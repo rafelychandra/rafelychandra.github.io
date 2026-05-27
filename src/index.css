@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  /* Custom 1960s Retro Theme Palette - Bold Typography edition */
+  --color-warm-cream: #F5F2E7;
+  --color-retro-cream-dark: #EBE7D9;
+  --color-retro-orange: #C04A21;
+  --color-retro-orange-dark: #9E3814;
+  --color-retro-yellow: #E1AD01;
+  --color-retro-green: #5A5A40;
+  --color-retro-green-light: #747455;
+  --color-retro-black: #2A2A2A;
+  --color-retro-charcoal: #3F3F3F;
+  --color-retro-gray: #6E6E6E;
+  --color-retro-card: #F5F2E7;
+}
+
+body {
+  background-color: var(--color-warm-cream);
+  color: var(--color-retro-black);
+  font-family: var(--font-sans);
+}
+
+/* Custom scrollbar to match retro layout */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-warm-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-retro-black);
+  border: 2px solid var(--color-warm-cream);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-retro-charcoal);
+}
+

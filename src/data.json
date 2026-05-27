@@ -1,0 +1,195 @@
+{
+  "profile": {
+    "name": "Arlo Vance",
+    "role": "Master of Electronic Computations & Fine Digital Interfaces",
+    "subtitle": "Meticulous Craftsmanship in Full-Stack Architectures & Mid-Century Graphic Mechanics",
+    "establishmentYear": "Est. 1962",
+    "location": "Oakland Mechanical Laboratories",
+    "avatarPlaceholderSeed": "retro-analyst",
+    "picture": "",
+    "retroNarrative": [
+      "In an era of rapid mechanization, Vance operates at the precise intersection of mathematical code and visual harmony. Utilizing state-of-the-art compilers, he fabricates digital apparatuses that run with high fidelity, exquisite modern typography, and robust mechanical performance.",
+      "With a decade of documented practice in electronic computing workshops, Vance has perfected the alignment of interactive pixels. His workspace delivers resilient full-stack systems, clean server-side data lines, and client interfaces structured with the rigor of Swiss graphic grids.",
+      "When not tuning server latency or crafting semantic layouts, Arlo is known to spin analog vinyl records, study antique newspaper advertisements, and tinker with transistor radio circuits."
+    ],
+    "socials": [
+      {
+        "platform": "GitHub",
+        "url": "https://github.com"
+      },
+      {
+        "platform": "LinkedIn",
+        "url": "https://linkedin.com"
+      },
+      {
+        "platform": "Telegram",
+        "url": "https://telegram.org"
+      }
+    ],
+    "contact": {
+      "email": "arlo.vance@cybernetics.org",
+      "phone": "+1 (555) 60s-COMPUTE",
+      "address": "402 Vintage Telegraph Ave, Oakland, California"
+    }
+  },
+  "experiences": [
+    {
+      "id": "exp-1",
+      "company": "General Cybernetics Division",
+      "role": "Senior Machinist & Chief Frontend Architect",
+      "period": "1960 - Present",
+      "location": "Aesthetic Computing Section, SF",
+      "description": [
+        "Pioneered the modernization of core user-facing systems, rendering application frameworks 45% faster under high mechanical loads.",
+        "Directed an active workshop of nine junior digital draftspersons to implement modular components using rigid typography and layouts.",
+        "Configured server-side rendering pipelines for standard data transmission, ensuring immediate print-ready performance."
+      ],
+      "tags": ["React Framework", "TypeScript", "Tailwind Artistry", "Data Streams"]
+    },
+    {
+      "id": "exp-2",
+      "company": "Bell Computing Laboratories",
+      "role": "Full-Stack System Assembler",
+      "period": "1957 - 1960",
+      "location": "Murray Hill Telemetry lab",
+      "description": [
+        "Architected highly structured data-fetching modules, lowering transmission latency by 120 milliseconds on low-frequency receivers.",
+        "Crafted beautiful, responsive layout grids for digital information boards using strict mathematical golden-grid proportions.",
+        "Optimized compilation times on standard hardware from minutes to seconds through rigorous bundle restructuring."
+      ],
+      "tags": ["Node.js Servers", "Structured Query Library", "Vite Engines", "CSS Drafting"]
+    },
+    {
+      "id": "exp-3",
+      "company": "Pacific Transistor Manufacturing",
+      "role": "Electronic Interface Drafter",
+      "period": "1954 - 1957",
+      "location": "Silicon Valley Foundry No. 1",
+      "description": [
+        "Digitized blueprint databases into interactive visual layouts, allowing non-technical operators to audit circuitry without manuals.",
+        "Ensured rigorous typographic standardizations across internal documentation hubs, enhancing reading speed by 30%."
+      ],
+      "tags": ["Client Storage", "Kinetic JavaScript", "Mathematical Layouts"]
+    }
+  ],
+  "educations": [
+    {
+      "id": "edu-1",
+      "school": "University of California, Cybernetics Institute",
+      "degree": "Bachelor of Electronic Science",
+      "major": "Computer Machinery & Visual Typographics",
+      "period": "1950 - 1954",
+      "achievements": [
+        "Awarded First Medal in the annual Scientific Graphic Visualization Symposium.",
+        "Published comprehensive thesis: 'On the Dynamic Kinetic Alignment of Typography in Electronic Cathode Tubes'."
+      ]
+    },
+    {
+      "id": "edu-2",
+      "school": "Retro Art Center College",
+      "degree": "Associate Guild Diploma",
+      "major": "Mid-Century Modern Graphic Layouts & Poster Drafting",
+      "period": "1948 - 1950",
+      "achievements": [
+        "Achieved full honors in Swiss Minimalist grid theory and color harmony."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "skill-group-1",
+      "category": "Core Digital Engineering",
+      "items": [
+        { "name": "React Drafting Engine", "proficiency": 5, "description": "Highly modular interfaces" },
+        { "name": "TypeScript Assertions", "proficiency": 5, "description": "Total compile-time security" },
+        { "name": "Next.js / Service-Rendering", "proficiency": 4, "description": "High-efficiency page generation" },
+        { "name": "Node/Express Mechanics", "proficiency": 5, "description": "Resilient backend telemetry" },
+        { "name": "Relational DB Relays", "proficiency": 4, "description": "Structured storage alignment" }
+      ]
+    },
+    {
+      "id": "skill-group-2",
+      "category": "Mechanical & Aesthetic Tools",
+      "items": [
+        { "name": "Tailwind Drafting CSS", "proficiency": 5, "description": "Mathematical margin ratios" },
+        { "name": "Framer Layout Kinetics", "proficiency": 4, "description": "Subtle kinetic micro-gestures" },
+        { "name": "Vite Compiler Core", "proficiency": 5, "description": "Instantaneous local reload loop" },
+        { "name": "Visual Figma Blueprints", "proficiency": 4, "description": "Swiss typographic precision" },
+        { "name": "Docker Container Hubs", "proficiency": 3, "description": "Hermetic deployment matrices" }
+      ]
+    },
+    {
+      "id": "skill-group-3",
+      "category": "Interpersonal & Craft Ethics",
+      "items": [
+        { "name": "Meticulous Typography Pairings", "proficiency": 5, "description": "Strict serif-sans pairing ratio" },
+        { "name": "Apprentice Mentorship", "proficiency": 5, "description": "Passing down visual standards" },
+        { "name": "Mathematical Layout Alignment", "proficiency": 5, "description": "Devoid of pixel inconsistencies" },
+        { "name": "Vintage Tech Restoration", "proficiency": 4, "description": "Keeping old mechanical clocks alive" }
+      ]
+    }
+  ],
+  "aestheticSettings": {
+    "siteTitle": "Arlo Vance Portfolio",
+    "newspaperName": "THE DAILY COMPUTATIONALIST",
+    "todaysDateOverride": "WEDNESDAY, MAY 27, 1964",
+    "quoteOfTheDay": "CRAFTSMANSHIP SECURES THE INTEGRITY OF MECHANICAL INITIATIVES. DESIGN ACCEPTS THE CHALLENGE OF FORM.",
+    "vinylMelody": {
+      "title": "Bossa Nova Compiler (Mono No. 9)",
+      "genre": "Retro Synth Jazz Beat",
+      "bpm": 96,
+      "chords": [
+        [174.61, 220.00, 261.63, 329.63],
+        [146.83, 174.61, 220.00, 261.63],
+        [196.00, 233.08, 293.66, 349.23],
+        [130.81, 164.81, 196.00, 233.08]
+      ]
+    },
+    "vinylPlaylist": [
+      {
+        "title": "Bossa Nova Compiler (Mono No. 9)",
+        "genre": "Retro Synth Jazz Beat",
+        "bpm": 96,
+        "chords": [
+          [174.61, 220.00, 261.63, 329.63],
+          [146.83, 174.61, 220.00, 261.63],
+          [196.00, 233.08, 293.66, 349.23],
+          [130.81, 164.81, 196.00, 233.08]
+        ]
+      },
+      {
+        "title": "Space-Age Transistor (Stereo No. 4)",
+        "genre": "Theremin Ambient Sci-Fi",
+        "bpm": 80,
+        "chords": [
+          [130.81, 155.56, 196.00, 233.08],
+          [103.83, 155.56, 207.65, 246.94],
+          [174.61, 207.65, 261.63, 311.13],
+          [98.00, 146.83, 196.00, 246.94]
+        ]
+      },
+      {
+        "title": "Mid-Century Lounge (Lofi No. 11)",
+        "genre": "Atmospheric Lounge Jazz",
+        "bpm": 105,
+        "chords": [
+          [110.00, 164.81, 220.00, 277.18],
+          [146.83, 220.00, 293.66, 369.99],
+          [123.47, 146.83, 220.00, 293.66],
+          [164.81, 246.94, 329.63, 392.00]
+        ]
+      },
+      {
+        "title": "Silicon Autumn (Chiptune No. 2)",
+        "genre": "Warm Transistor Pulse",
+        "bpm": 112,
+        "chords": [
+          [110.00, 130.81, 196.00, 246.94],
+          [146.83, 185.00, 220.00, 293.66],
+          [98.00, 146.83, 196.00, 246.94],
+          [130.81, 164.81, 196.00, 261.63]
+        ]
+      }
+    ]
+  }
+}

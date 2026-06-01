@@ -63,7 +63,7 @@ export default function HeroSection({
 
         {/* Secondary Masthead Banner: Dynamic Date, price, and statement */}
         <div className="flex flex-col sm:flex-row items-center justify-between py-2 border-b-2 border-retro-black font-mono text-xs text-retro-charcoal gap-2 font-bold select-none">
-          <div>SAN FRANCISCO, CALIFORNIA</div>
+          <div>{profile.location.toUpperCase()}</div>
           <div className="border-t border-b sm:border-y-0 border-retro-gray py-1 sm:py-0 w-full sm:w-auto text-center font-extrabold text-retro-orange">
             {formattedDate}
           </div>
@@ -78,7 +78,7 @@ export default function HeroSection({
             <div className="space-y-4">
               <div className="border-b border-dashed border-retro-gray pb-2">
                 <span className="bg-retro-yellow text-retro-black font-mono text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase mr-2.5 inline-block">
-                  FRONT END SPECIALIST LEAD
+                  {profile.role.toUpperCase()}
                 </span>
                 <span className="font-sans font-bold text-retro-black text-lg uppercase tracking-tight leading-tight block sm:inline mt-1.5 sm:mt-0">
                   RAFELY CHANDRA UNVEILS DIGITAL APPARATUS CODE

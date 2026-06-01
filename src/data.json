@@ -1,139 +1,133 @@
 {
   "profile": {
-    "name": "Arlo Vance",
-    "role": "Master of Electronic Computations & Fine Digital Interfaces",
-    "subtitle": "Meticulous Craftsmanship in Full-Stack Architectures & Mid-Century Graphic Mechanics",
-    "establishmentYear": "Est. 1962",
-    "location": "Oakland Mechanical Laboratories",
+    "name": "Rafely Chandra Rizkilillah",
+    "role": "Senior Back-end Engineer",
+    "subtitle": "Meticulous Craftsmanship in Scalable Payment Systems, High-Velocity APIs & Fintech Architecture",
+    "establishmentYear": "Est. 2019",
+    "location": "Jakarta, Indonesia",
     "avatarPlaceholderSeed": "retro-analyst",
     "picture": "",
     "retroNarrative": [
-      "In an era of rapid mechanization, Vance operates at the precise intersection of mathematical code and visual harmony. Utilizing state-of-the-art compilers, he fabricates digital apparatuses that run with high fidelity, exquisite modern typography, and robust mechanical performance.",
-      "With a decade of documented practice in electronic computing workshops, Vance has perfected the alignment of interactive pixels. His workspace delivers resilient full-stack systems, clean server-side data lines, and client interfaces structured with the rigor of Swiss graphic grids.",
-      "When not tuning server latency or crafting semantic layouts, Arlo is known to spin analog vinyl records, study antique newspaper advertisements, and tinker with transistor radio circuits."
+      "In an era of rapid digital transactions, Rafely operates at the precise intersection of concurrent Go code, high-throughput payment pipelines, and secure ledger telemetry. Fabricating robust digital apparatuses that handle millions of micro-finance data transmissions with absolute mathematical reliability.",
+      "With over five years of documented practice in fintech payment workshops, Rafely has mastered the alignment of core financial flows. His digital workbench delivers resilient full-stack elements, safe server-side gateway relays (KrakenD, Kong), and databases engineered with high-fidelity performance.",
+      "Whether launching QRIS integration nodes, tuning database query metrics, or structuring secure e-wallet top-ups, he approaches code with rigorous standards corresponding to the classic Swiss grid layouts of early computational systems."
     ],
     "socials": [
       {
         "platform": "GitHub",
-        "url": "https://github.com"
+        "url": "https://github.com/rafelychandra"
       },
       {
         "platform": "LinkedIn",
-        "url": "https://linkedin.com"
+        "url": "https://linkedin.com/in/rafelychandra"
       },
       {
-        "platform": "Telegram",
-        "url": "https://telegram.org"
+        "platform": "Spotify",
+        "url": "https://open.spotify.com/user/rzkllh?si=b067355aa69d430a"
       }
     ],
     "contact": {
-      "email": "arlo.vance@cybernetics.org",
-      "phone": "+1 (555) 60s-COMPUTE",
-      "address": "402 Vintage Telegraph Ave, Oakland, California"
+      "email": "rafelychandra@gmail.com",
+      "phone": "(+62) 851-2130-5545",
+      "address": "Jakarta, Indonesia"
     }
   },
   "experiences": [
     {
       "id": "exp-1",
-      "company": "General Cybernetics Division",
-      "role": "Senior Machinist & Chief Frontend Architect",
-      "period": "1960 - Present",
-      "location": "Aesthetic Computing Section, SF",
+      "company": "Amartha Financial",
+      "role": "Senior Engineer (Payment & Wealth Platforms)",
+      "period": "Jan 2023 - Present",
+      "location": "Jakarta, Indonesia",
       "description": [
-        "Pioneered the modernization of core user-facing systems, rendering application frameworks 45% faster under high mechanical loads.",
-        "Directed an active workshop of nine junior digital draftspersons to implement modular components using rigid typography and layouts.",
-        "Configured server-side rendering pipelines for standard data transmission, ensuring immediate print-ready performance."
+        "Handle the Payment Platform Team, ensuring exceptional reliability and high scalability for all core financial transaction pathways, including disbursement, repayment, cash-in/out, remittance, and Virtual Account management.",
+        "Lead the high-priority QRIS integration project with 3 engineers under my direction, expanding the platform's monetary ecosystem with QR-based payments.",
+        "Pioneered secure integrations with major third-party payment providers (BRI, Midtrans, Digiasia, Xendit) containing resilient failed-payment retry triggers.",
+        "Built automatic e-wallet top-up pathways (GoPay, OVO, DANA, ShopeePay, LinkAja), cash-out processing, and secure order loan services."
       ],
-      "tags": ["React Framework", "TypeScript", "Tailwind Artistry", "Data Streams"]
+      "tags": ["Go (go-echo)", "KrakenD", "Kong", "PostgreSQL", "Kafka Messenger", "GCP/GCS", "Docker & K8s"]
     },
     {
       "id": "exp-2",
-      "company": "Bell Computing Laboratories",
-      "role": "Full-Stack System Assembler",
-      "period": "1957 - 1960",
-      "location": "Murray Hill Telemetry lab",
+      "company": "Amartha Micro Fintech",
+      "role": "Software Engineer (Core Money-Flow & MIS Systems)",
+      "period": "Nov 2019 - Dec 2021",
+      "location": "Jakarta, Indonesia",
       "description": [
-        "Architected highly structured data-fetching modules, lowering transmission latency by 120 milliseconds on low-frequency receivers.",
-        "Crafted beautiful, responsive layout grids for digital information boards using strict mathematical golden-grid proportions.",
-        "Optimized compilation times on standard hardware from minutes to seconds through rigorous bundle restructuring."
+        "Managed the main MIS Dashboard, overseeing all loan allocations, investor transactions, and automated installment payment ledger transactions.",
+        "Led the integration and software migration of the core banking system with vendor FDS, ensuring seamless data-flow with robust failure safety.",
+        "Rebuilt critical core money flow pathways handling automated disbursements, repayment, and partial-repayment calculations.",
+        "Redesigned the automated loan insurance claim system for PAR loans with consecutive defaults, minimizing risk profile and protecting investors."
       ],
-      "tags": ["Node.js Servers", "Structured Query Library", "Vite Engines", "CSS Drafting"]
+      "tags": ["Go (go-echo)", "Postgres", "MongoDB", "Kong API Gateway", "Kafka", "Docker", "GCP"]
     },
     {
       "id": "exp-3",
-      "company": "Pacific Transistor Manufacturing",
-      "role": "Electronic Interface Drafter",
-      "period": "1954 - 1957",
-      "location": "Silicon Valley Foundry No. 1",
+      "company": "Tunaiku (PT Bank Amar Indonesia Tbk)",
+      "role": "Back-end Developer (Unsecured Loans Engine)",
+      "period": "April 2019 - Nov 2019",
+      "location": "Surabaya / Jakarta, Indonesia",
       "description": [
-        "Digitized blueprint databases into interactive visual layouts, allowing non-technical operators to audit circuitry without manuals.",
-        "Ensured rigorous typographic standardizations across internal documentation hubs, enhancing reading speed by 30%."
+        "Designed and implemented high-availability CRUD operations using RESTful API structures, PostgreSQL, and custom-tailored middleware solutions.",
+        "Developed and maintained rapid API endpoints for the public FAQ database and customer-facing support documentation indexes.",
+        "Collaborated with the Customer Service Improvement team to implement logging telemetry, reducing action latency and boosting service efficiency."
       ],
-      "tags": ["Client Storage", "Kinetic JavaScript", "Mathematical Layouts"]
+      "tags": ["Go (go-gin)", "SQL", "PostgreSQL", "JavaScript (Gateway)", "Git", "Docker"]
     }
   ],
   "educations": [
     {
       "id": "edu-1",
-      "school": "University of California, Cybernetics Institute",
-      "degree": "Bachelor of Electronic Science",
-      "major": "Computer Machinery & Visual Typographics",
-      "period": "1950 - 1954",
+      "school": "University of Brawijaya",
+      "degree": "Bachelor of Computer Science",
+      "major": "Computer Science & Distributed Systems",
+      "period": "Jul 2014 - Jan 2019",
       "achievements": [
-        "Awarded First Medal in the annual Scientific Graphic Visualization Symposium.",
-        "Published comprehensive thesis: 'On the Dynamic Kinetic Alignment of Typography in Electronic Cathode Tubes'."
-      ]
-    },
-    {
-      "id": "edu-2",
-      "school": "Retro Art Center College",
-      "degree": "Associate Guild Diploma",
-      "major": "Mid-Century Modern Graphic Layouts & Poster Drafting",
-      "period": "1948 - 1950",
-      "achievements": [
-        "Achieved full honors in Swiss Minimalist grid theory and color harmony."
+        "Conducted studies in distributed algorithms, multi-thread mechanics, relational algebra databases, and internet-protocol engineering.",
+        "Engineered visual database dashboards and high-performance programming lab tooling."
       ]
     }
   ],
   "skills": [
     {
       "id": "skill-group-1",
-      "category": "Core Digital Engineering",
+      "category": "Linguistic & Core Algorithms",
       "items": [
-        { "name": "React Drafting Engine", "proficiency": 5, "description": "Highly modular interfaces" },
-        { "name": "TypeScript Assertions", "proficiency": 5, "description": "Total compile-time security" },
-        { "name": "Next.js / Service-Rendering", "proficiency": 4, "description": "High-efficiency page generation" },
-        { "name": "Node/Express Mechanics", "proficiency": 5, "description": "Resilient backend telemetry" },
-        { "name": "Relational DB Relays", "proficiency": 4, "description": "Structured storage alignment" }
+        { "name": "Golang (Go)", "proficiency": 5, "description": "Highly concurrent services" },
+        { "name": "Javascript & NodeJS", "proficiency": 4, "description": "Dynamic script automation" },
+        { "name": "SQL & Relational Algebra", "proficiency": 5, "description": "Complex queries & database indexing" },
+        { "name": "Java & PHP", "proficiency": 3, "description": "Enterprise application engines" },
+        { "name": "HTML & Basic Web Elements", "proficiency": 4, "description": "Document layouts & views" }
       ]
     },
     {
       "id": "skill-group-2",
-      "category": "Mechanical & Aesthetic Tools",
+      "category": "Platform Frameworks & Gateways",
       "items": [
-        { "name": "Tailwind Drafting CSS", "proficiency": 5, "description": "Mathematical margin ratios" },
-        { "name": "Framer Layout Kinetics", "proficiency": 4, "description": "Subtle kinetic micro-gestures" },
-        { "name": "Vite Compiler Core", "proficiency": 5, "description": "Instantaneous local reload loop" },
-        { "name": "Visual Figma Blueprints", "proficiency": 4, "description": "Swiss typographic precision" },
-        { "name": "Docker Container Hubs", "proficiency": 3, "description": "Hermetic deployment matrices" }
+        { "name": "Go-Echo / Go-Gin / Go-Chi", "proficiency": 5, "description": "Microservice web routers" },
+        { "name": "KrakenD & Kong", "proficiency": 5, "description": "API Gateways & rate-limiting" },
+        { "name": "Kafka & Google PubSub", "proficiency": 5, "description": "Asynchronous messaging pipelines" },
+        { "name": "ReactJS & Web Clients", "proficiency": 4, "description": "Dynamic front-end administration" },
+        { "name": "Grafana & Prometheus", "proficiency": 4, "description": "Telemetry and service health dashboards" }
       ]
     },
     {
       "id": "skill-group-3",
-      "category": "Interpersonal & Craft Ethics",
+      "category": "Infrastructure & Mechanical Tools",
       "items": [
-        { "name": "Meticulous Typography Pairings", "proficiency": 5, "description": "Strict serif-sans pairing ratio" },
-        { "name": "Apprentice Mentorship", "proficiency": 5, "description": "Passing down visual standards" },
-        { "name": "Mathematical Layout Alignment", "proficiency": 5, "description": "Devoid of pixel inconsistencies" },
-        { "name": "Vintage Tech Restoration", "proficiency": 4, "description": "Keeping old mechanical clocks alive" }
+        { "name": "GCP (Compute Engine & GCS)", "proficiency": 5, "description": "Cloud orchestration & storage arrays" },
+        { "name": "Docker & Kubernetes", "proficiency": 5, "description": "Containerized isolation & deployment scale" },
+        { "name": "PostgreSQL & MongoDB", "proficiency": 5, "description": "Structured & document databases" },
+        { "name": "Redis Cache Relays", "proficiency": 5, "description": "High-throughput concurrent memory store" },
+        { "name": "Git Version Controller", "proficiency": 5, "description": "Meticulous collaboration history" }
       ]
     }
   ],
   "aestheticSettings": {
-    "siteTitle": "Arlo Vance Portfolio",
-    "newspaperName": "THE DAILY COMPUTATIONALIST",
-    "todaysDateOverride": "WEDNESDAY, MAY 27, 1964",
-    "quoteOfTheDay": "CRAFTSMANSHIP SECURES THE INTEGRITY OF MECHANICAL INITIATIVES. DESIGN ACCEPTS THE CHALLENGE OF FORM.",
+    "siteTitle": "Rafely Chandra Portfolio",
+    "newspaperName": "THE FINTECH COURIER",
+    "todaysDateOverride": "MONDAY, JUNE 1, 2026",
+    "quoteOfTheDay": "FINANCIAL SCALABILITY SECURES THE INTEGRITY OF GRASSTOOTS ECONOMIES. HIGH THROUGHPUT CONQUERS SPACE AND TIME.",
     "vinylMelody": {
       "title": "Bossa Nova Compiler (Mono No. 9)",
       "genre": "Retro Synth Jazz Beat",

@@ -10,6 +10,7 @@ import rawPortfolioData from "./data.json";
 // Component imports
 import Navbar from "./components/Navbar";
 import AudioPlayer from "./components/AudioPlayer";
+import SpotifyPlaylists from "./components/SpotifyPlaylists";
 import HeroSection from "./components/HeroSection";
 import ExperienceTimeline from "./components/ExperienceTimeline";
 import EducationCard from "./components/EducationCard";
@@ -67,13 +68,14 @@ export default function App() {
           quoteOfTheDay={data.aestheticSettings.quoteOfTheDay}
         />
 
-        {/* Live Broadcast / Audio Turntable Section */}
-        <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12">
+        {/* Live Broadcast / Audio Turntable & Spotify Section */}
+        <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12 space-y-8">
           <AudioPlayer
             melodyConfig={data.aestheticSettings.vinylMelody}
             playlist={data.aestheticSettings.vinylPlaylist}
             vintageMode={vintageMode}
           />
+          <SpotifyPlaylists />
         </section>
 
         {/* 4. Experience History ledger */}

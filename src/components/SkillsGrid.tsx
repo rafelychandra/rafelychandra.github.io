@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Scissors, Star, ShieldCheck } from "lucide-react";
+import { Scissors, ShieldCheck } from "lucide-react";
 import { SkillCategory } from "../types";
 import { motion } from "motion/react";
 
@@ -86,21 +86,6 @@ export default function SkillsGrid({ skills }: SkillsGridProps) {
                               {item.description}
                             </p>
                           )}
-                        </div>
-
-                        {/* Stamp stars representing proficiency levels */}
-                        <div className="flex gap-0.5 flex-shrink-0 pt-0.5" title={`${item.proficiency}/5 Stars`}>
-                          {Array.from({ length: 5 }).map((_, starIdx) => (
-                            <Star
-                              key={starIdx}
-                              size={9}
-                              className={`rounded ${
-                                starIdx < item.proficiency
-                                  ? "text-retro-orange fill-retro-orange"
-                                  : "text-retro-gray text-opacity-35"
-                              }`}
-                            />
-                          ))}
                         </div>
                       </div>
                     </div>

@@ -174,21 +174,20 @@ export default function HeroSection({
                   <p className="text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed select-all">
                     {profile.retroNarrative[1]}
                   </p>
-                </div>
 
-              </div>
-
-              {/* Extra narrative block and quote */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pt-2 text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed">
-                <div className="md:col-span-4"></div>
-                <div className="md:col-span-8 space-y-4 border-t border-retro-gray pt-4 bg-retro-cream-dark bg-opacity-30 p-3 rounded-xs font-serif font-medium">
-                  <p className="font-sans text-xs md:text-sm text-retro-charcoal leading-relaxed">{profile.retroNarrative[2]}</p>
-                  
-                  {/* Retro blockquote quoteOfTheDay */}
-                  <div className="border-l-4 border-retro-orange pl-3 italic text-xs text-retro-black py-0.5 select-all leading-normal bg-warm-cream/40 p-1.5 rounded-r">
-                    "{quoteOfTheDay}"
+                  {/* Extra narrative block and quote */}
+                  <div className="pt-2 text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed w-full">
+                    <div className="w-full space-y-4 border-t border-retro-gray pt-4 bg-retro-cream-dark bg-opacity-30 p-3 rounded-xs font-serif font-medium">
+                      <p className="font-sans text-xs md:text-sm text-retro-charcoal leading-relaxed">{profile.retroNarrative[2]}</p>
+                      
+                      {/* Retro blockquote quoteOfTheDay */}
+                      <div className="border-l-4 border-retro-orange pl-3 italic text-xs text-retro-black py-0.5 select-all leading-normal bg-warm-cream/40 p-1.5 rounded-r">
+                        "{quoteOfTheDay}"
+                      </div>
+                    </div>
                   </div>
                 </div>
+
               </div>
             </div>
 

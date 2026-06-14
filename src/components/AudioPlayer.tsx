@@ -16,23 +16,19 @@ interface AudioPlayerProps {
 
 export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }: AudioPlayerProps) {
   // Combine custom playlist or default to melodyConfig if empty and declare in state
-  const [tracks, setTracks] = useState<(VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File })[]>(() => {
+  const [tracks, setTracks] = useState<(VinylMelody & { audioUrl?: string; audioFile?: File })[]>(() => {
     return playlist && playlist.length > 0 ? playlist : [melodyConfig];
   });
   
-  const [activeSong, setActiveSong] = useState<VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File }>(tracks[0]);
+  const [activeSong, setActiveSong] = useState<VinylMelody & { audioUrl?: string; audioFile?: File }>(tracks[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [tempo, setTempo] = useState(activeSong.bpm || 100);
   const [isSynthesizedOk, setIsSynthesizedOk] = useState(false);
-  const [activeTab, setActiveTab] = useState<"synth" | "spotify">("synth");
-  const [inputUrl, setInputUrl] = useState<string>("https://open.spotify.com/user/rzkllh?si=b067355aa69d430a");
-  const [spotifyUrl, setSpotifyUrl] = useState<string>("https://open.spotify.com/user/rzkllh?si=b067355aa69d430a");
 
   // Custom track generator state variables
   const [newTitle, setNewTitle] = useState("");
-  const [newType, setNewType] = useState<"synth" | "spotify" | "mp3">("mp3");
-  const [newSpotifyUrl, setNewSpotifyUrl] = useState("");
+  const [newType, setNewType] = useState<"synth" | "mp3">("mp3");
   const [newBpm, setNewBpm] = useState(100);
   const [newVibe, setNewVibe] = useState<"warm" | "space" | "coffee" | "neon">("warm");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -74,7 +70,7 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     }
   };
 
-  const playSynthesizer = async (trackOverride?: VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File }, tempoOverride?: number) => {
+  const playSynthesizer = async (trackOverride?: VinylMelody & { audioUrl?: string; audioFile?: File }, tempoOverride?: number) => {
     initAudio();
     const ctx = audioCtxRef.current;
     if (!ctx) return;
@@ -277,22 +273,15 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     }
   };
 
-  const selectTrack = (track: VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File }) => {
+  const selectTrack = (track: VinylMelody & { audioUrl?: string; audioFile?: File }) => {
     const wasPlaying = isPlaying;
     stopSynthesizer();
     setActiveSong(track);
     setTempo(track.bpm || 100);
-    if (track.spotifyUrl) {
-      setSpotifyUrl(track.spotifyUrl);
-      setInputUrl(track.spotifyUrl);
-      setActiveTab("spotify");
-    } else {
-      setActiveTab("synth");
-      if (wasPlaying) {
-        setTimeout(() => {
-          playSynthesizer(track, track.bpm || 100);
-        }, 120);
-      }
+    if (wasPlaying) {
+      setTimeout(() => {
+        playSynthesizer(track, track.bpm || 100);
+      }, 120);
     }
   };
 
@@ -307,33 +296,6 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     const nextIndex = (currentIndex + 1) % tracks.length;
     selectTrack(tracks[nextIndex]);
   };
-
-  const getSpotifyEmbedUrl = (rawUrl: string) => {
-    if (!rawUrl) return "";
-    try {
-      const url = new URL(rawUrl.trim());
-      if (url.hostname === "open.spotify.com" || url.hostname.endsWith(".spotify.com")) {
-        let pathname = url.pathname;
-        if (!pathname.startsWith("/embed")) {
-          pathname = `/embed${pathname}`;
-        }
-        return `https://open.spotify.com${pathname}${url.search}`;
-      }
-    } catch {
-      // Return empty or default
-    }
-    return "";
-  };
-
-  const handleLoadSpotify = () => {
-    if (inputUrl.trim()) {
-      setSpotifyUrl(inputUrl.trim());
-    }
-  };
-
-  const isTrack = spotifyUrl.includes("/track/");
-  const iframeHeight = isTrack ? 152 : 352;
-  const embedUrl = getSpotifyEmbedUrl(spotifyUrl);
 
   return (
     <div 
@@ -403,47 +365,19 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
       <div className="flex flex-col sm:flex-row border-b-2 border-retro-black pb-3 mb-4 justify-between items-center text-xs font-mono font-bold uppercase select-none w-full gap-2">
         <div className="flex items-center gap-1.5 text-retro-black font-extrabold">
           <Music size={14} className="text-retro-orange shrink-0 animate-pulse" />
-          <span>RECEIVER STATION INTERFACE</span>
-        </div>
-        <div className="flex gap-2 shrink-0">
-          <button
-            onClick={() => {
-              setActiveTab("synth");
-            }}
-            className={`px-2.5 py-1 border-2 border-retro-black text-[10px] font-bold tracking-tight uppercase flex items-center gap-1 rounded cursor-pointer transition-all ${
-              activeTab === "synth"
-                ? "bg-retro-black text-warm-cream"
-                : "bg-warm-cream hover:bg-retro-yellow text-retro-black"
-            }`}
-          >
-            ● ANALOG SYNTH
-          </button>
-          <button
-            onClick={() => {
-              stopSynthesizer();
-              setActiveTab("spotify");
-            }}
-            className={`px-2.5 py-1 border-2 border-retro-black text-[10px] font-bold tracking-tight uppercase flex items-center gap-1 rounded cursor-pointer transition-all ${
-              activeTab === "spotify"
-                ? "bg-retro-black text-warm-cream"
-                : "bg-warm-cream hover:bg-retro-yellow text-retro-black"
-            }`}
-          >
-            ● SPOTIFY BROADCAST
-          </button>
+          <span>RECEIVER STATION INTERFACE (ANALOG SYNTH)</span>
         </div>
       </div>
 
       <AnimatePresence mode="wait">
-        {activeTab === "synth" ? (
-          <motion.div
-            key="synth"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.15 }}
-            className="flex flex-col gap-4"
-          >
+        <motion.div
+          key="synth"
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -5 }}
+          transition={{ duration: 0.15 }}
+          className="flex flex-col gap-4"
+        >
             {/* CONTROLS AREA */}
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Record Graphic */}
@@ -599,73 +533,6 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
             </div>
 
           </motion.div>
-        ) : (
-          <motion.div
-            key="spotify"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.15 }}
-            className="flex flex-col gap-4"
-          >
-            {/* Spotify Info Descriptor */}
-            <div className="bg-warm-cream border-2 border-retro-black p-3.5 rounded shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] select-none">
-              <span className="font-mono text-[8px] text-retro-orange font-bold uppercase tracking-widest block">
-                INTEGRATED INTERCEPTOR CHANNEL
-              </span>
-              <h4 className="font-serif font-extrabold text-sm uppercase text-retro-black mt-0.5">
-                SPOTIFY ELECTROMAGNETIC RECEIVER
-              </h4>
-              <p className="font-sans text-[10.5px] text-retro-charcoal leading-relaxed mt-1.5">
-                Paste any live Spotify track, playlist, user, or album link in the cockpit below. The tuner intercepts the URL structure to assemble a safe embed frame. Prefilled with <strong>Rafely's profile</strong>!
-              </p>
-
-              {/* Dynamic URL Inputs */}
-              <div className="flex flex-col sm:flex-row gap-2 mt-4 items-stretch">
-                <div className="flex-1 flex items-center bg-retro-cream-dark border-2 border-retro-black px-3 py-1.5 rounded relative">
-                  <span className="font-mono text-[9px] text-retro-orange uppercase font-bold shrink-0 mr-2 border-r border-retro-gray/30 pr-2 select-none flex items-center gap-1">
-                    <Link size={10} />
-                    FEED LINK:
-                  </span>
-                  <input
-                    type="text"
-                    value={inputUrl}
-                    onChange={(e) => setInputUrl(e.target.value)}
-                    placeholder="Enter Spotify open url (e.g. track, playlist)..."
-                    className="w-full bg-transparent focus:outline-none text-[11px] font-mono text-retro-black placeholder-retro-gray/45"
-                  />
-                </div>
-                <button
-                  onClick={handleLoadSpotify}
-                  className="px-4 py-2 border-2 border-retro-black bg-retro-orange hover:bg-retro-orange-dark text-warm-cream font-mono font-bold text-[10px] uppercase flex items-center justify-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] transition-colors cursor-pointer shrink-0"
-                >
-                  <span>CONNECT SIGNAL</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Embedded Spotify Audio Frame Player */}
-            {embedUrl ? (
-              <div className="border-4 border-retro-black shadow-[4px_4px_0px_0px_rgba(30,28,26,1)] rounded overflow-hidden bg-retro-black w-full transition-all duration-300">
-                <iframe
-                  src={embedUrl}
-                  width="100%"
-                  height={iframeHeight}
-                  frameBorder="0"
-                  allowFullScreen={true}
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                  title="Integrated Spotify Streamer"
-                  className="bg-retro-black block"
-                ></iframe>
-              </div>
-            ) : (
-              <div className="border-2 border-dashed border-retro-orange p-8 text-center text-xs font-mono text-retro-orange rounded bg-warm-cream">
-                * PLEASE CONFIGURE A VALID OPEN.SPOTIFY.COM SIGNAL EMBED
-              </div>
-            )}
-          </motion.div>
-        )}
       </AnimatePresence>
 
       {/* CHIPPED VINYL PLAYLIST CATALOG (Visible on both view settings!) */}
@@ -677,7 +544,6 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {tracks.map((track, idx) => {
             const isActive = activeSong.title === track.title;
-            const isSpotifyTrack = !!track.spotifyUrl;
             return (
               <button
                 key={idx}
@@ -694,12 +560,8 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
                   </span>
                   <span className="truncate">{track.title}</span>
                 </div>
-                <span className={`text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded select-none shrink-0 ml-1 ${
-                  isSpotifyTrack 
-                    ? "bg-green-100 text-green-800 border border-green-300"
-                    : "text-retro-gray"
-                }`}>
-                  {isSpotifyTrack ? "🟢 SPOTIFY" : `${track.bpm} BPM`}
+                <span className="text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded select-none shrink-0 ml-1 text-retro-gray">
+                  {track.bpm} BPM
                 </span>
               </button>
             );
@@ -719,7 +581,7 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
             className="flex items-center gap-1 text-[9px] font-mono uppercase font-black text-retro-orange bg-warm-cream px-2.5 py-1.5 border-2 border-retro-orange rounded hover:bg-retro-orange hover:text-warm-cream cursor-pointer transition-all active:translate-y-[1px]"
           >
             <Plus size={10} strokeWidth={3} />
-            <span>{isFormOpen ? "CLOSE INSTRUMENT PRESS" : "PRESS NEW RECORD / MAP SPOTIFY INTEGRATION"}</span>
+            <span>{isFormOpen ? "CLOSE INSTRUMENT PRESS" : "PRESS NEW RECORD / CREATE RETRO TRACK"}</span>
           </button>
         </div>
 
@@ -765,20 +627,6 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
                   <button
                     type="button"
                     onClick={() => {
-                      setNewType("spotify");
-                      setFormError("");
-                    }}
-                    className={`flex-1 py-1 px-1.5 border text-[9px] font-mono font-bold rounded uppercase cursor-pointer transition-colors ${
-                      newType === "spotify"
-                        ? "bg-retro-black text-warm-cream border-retro-black"
-                        : "bg-warm-cream text-retro-black border-retro-black/30 hover:border-retro-black"
-                    }`}
-                  >
-                    🟢 Spotify
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
                       setNewType("synth");
                       setFormError("");
                     }}
@@ -817,22 +665,6 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
                     ✓ File Selected: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
                   </span>
                 )}
-              </div>
-            ) : newType === "spotify" ? (
-              <div>
-                <label className="block font-mono text-[9px] text-retro-gray uppercase font-bold mb-1">
-                  SPOTIFY OPEN SIGNAL LINK
-                </label>
-                <input
-                  type="text"
-                  placeholder="https://open.spotify.com/track/..."
-                  value={newSpotifyUrl}
-                  onChange={(e) => setNewSpotifyUrl(e.target.value)}
-                  className="w-full bg-retro-cream-dark border border-retro-black rounded p-1.5 text-xs font-mono text-retro-black focus:outline-none"
-                />
-                <span className="text-[8px] font-mono text-retro-gray mt-1 block">
-                  * Note: Insert any valid track, playlist, album, or user link from your Spotify app (Share &gt; Copy Link).
-                </span>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -914,33 +746,6 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
                   // reset
                   setNewTitle("");
                   setSelectedFile(null);
-                } else if (newType === "spotify") {
-                  if (!newSpotifyUrl.trim()) {
-                    setFormError("Spotify URL is required for Spotify broadcast type.");
-                    return;
-                  }
-                  if (!newSpotifyUrl.toLowerCase().includes("spotify.com")) {
-                    setFormError("Please enter a valid open.spotify.com URL.");
-                    return;
-                  }
-
-                  const newTrackObj = {
-                    title: newTitle.trim(),
-                    genre: "Spotify Broadcast",
-                    bpm: 0,
-                    spotifyUrl: newSpotifyUrl.trim()
-                  };
-
-                  setTracks(prev => [...prev, newTrackObj]);
-                  setFormSuccess(true);
-                  // Select immediately
-                  setTimeout(() => {
-                    selectTrack(newTrackObj);
-                  }, 150);
-
-                  // reset
-                  setNewTitle("");
-                  setNewSpotifyUrl("");
                 } else {
                   const chordOptions = {
                     warm: [

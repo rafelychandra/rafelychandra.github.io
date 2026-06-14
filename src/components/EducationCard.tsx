@@ -41,7 +41,7 @@ export default function EducationCard({ educations }: EducationCardProps) {
               </div>
 
               <div>
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-3 pr-28">
                   <div className="p-1.5 bg-retro-green text-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
                     <GraduationCap size={16} />
                   </div>
@@ -50,7 +50,7 @@ export default function EducationCard({ educations }: EducationCardProps) {
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-bold uppercase text-retro-black leading-snug tracking-tight">
+                <h3 className="font-serif text-xl font-bold uppercase text-retro-black leading-snug tracking-tight pr-28">
                   {edu.school}
                 </h3>
                 

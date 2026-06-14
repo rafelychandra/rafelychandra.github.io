@@ -69,36 +69,11 @@ export default function App() {
 
         {/* Live Broadcast / Audio Turntable Section */}
         <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            {/* Explanatory retro notice card */}
-            <div className="lg:col-span-5 border-4 border-retro-black p-5 bg-warm-cream rounded shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] h-full flex flex-col justify-between">
-              <div>
-                <span className="font-mono text-xs text-retro-orange uppercase font-bold tracking-wider">
-                  ACOUSTIC BROADCAST TRANSCEIVER
-                </span>
-                <h3 className="font-serif text-xl font-extrabold uppercase text-retro-black tracking-tight mt-1 leading-snug">
-                  SPIN THE ANALOG RECORDS
-                </h3>
-                <p className="font-sans text-xs text-retro-charcoal leading-relaxed mt-2.5">
-                  Engage your speakers to compile the live ambient synthesized audio generator.
-                  Utilizes fine-tuned frequency loops to render a retro lo-fi jazz chord sequence on-the-fly.
-                  No external server transmission required.
-                </p>
-              </div>
-              <div className="border-t border-retro-gray pt-3.5 mt-4 font-mono text-[9px] text-retro-gray uppercase">
-                * WARNING: Adjust your pitch/tempo slide dial smoothly to calibrate sound rhythms.
-              </div>
-            </div>
-
-            {/* Turntable audio component */}
-            <div className="lg:col-span-7">
-              <AudioPlayer
-                melodyConfig={data.aestheticSettings.vinylMelody}
-                playlist={data.aestheticSettings.vinylPlaylist}
-                vintageMode={vintageMode}
-              />
-            </div>
-          </div>
+          <AudioPlayer
+            melodyConfig={data.aestheticSettings.vinylMelody}
+            playlist={data.aestheticSettings.vinylPlaylist}
+            vintageMode={vintageMode}
+          />
         </section>
 
         {/* 4. Experience History ledger */}

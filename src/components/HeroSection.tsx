@@ -70,11 +70,11 @@ export default function HeroSection({
           <div>PRICE: 10 CENTS</div>
         </div>
 
-        {/* News Layout Grid: Main Headline Column & Graphic Clip Column */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6">
+        {/* News Layout Grid: Main Headline Column (Full Width) */}
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 pt-6">
           
-          {/* Main Editorial Text (Left/Middle Column - Span 8) */}
-          <div className="lg:col-span-8 flex flex-col justify-between border-b lg:border-b-0 lg:border-r-2 border-retro-black pb-8 lg:pb-0 lg:pr-8">
+          {/* Main Editorial Text (Full Width Span) */}
+          <div className="flex flex-col justify-between border-b lg:border-b-0 border-retro-black pb-8 lg:pb-0">
             <div className="space-y-4">
               <div className="border-b border-dashed border-retro-gray pb-2">
                 <span className="bg-retro-yellow text-retro-black font-mono text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase mr-2.5 inline-block">
@@ -91,16 +91,32 @@ export default function HeroSection({
                 {/* Left side within Editorial: Profile picture section */}
                 <div className="md:col-span-4 flex flex-col">
                   {/* Aspect ratio frame with vintage grayscale/sepia filter support */}
-                  <div className="aspect-[4/5] bg-retro-yellow/10 border-4 border-retro-black mb-3 relative flex flex-col items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] group rounded-xs">
+                  <div className="aspect-[4/5] bg-retro-yellow/10 border-4 border-retro-black mb-3 relative flex flex-col items-center justify-center overflow-hidden transition-all duration-500 shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] hover:shadow-[4px_4px_0px_0px_rgba(242,100,25,1)] group rounded-xs">
                     <div className="absolute inset-0 border-[6px] border-warm-cream/30 z-10 pointer-events-none"></div>
                     
                     {profile.picture ? (
-                      <img
-                        src={profile.picture}
-                        alt={profile.name}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                      <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-retro-cream-dark">
+                        <img
+                          src={profile.picture}
+                          alt={profile.name}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover grayscale sepia-[0.15] contrast-[1.25] brightness-[0.92] group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            // If the local file is not found, fallback gracefully to the classic tech schematic
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        {/* 1960s Newsprint Screen Halftone Overlay */}
+                        <div 
+                          className="absolute inset-0 pointer-events-none opacity-[0.22] mix-blend-multiply bg-repeat"
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000'/%3E%3C/svg%3E")`,
+                            backgroundSize: '3px 3px'
+                          }}
+                        ></div>
+                        {/* Editorial Warm Sepia Multiply Accent */}
+                        <div className="absolute inset-0 bg-retro-orange/5 mix-blend-multiply pointer-events-none"></div>
+                      </div>
                     ) : (
                       /* Classic modular vector schematic of mid-century technical operator */
                       <div className="w-full h-full flex flex-col items-center justify-center bg-retro-cream-dark p-3.5 relative select-none">
@@ -147,12 +163,12 @@ export default function HeroSection({
 
                 {/* Right side within Editorial: Main dropcap narrative & paragraphs */}
                 <div className="md:col-span-8 space-y-4">
-                  {/* Bold First Paragraph drop cap */}
+                  {/* Bold first paragraph with dynamic drop cap */}
                   <p className="font-serif text-retro-black text-base md:text-lg font-medium leading-relaxed italic relative">
-                    <span className="float-left text-4xl font-extrabold text-retro-orange mr-2 sm:mr-3 mt-1 font-serif border-4 border-retro-black px-1.5 pb-0.5 bg-retro-cream-dark shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
-                      M
+                    <span className="float-left text-4xl font-extrabold text-retro-orange mr-2 sm:mr-3 mt-1 font-serif border-4 border-retro-black px-1.5 pb-0.5 bg-retro-cream-dark shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
+                      {profile.retroNarrative[0]?.charAt(0)}
                     </span>
-                    {profile.retroNarrative[0]}
+                    {profile.retroNarrative[0]?.slice(1)}
                   </p>
 
                   <p className="text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed select-all">
@@ -201,73 +217,6 @@ export default function HeroSection({
                 <span>Dispatch Cable (Email)</span>
               </a>
             </div>
-          </div>
-
-          {/* Graphic Clip & Patent Blueprint Art (Right Column - Span 4) */}
-          <div className="lg:col-span-4 flex flex-col justify-between gap-6">
-            
-            {/* The CSS Art Patent Drawing Graphic */}
-            <div className="border-2 border-retro-black p-4 bg-retro-cream-dark rounded relative flex flex-col items-center justify-center shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] overflow-hidden">
-              <div className="absolute top-1.5 left-2 font-mono text-[8px] uppercase tracking-wider text-retro-gray">
-                PATENT APPARATUS PLOT NO. 941
-              </div>
-
-              {/* Minimal SVG Graphic representing mid-century space age calculation / transistor circles */}
-              <div className="w-full h-44 my-4 relative flex items-center justify-center">
-                {/* Mathematical grid */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(30,28,26,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(30,28,26,0.15)_1px,transparent_1px)] [background-size:20px_20px] rounded-sm"></div>
-                
-                {/* Concentric space-age circles */}
-                <div className="w-32 h-32 rounded-full border border-retro-orange absolute flex items-center justify-center animate-pulse">
-                  <div className="w-24 h-24 rounded-full border border-dashed border-retro-green flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-full border-2 border-retro-black border-opacity-80 flex items-center justify-center bg-warm-cream">
-                      {/* Stylized transistor core */}
-                      <div className="w-6 h-6 bg-retro-yellow rotate-45 border border-retro-black flex items-center justify-center">
-                        <div className="w-2 h-2 bg-retro-orange rounded-full"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Vertical and horizontal axes lines */}
-                <div className="absolute w-[90%] h-[1px] bg-retro-black bg-opacity-35"></div>
-                <div className="absolute h-[90%] w-[1px] bg-retro-black bg-opacity-35"></div>
-
-                {/* Little blueprint calculation numbers */}
-                <span className="absolute bottom-1 right-2 font-mono text-[8px] text-retro-gray">R_0 = 1.618</span>
-                <span className="absolute top-1 right-2 font-mono text-[8px] text-retro-orange font-bold">ALPHA COMPILER</span>
-                <span className="absolute top-12 left-4 font-mono text-[8px] text-retro-gray">theta = 60&deg;</span>
-              </div>
-
-              <div className="border-t border-retro-black w-full pt-2 flex flex-col items-center text-center">
-                <span className="font-serif font-bold text-xs uppercase text-retro-black">
-                  ELECTRO-CYBERNETIC SCHEMATIC
-                </span>
-                <span className="font-mono text-[9px] text-retro-gray uppercase block mt-0.5">
-                  Hand-crafted standard grid calibration
-                </span>
-              </div>
-            </div>
-
-            {/* Vintage Advertising Slogan block */}
-            <div className="border-4 border-double border-retro-black p-4 bg-retro-yellow bg-opacity-20 rounded text-center relative shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] select-none">
-              <span className="absolute top-1.5 right-1.5 font-mono text-[8px] uppercase tracking-wide text-retro-orange font-bold animate-pulse">
-                • RETRO REVOLUTION
-              </span>
-              <FileBadge className="mx-auto text-retro-yellow mb-1" size={24} />
-              
-              <h3 className="font-serif text-xl font-black text-retro-black leading-tight uppercase">
-                GUARANTEED SECURE
-              </h3>
-              <p className="font-mono text-[10px] text-retro-charcoal uppercase tracking-wider mx-auto max-w-[200px] mt-1 leading-normal font-bold">
-                Certified TypeScript Integrity. Fully Responsive under high pressure. No vacuum tubes required!
-              </p>
-              
-              <div className="border-t border-retro-black mt-3 pt-1.5 font-mono text-[8px] text-retro-gray">
-                CLASS OF '62 DRAFTING BUREAU • USA APPARATUS
-              </div>
-            </div>
-
           </div>
 
         </div>

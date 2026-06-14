@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { Play, Square, Music, Volume2, VolumeX, Radio, Disc, ChevronRight, ChevronLeft } from "lucide-react";
+import { Play, Square, Music, Volume2, VolumeX, Radio, Disc, ChevronRight, ChevronLeft, Link, Plus, Upload } from "lucide-react";
 import { VinylMelody } from "../types";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -15,14 +15,33 @@ interface AudioPlayerProps {
 }
 
 export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }: AudioPlayerProps) {
-  // Combine custom playlist or default to melodyConfig if empty
-  const tracks = playlist && playlist.length > 0 ? playlist : [melodyConfig];
+  // Combine custom playlist or default to melodyConfig if empty and declare in state
+  const [tracks, setTracks] = useState<(VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File })[]>(() => {
+    return playlist && playlist.length > 0 ? playlist : [melodyConfig];
+  });
   
-  const [activeSong, setActiveSong] = useState<VinylMelody>(tracks[0]);
+  const [activeSong, setActiveSong] = useState<VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File }>(tracks[0]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [tempo, setTempo] = useState(activeSong.bpm);
+  const [tempo, setTempo] = useState(activeSong.bpm || 100);
   const [isSynthesizedOk, setIsSynthesizedOk] = useState(false);
+  const [activeTab, setActiveTab] = useState<"synth" | "spotify">("synth");
+  const [inputUrl, setInputUrl] = useState<string>("https://open.spotify.com/user/rzkllh?si=b067355aa69d430a");
+  const [spotifyUrl, setSpotifyUrl] = useState<string>("https://open.spotify.com/user/rzkllh?si=b067355aa69d430a");
+
+  // Custom track generator state variables
+  const [newTitle, setNewTitle] = useState("");
+  const [newType, setNewType] = useState<"synth" | "spotify" | "mp3">("mp3");
+  const [newSpotifyUrl, setNewSpotifyUrl] = useState("");
+  const [newBpm, setNewBpm] = useState(100);
+  const [newVibe, setNewVibe] = useState<"warm" | "space" | "coffee" | "neon">("warm");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [formError, setFormError] = useState("");
+  const [formSuccess, setFormSuccess] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // Drag and drop states
+  const [isDragging, setIsDragging] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const crackleIntervalRef = useRef<number | null>(null);
@@ -30,10 +49,18 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
   const synthNodesLocal = useRef<AudioNode[]>([]);
   const masterGainRef = useRef<GainNode | null>(null);
 
+  const localAudioRef = useRef<HTMLAudioElement | null>(null);
+  const mediaElementSourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+
   // Stop music on unmount
   useEffect(() => {
     return () => {
       stopSynthesizer();
+      if (localAudioRef.current) {
+        localAudioRef.current.pause();
+        localAudioRef.current.src = "";
+        localAudioRef.current = null;
+      }
     };
   }, []);
 
@@ -47,7 +74,7 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     }
   };
 
-  const playSynthesizer = async (trackOverride?: VinylMelody, tempoOverride?: number) => {
+  const playSynthesizer = async (trackOverride?: VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File }, tempoOverride?: number) => {
     initAudio();
     const ctx = audioCtxRef.current;
     if (!ctx) return;
@@ -87,7 +114,7 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
 
       const noiseGain = ctx.createGain();
       // random crackle volumes
-      const vol = Math.random() * 0.03 + 0.01;
+      const vol = Math.random() * 0.04 + 0.012;
       noiseGain.gain.setValueAtTime(vol, ctx.currentTime);
       noiseGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
 
@@ -104,70 +131,96 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
       if (Math.random() > 0.4) {
         crackleGenerator();
       }
-    }, 250);
+    }, 240);
 
-    // Create 2: Soft Retro Jazz Electric Chords or custom track chords definitions
-    const chords = currentTrack.chords || [
-      [174.61, 220.00, 261.63, 329.63], // Fmaj7
-      [146.83, 174.61, 220.00, 261.63], // Dm7
-      [196.00, 233.08, 293.66, 349.23], // Gm7
-      [130.81, 164.81, 196.00, 233.08]  // C7
-    ];
+    // Play MP3 audio signal
+    if (currentTrack.audioUrl) {
+      if (!localAudioRef.current) {
+        const audio = new Audio();
+        audio.crossOrigin = "anonymous";
+        audio.loop = true;
+        localAudioRef.current = audio;
+      }
+      const audio = localAudioRef.current;
+      audio.src = currentTrack.audioUrl;
 
-    let chordIndex = 0;
-    const playChordNote = (freq: number, duration: number) => {
-      const osc = ctx.createOscillator();
-      const nodeGain = ctx.createGain();
-      const lowpass = ctx.createBiquadFilter();
+      if (!mediaElementSourceRef.current) {
+        mediaElementSourceRef.current = ctx.createMediaElementSource(audio);
+      }
+      mediaElementSourceRef.current.disconnect();
+      mediaElementSourceRef.current.connect(masterGain);
 
-      osc.type = "triangle";
-      osc.frequency.value = freq;
+      // set speed matching activeSong.bpm settings
+      const speed = currentTempo / 100;
+      audio.playbackRate = Math.min(Math.max(speed, 0.45), 2.2);
 
-      lowpass.type = "lowpass";
-      lowpass.frequency.value = 450; // Muffly warm old tone
-
-      nodeGain.gain.setValueAtTime(0, ctx.currentTime);
-      nodeGain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.15); // gentle attack
-      nodeGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration - 0.15); // slow release
-
-      osc.connect(lowpass);
-      lowpass.connect(nodeGain);
-      nodeGain.connect(masterGain);
-
-      osc.start();
-      osc.stop(ctx.currentTime + duration);
-
-      synthNodesLocal.current.push(osc);
-    };
-
-    const beatDuration = (60 / currentTempo) * 4; // 1 chord every 4 beats
-
-    const playJazzBar = () => {
-      const notes = chords[chordIndex];
-      // Play chord notes staggered slightly (vintage human feel)
-      notes.forEach((freq, idx) => {
-        const stagger = idx * 0.04;
-        setTimeout(() => {
-          if (audioCtxRef.current && audioCtxRef.current.state === "running") {
-            playChordNote(freq, beatDuration - stagger - 0.2);
-          }
-        }, stagger * 1000);
+      audio.play().catch(e => {
+        console.warn("Local playback failed or requires gesture:", e);
       });
+    } else {
+      // Create 2: Soft Retro Jazz Electric Chords or custom track chords definitions
+      const chords = currentTrack.chords || [
+        [174.61, 220.00, 261.63, 329.63], // Fmaj7
+        [146.83, 174.61, 220.00, 261.63], // Dm7
+        [196.00, 233.08, 293.66, 349.23], // Gm7
+        [130.81, 164.81, 196.00, 233.08]  // C7
+      ];
 
-      // Play soft warm bass note on root
-      const bassFreq = notes[0] / 2;
-      playChordNote(bassFreq, beatDuration - 0.1);
+      let chordIndex = 0;
+      const playChordNote = (freq: number, duration: number) => {
+        const osc = ctx.createOscillator();
+        const nodeGain = ctx.createGain();
+        const lowpass = ctx.createBiquadFilter();
 
-      chordIndex = (chordIndex + 1) % chords.length;
-    };
+        osc.type = "triangle";
+        osc.frequency.value = freq;
 
-    // Play first immediate bar
-    playJazzBar();
+        lowpass.type = "lowpass";
+        lowpass.frequency.value = 450; // Muffly warm old tone
 
-    // Loop progressions
-    musicIntervalRef.current = window.setInterval(() => {
+        nodeGain.gain.setValueAtTime(0, ctx.currentTime);
+        nodeGain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.15); // gentle attack
+        nodeGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration - 0.15); // slow release
+
+        osc.connect(lowpass);
+        lowpass.connect(nodeGain);
+        nodeGain.connect(masterGain);
+
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+
+        synthNodesLocal.current.push(osc);
+      };
+
+      const beatDuration = (60 / currentTempo) * 4; // 1 chord every 4 beats
+
+      const playJazzBar = () => {
+        const notes = chords[chordIndex];
+        // Play chord notes staggered slightly (vintage human feel)
+        notes.forEach((freq, idx) => {
+          const stagger = idx * 0.04;
+          setTimeout(() => {
+            if (audioCtxRef.current && audioCtxRef.current.state === "running") {
+              playChordNote(freq, beatDuration - stagger - 0.2);
+            }
+          }, stagger * 1000);
+        });
+
+        // Play soft warm bass note on root
+        const bassFreq = notes[0] / 2;
+        playChordNote(bassFreq, beatDuration - 0.1);
+
+        chordIndex = (chordIndex + 1) % chords.length;
+      };
+
+      // Play first immediate bar
       playJazzBar();
-    }, beatDuration * 1000);
+
+      // Loop progressions
+      musicIntervalRef.current = window.setInterval(() => {
+        playJazzBar();
+      }, beatDuration * 1000);
+    }
 
     setIsPlaying(true);
   };
@@ -181,6 +234,11 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     if (musicIntervalRef.current) {
       clearInterval(musicIntervalRef.current);
       musicIntervalRef.current = null;
+    }
+
+    // Stop HTML5 Audio Element playback
+    if (localAudioRef.current) {
+      localAudioRef.current.pause();
     }
 
     // Stop active audio nodes
@@ -219,15 +277,22 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     }
   };
 
-  const selectTrack = (track: VinylMelody) => {
+  const selectTrack = (track: VinylMelody & { spotifyUrl?: string; audioUrl?: string; audioFile?: File }) => {
     const wasPlaying = isPlaying;
     stopSynthesizer();
     setActiveSong(track);
-    setTempo(track.bpm);
-    if (wasPlaying) {
-      setTimeout(() => {
-        playSynthesizer(track, track.bpm);
-      }, 120);
+    setTempo(track.bpm || 100);
+    if (track.spotifyUrl) {
+      setSpotifyUrl(track.spotifyUrl);
+      setInputUrl(track.spotifyUrl);
+      setActiveTab("spotify");
+    } else {
+      setActiveTab("synth");
+      if (wasPlaying) {
+        setTimeout(() => {
+          playSynthesizer(track, track.bpm || 100);
+        }, 120);
+      }
     }
   };
 
@@ -243,159 +308,698 @@ export default function AudioPlayer({ melodyConfig, playlist = [], vintageMode }
     selectTrack(tracks[nextIndex]);
   };
 
+  const getSpotifyEmbedUrl = (rawUrl: string) => {
+    if (!rawUrl) return "";
+    try {
+      const url = new URL(rawUrl.trim());
+      if (url.hostname === "open.spotify.com" || url.hostname.endsWith(".spotify.com")) {
+        let pathname = url.pathname;
+        if (!pathname.startsWith("/embed")) {
+          pathname = `/embed${pathname}`;
+        }
+        return `https://open.spotify.com${pathname}${url.search}`;
+      }
+    } catch {
+      // Return empty or default
+    }
+    return "";
+  };
+
+  const handleLoadSpotify = () => {
+    if (inputUrl.trim()) {
+      setSpotifyUrl(inputUrl.trim());
+    }
+  };
+
+  const isTrack = spotifyUrl.includes("/track/");
+  const iframeHeight = isTrack ? 152 : 352;
+  const embedUrl = getSpotifyEmbedUrl(spotifyUrl);
+
   return (
-    <div id="retro-turntable-panel" className="bg-retro-cream-dark border-4 border-retro-black p-4 md:p-6 rounded-lg shadow-[6px_6px_0px_0px_rgba(30,28,26,1)] flex flex-col md:flex-row items-center gap-6 relative overflow-hidden transition-all duration-300">
+    <div 
+      id="retro-turntable-panel" 
+      className="bg-retro-cream-dark border-4 border-retro-black p-4 md:p-6 rounded-lg shadow-[6px_6px_0px_0px_rgba(30,28,26,1)] flex flex-col relative overflow-hidden transition-all duration-300"
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
+      onDragLeave={(e) => {
+        e.preventDefault();
+        setIsDragging(false);
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const file = e.dataTransfer.files[0];
+          if (file.type.startsWith("audio/") || file.name.endsWith(".mp3") || file.name.endsWith(".wav") || file.name.endsWith(".m4a")) {
+            const url = URL.createObjectURL(file);
+            const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+            const newTrack = {
+              title: nameWithoutExt,
+              genre: "Dropped Stereo Signal",
+              bpm: 100,
+              audioUrl: url,
+              audioFile: file
+            };
+            setTracks(prev => [...prev, newTrack]);
+            setTimeout(() => {
+              selectTrack(newTrack);
+              setTimeout(() => {
+                playSynthesizer(newTrack, 100);
+              }, 100);
+            }, 120);
+          }
+        }
+      }}
+    >
       
+      {/* Drag & Drop Visual Overlay */}
+      <AnimatePresence>
+        {isDragging && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-retro-orange/95 border-4 border-dashed border-retro-black z-50 flex flex-col items-center justify-center text-warm-cream p-4 text-center cursor-copy select-none"
+          >
+            <div className="animate-bounce mb-3">
+              <Disc size={44} className="text-warm-cream" />
+            </div>
+            <span className="font-serif font-black text-lg uppercase tracking-tight">DROP MP3 TO PRESS VINYL DISC!</span>
+            <span className="font-mono text-[10px] mt-1.5 max-w-sm opacity-95 block leading-relaxed">
+              Your MP3 is processed entirely locally inside your browser interface. No network transfers are dispatched!
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Newspaper headline style badge */}
-      <span className="absolute top-1 right-2 font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-retro-gray select-none">
-        AMPLIFIED TRANSISTOR REPLAY SERVICE NO. 9
+      <span className="absolute top-1.5 right-3 font-mono text-[8px] sm:text-[9px] uppercase tracking-wider text-retro-gray select-none">
+        AMPLIFIED TRANSISTOR REPLAY SERVICE NO. 12
       </span>
 
-      {/* LEFT SECTION: Active Record & Player Controls */}
-      <div className="flex-1 flex flex-col md:flex-row items-center gap-6">
-        
-        {/* Record Graphic */}
-        <div className="relative w-32 h-32 md:w-36 md:h-36 flex-shrink-0 flex items-center justify-center">
-          {/* Vinyl Disc shadow boundary */}
-          <div 
-            className={`absolute inset-0 bg-gradient-to-br from-[#121111] via-[#1a1919] to-[#252323] rounded-full border-4 border-retro-black shadow-md flex items-center justify-center cursor-pointer transition-transform duration-1000 ${
-              isPlaying ? "animate-spin" : ""
-            }`}
-            style={{ animationDuration: "3.5s" }}
-            onClick={handleTogglePlay}
-          >
-            {/* Vinyl grooves */}
-            <div className="absolute w-[85%] h-[85%] rounded-full border border-retro-charcoal border-opacity-40"></div>
-            <div className="absolute w-[70%] h-[70%] rounded-full border border-retro-charcoal border-opacity-30"></div>
-            <div className="absolute w-[50%] h-[50%] rounded-full border border-retro-charcoal border-opacity-50"></div>
-            
-            {/* Inner label paper colored retro yellow / orange */}
-            <div className="absolute w-[36%] h-[36%] bg-retro-orange text-warm-cream border-2 border-retro-black rounded-full flex flex-col items-center justify-center select-none text-center p-1 font-sans">
-              <span className="text-[6px] uppercase font-black tracking-tight leading-none text-warm-cream">
-                60s MONO
-              </span>
-              {/* Tiny turntable hole */}
-              <div className="w-2.5 h-2.5 bg-retro-cream-dark border border-retro-black rounded-full mt-0.5"></div>
-            </div>
-          </div>
-
-          {/* Tonearm Selector needle */}
-          <div 
-            className={`absolute top-0 right-4 w-12 h-16 origin-top-right transition-transform duration-700 pointer-events-none z-10 ${
-              isPlaying ? "rotate-20" : "-rotate-12"
-            }`}
-          >
-            {/* Needle Arm */}
-            <div className="absolute top-0 right-0 w-1.5 h-16 bg-retro-gray border border-retro-black rounded-full transform -skew-x-6"></div>
-            {/* Needle head cartridge */}
-            <div className="absolute bottom-0 -left-1 w-3.5 h-5 bg-retro-yellow border border-retro-black rounded"></div>
-          </div>
+      {/* TABS HEADER FOR MODE SELECTION */}
+      <div className="flex flex-col sm:flex-row border-b-2 border-retro-black pb-3 mb-4 justify-between items-center text-xs font-mono font-bold uppercase select-none w-full gap-2">
+        <div className="flex items-center gap-1.5 text-retro-black font-extrabold">
+          <Music size={14} className="text-retro-orange shrink-0 animate-pulse" />
+          <span>RECEIVER STATION INTERFACE</span>
         </div>
+        <div className="flex gap-2 shrink-0">
+          <button
+            onClick={() => {
+              setActiveTab("synth");
+            }}
+            className={`px-2.5 py-1 border-2 border-retro-black text-[10px] font-bold tracking-tight uppercase flex items-center gap-1 rounded cursor-pointer transition-all ${
+              activeTab === "synth"
+                ? "bg-retro-black text-warm-cream"
+                : "bg-warm-cream hover:bg-retro-yellow text-retro-black"
+            }`}
+          >
+            ● ANALOG SYNTH
+          </button>
+          <button
+            onClick={() => {
+              stopSynthesizer();
+              setActiveTab("spotify");
+            }}
+            className={`px-2.5 py-1 border-2 border-retro-black text-[10px] font-bold tracking-tight uppercase flex items-center gap-1 rounded cursor-pointer transition-all ${
+              activeTab === "spotify"
+                ? "bg-retro-black text-warm-cream"
+                : "bg-warm-cream hover:bg-retro-yellow text-retro-black"
+            }`}
+          >
+            ● SPOTIFY BROADCAST
+          </button>
+        </div>
+      </div>
 
-        {/* Control Mechanics */}
-        <div className="flex-1 w-full space-y-3.5">
-          {/* Playlist metadata cards */}
-          <div className="bg-warm-cream border-2 border-retro-black p-3.5 rounded shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-2 h-full bg-retro-orange bg-opacity-20"></div>
-            
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 font-serif text-[10px] text-retro-orange font-black uppercase tracking-wide">
-                <Radio size={12} className="text-retro-orange animate-pulse" />
-                Now Broadcasting Record ({currentIndex + 1}/{tracks.length})
+      <AnimatePresence mode="wait">
+        {activeTab === "synth" ? (
+          <motion.div
+            key="synth"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.15 }}
+            className="flex flex-col gap-4"
+          >
+            {/* CONTROLS AREA */}
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              {/* Record Graphic */}
+              <div className="relative w-32 h-32 md:w-36 md:h-36 flex-shrink-0 flex items-center justify-center">
+                {/* Vinyl Disc shadow boundary */}
+                <div 
+                  className={`absolute inset-0 bg-gradient-to-br from-[#121111] via-[#1a1919] to-[#252323] rounded-full border-4 border-retro-black shadow-md flex items-center justify-center cursor-pointer transition-transform duration-1000 ${
+                    isPlaying ? "animate-spin" : ""
+                  }`}
+                  style={{ animationDuration: "3.5s" }}
+                  onClick={handleTogglePlay}
+                >
+                  {/* Vinyl grooves */}
+                  <div className="absolute w-[85%] h-[85%] rounded-full border border-retro-charcoal border-opacity-40"></div>
+                  <div className="absolute w-[70%] h-[70%] rounded-full border border-retro-charcoal border-opacity-30"></div>
+                  <div className="absolute w-[50%] h-[50%] rounded-full border border-retro-charcoal border-opacity-50"></div>
+                  
+                  {/* Inner label paper colored retro yellow / orange */}
+                  <div className="absolute w-[36%] h-[36%] bg-retro-orange text-warm-cream border-2 border-retro-black rounded-full flex flex-col items-center justify-center select-none text-center p-1 font-sans">
+                    <span className="text-[6.5px] uppercase font-black tracking-tight leading-none text-warm-cream">
+                      {isPlaying ? "SPINNING" : "MONO"}
+                    </span>
+                    {/* Tiny turntable hole */}
+                    <div className="w-2 h-2 bg-retro-cream-dark border border-retro-black rounded-full mt-0.5"></div>
+                  </div>
+                </div>
+
+                {/* Tonearm Selector needle */}
+                <div 
+                  className={`absolute top-0 right-4 w-12 h-16 origin-top-right transition-transform duration-700 pointer-events-none z-10 ${
+                    isPlaying ? "rotate-20" : "-rotate-12"
+                  }`}
+                >
+                  {/* Needle Arm */}
+                  <div className="absolute top-0 right-0 w-1.5 h-16 bg-retro-gray border border-retro-black rounded-full transform -skew-x-6"></div>
+                  {/* Needle head cartridge */}
+                  <div className="absolute bottom-0 -left-1 w-3.5 h-5 bg-retro-yellow border border-retro-black rounded"></div>
+                </div>
               </div>
-              <span className="font-mono text-[8px] text-retro-gray uppercase font-bold tracking-wider">
-                {activeSong.genre}
+
+              {/* Control Mechanics */}
+              <div className="flex-1 w-full space-y-3">
+                {/* Playlist metadata cards */}
+                <div className="bg-warm-cream border-2 border-retro-black p-3 rounded shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] transition-all duration-300 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-2 h-full bg-retro-orange bg-opacity-20"></div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 font-serif text-[9px] text-retro-orange font-black uppercase tracking-wide">
+                      <Radio size={11} className="text-retro-orange animate-pulse" />
+                      Now Playing Record ({currentIndex + 1}/{tracks.length})
+                    </div>
+                    <span className="font-mono text-[8px] text-retro-gray uppercase font-bold tracking-wider">
+                      {activeSong.genre}
+                    </span>
+                  </div>
+                  
+                  <h4 className="font-serif font-black text-retro-black text-base uppercase leading-tight mt-1 truncate">
+                    {activeSong.title}
+                  </h4>
+                  
+                  <p className="font-mono text-[9px] text-retro-gray uppercase truncate mt-0.5">
+                    {activeSong.audioUrl 
+                      ? `Playback Pitch: ${tempo}% • Signal: Stereo Audio` 
+                      : `Transistor Speed: ${tempo} BPM • Waveform: Triangle`}
+                  </p>
+                </div>
+
+                {/* Button deck */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* PREVIOUS TRACK BUTTON */}
+                  <button
+                    onClick={playPrevious}
+                    className="p-1.5 border-2 border-retro-black bg-warm-cream hover:bg-retro-cream-dark text-retro-black rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] cursor-pointer flex items-center justify-center relative z-25"
+                    title="Previous Track"
+                  >
+                    <ChevronLeft size={16} strokeWidth={2.5} />
+                  </button>
+
+                  {/* PLAY BUTTON */}
+                  <button
+                    onClick={handleTogglePlay}
+                    id="retro-play-btn"
+                    className={`px-3 py-1.5 border-2 border-retro-black font-display font-medium text-xs uppercase flex items-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px_rgba(30,28,26,1)] transition-all cursor-pointer relative z-25 ${
+                      isPlaying
+                        ? "bg-retro-orange text-warm-cream hover:bg-retro-orange-dark"
+                        : "bg-retro-yellow text-retro-black hover:bg-opacity-90"
+                    }`}
+                  >
+                    {isPlaying ? (
+                      <>
+                        <Square size={10} fill="currentColor" />
+                        <span>Stop Disc</span>
+                      </>
+                    ) : (
+                      <>
+                        <Play size={10} fill="currentColor" />
+                        <span>Spin Vinyl</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* NEXT TRACK BUTTON */}
+                  <button
+                    onClick={playNext}
+                    className="p-1.5 border-2 border-retro-black bg-warm-cream hover:bg-retro-cream-dark text-retro-black rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] cursor-pointer flex items-center justify-center relative z-25"
+                    title="Next Track"
+                  >
+                    <ChevronRight size={16} strokeWidth={2.5} />
+                  </button>
+
+                  {/* MUTE BUTTON */}
+                  <button
+                    onClick={handleToggleMute}
+                    id="retro-mute-btn"
+                    className="p-1.5 border-2 border-retro-black bg-warm-cream hover:bg-retro-cream-dark text-retro-black rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] cursor-pointer relative z-25"
+                    title={isMuted ? "Unmute Beats" : "Mute Sound"}
+                  >
+                    {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                  </button>
+
+                  {/* Tempo / Pitch slider */}
+                  <div className="flex-grow min-w-[90px] flex items-center gap-1.5 px-2 py-0.5 bg-retro-cream-dark border border-retro-black bg-opacity-20 rounded relative z-25">
+                    <span className="font-mono text-[8px] text-retro-charcoal uppercase select-none">Pitch</span>
+                    <input
+                      type="range"
+                      min="60"
+                      max="140"
+                      value={tempo}
+                      onChange={(e) => {
+                        const val = Number(e.target.value);
+                        setTempo(val);
+                        if (isPlaying) {
+                          if (activeSong.audioUrl) {
+                            if (localAudioRef.current) {
+                              localAudioRef.current.playbackRate = val / 100;
+                            }
+                          } else {
+                            stopSynthesizer();
+                            setTimeout(() => playSynthesizer(activeSong, val), 80);
+                          }
+                        }
+                      }}
+                      className="w-full h-1 bg-retro-black rounded appearance-none cursor-ew-resize opacity-80"
+                    />
+                    <span className="font-mono text-[8px] text-retro-charcoal font-bold w-4 text-right">{tempo}</span>
+                  </div>
+                </div>
+                
+                <div className="text-[8px] font-mono text-retro-gray italic leading-none">
+                  * Dynamic real-time browser-native Web Audio synthesizer. No network buffers required.
+                </div>
+              </div>
+            </div>
+
+          </motion.div>
+        ) : (
+          <motion.div
+            key="spotify"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.15 }}
+            className="flex flex-col gap-4"
+          >
+            {/* Spotify Info Descriptor */}
+            <div className="bg-warm-cream border-2 border-retro-black p-3.5 rounded shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] select-none">
+              <span className="font-mono text-[8px] text-retro-orange font-bold uppercase tracking-widest block">
+                INTEGRATED INTERCEPTOR CHANNEL
               </span>
+              <h4 className="font-serif font-extrabold text-sm uppercase text-retro-black mt-0.5">
+                SPOTIFY ELECTROMAGNETIC RECEIVER
+              </h4>
+              <p className="font-sans text-[10.5px] text-retro-charcoal leading-relaxed mt-1.5">
+                Paste any live Spotify track, playlist, user, or album link in the cockpit below. The tuner intercepts the URL structure to assemble a safe embed frame. Prefilled with <strong>Rafely's profile</strong>!
+              </p>
+
+              {/* Dynamic URL Inputs */}
+              <div className="flex flex-col sm:flex-row gap-2 mt-4 items-stretch">
+                <div className="flex-1 flex items-center bg-retro-cream-dark border-2 border-retro-black px-3 py-1.5 rounded relative">
+                  <span className="font-mono text-[9px] text-retro-orange uppercase font-bold shrink-0 mr-2 border-r border-retro-gray/30 pr-2 select-none flex items-center gap-1">
+                    <Link size={10} />
+                    FEED LINK:
+                  </span>
+                  <input
+                    type="text"
+                    value={inputUrl}
+                    onChange={(e) => setInputUrl(e.target.value)}
+                    placeholder="Enter Spotify open url (e.g. track, playlist)..."
+                    className="w-full bg-transparent focus:outline-none text-[11px] font-mono text-retro-black placeholder-retro-gray/45"
+                  />
+                </div>
+                <button
+                  onClick={handleLoadSpotify}
+                  className="px-4 py-2 border-2 border-retro-black bg-retro-orange hover:bg-retro-orange-dark text-warm-cream font-mono font-bold text-[10px] uppercase flex items-center justify-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] transition-colors cursor-pointer shrink-0"
+                >
+                  <span>CONNECT SIGNAL</span>
+                </button>
+              </div>
             </div>
-            
-            <h4 className="font-serif font-black text-retro-black text-base uppercase leading-tight mt-1 truncate">
-              {activeSong.title}
-            </h4>
-            
-            <p className="font-mono text-[9px] text-retro-gray uppercase truncate mt-1">
-              Transistor Speed: {tempo} BPM • Waveform: Triangle
-            </p>
-          </div>
 
-          {/* Button deck */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* PREVIOUS TRACK BUTTON */}
-            <button
-              onClick={playPrevious}
-              className="p-2 border-2 border-retro-black bg-warm-cream hover:bg-retro-cream-dark text-retro-black rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] cursor-pointer flex items-center justify-center"
-              title="Previous Track"
-            >
-              <ChevronLeft size={16} strokeWidth={2.5} />
-            </button>
+            {/* Embedded Spotify Audio Frame Player */}
+            {embedUrl ? (
+              <div className="border-4 border-retro-black shadow-[4px_4px_0px_0px_rgba(30,28,26,1)] rounded overflow-hidden bg-retro-black w-full transition-all duration-300">
+                <iframe
+                  src={embedUrl}
+                  width="100%"
+                  height={iframeHeight}
+                  frameBorder="0"
+                  allowFullScreen={true}
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  title="Integrated Spotify Streamer"
+                  className="bg-retro-black block"
+                ></iframe>
+              </div>
+            ) : (
+              <div className="border-2 border-dashed border-retro-orange p-8 text-center text-xs font-mono text-retro-orange rounded bg-warm-cream">
+                * PLEASE CONFIGURE A VALID OPEN.SPOTIFY.COM SIGNAL EMBED
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* PLAY BUTTON */}
-            <button
-              onClick={handleTogglePlay}
-              id="retro-play-btn"
-              className={`px-3 py-2 border-2 border-retro-black font-display font-medium text-xs uppercase flex items-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_0px_rgba(30,28,26,1)] transition-all cursor-pointer ${
-                isPlaying
-                  ? "bg-retro-orange text-warm-cream hover:bg-retro-orange-dark"
-                  : "bg-retro-yellow text-retro-black hover:bg-opacity-90"
-              }`}
-            >
-              {isPlaying ? (
-                <>
-                  <Square size={12} fill="currentColor" />
-                  Stop Disc
-                </>
-              ) : (
-                <>
-                  <Play size={12} fill="currentColor" />
-                  Spin Vinyl
-                </>
-              )}
-            </button>
-
-            {/* NEXT TRACK BUTTON */}
-            <button
-              onClick={playNext}
-              className="p-2 border-2 border-retro-black bg-warm-cream hover:bg-retro-cream-dark text-retro-black rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] cursor-pointer flex items-center justify-center"
-              title="Next Track"
-            >
-              <ChevronRight size={16} strokeWidth={2.5} />
-            </button>
-
-            {/* MUTE BUTTON */}
-            <button
-              onClick={handleToggleMute}
-              id="retro-mute-btn"
-              className="p-2 border-2 border-retro-black bg-warm-cream hover:bg-retro-cream-dark text-retro-black rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] cursor-pointer"
-              title={isMuted ? "Unmute Beats" : "Mute Sound"}
-            >
-              {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
-            </button>
-
-            {/* Tempo adjuster slider dials */}
-            <div className="flex-1 min-w-[120px] flex items-center gap-2 px-1">
-              <span className="font-mono text-[9px] text-retro-charcoal uppercase select-none">Pitch</span>
-              <input
-                type="range"
-                min="60"
-                max="140"
-                value={tempo}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  setTempo(val);
-                  if (isPlaying) {
-                    stopSynthesizer();
-                    setTimeout(() => playSynthesizer(activeSong, val), 80);
-                  }
-                }}
-                className="w-full h-1 h-accent-retro-orange bg-retro-black rounded appearance-none cursor-ew-resize bg-opacity-70"
-              />
-              <span className="font-mono text-[9px] text-retro-charcoal font-bold w-6">{tempo}</span>
-            </div>
-          </div>
-          
-          <div className="text-[9px] font-mono text-retro-gray italic leading-none">
-            * Utilizing high-precision browser oscillator telemetry. Dynamic real-time synthesizer feedback.
-          </div>
+      {/* CHIPPED VINYL PLAYLIST CATALOG (Visible on both view settings!) */}
+      <div className="border-t border-dashed border-retro-gray pt-4 mt-4 select-none">
+        <div className="flex items-center justify-between pb-1.5 mb-2 font-serif text-[10px] uppercase font-bold text-retro-orange">
+          <span>[ CHIPPED VINYL PLAYLIST CATALOG ]</span>
+          <span className="font-mono text-[8px] text-retro-gray">{tracks.length} SIGNALS TUNED</span>
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {tracks.map((track, idx) => {
+            const isActive = activeSong.title === track.title;
+            const isSpotifyTrack = !!track.spotifyUrl;
+            return (
+              <button
+                key={idx}
+                onClick={() => selectTrack(track)}
+                className={`w-full text-left p-2 border rounded flex items-center justify-between text-[11px] font-mono transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? "bg-retro-yellow/30 border-retro-orange font-bold text-retro-orange shadow-[1px_1px_0px_0px_rgba(0,0,0,0.15)]"
+                    : "bg-warm-cream/40 border-retro-black/20 hover:bg-warm-cream/80"
+                }`}
+              >
+                <div className="flex items-center gap-1.5 truncate">
+                  <span className={`${isActive ? "text-retro-orange font-black" : "text-retro-gray"}`}>
+                    {isActive ? "●" : `${idx + 1}.`}
+                  </span>
+                  <span className="truncate">{track.title}</span>
+                </div>
+                <span className={`text-[8px] font-bold tracking-wider px-1.5 py-0.5 rounded select-none shrink-0 ml-1 ${
+                  isSpotifyTrack 
+                    ? "bg-green-100 text-green-800 border border-green-300"
+                    : "text-retro-gray"
+                }`}>
+                  {isSpotifyTrack ? "🟢 SPOTIFY" : `${track.bpm} BPM`}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Retro Form Drawer/Section for pressing/adding dynamic records */}
+      <div className="border-t border-dashed border-retro-gray pt-4 mt-4">
+        <div className="flex justify-between items-center">
+          <button
+            onClick={() => {
+              setIsFormOpen(!isFormOpen);
+              setFormError("");
+              setFormSuccess(false);
+            }}
+            className="flex items-center gap-1 text-[9px] font-mono uppercase font-black text-retro-orange bg-warm-cream px-2.5 py-1.5 border-2 border-retro-orange rounded hover:bg-retro-orange hover:text-warm-cream cursor-pointer transition-all active:translate-y-[1px]"
+          >
+            <Plus size={10} strokeWidth={3} />
+            <span>{isFormOpen ? "CLOSE INSTRUMENT PRESS" : "PRESS NEW RECORD / MAP SPOTIFY INTEGRATION"}</span>
+          </button>
+        </div>
+
+        {isFormOpen && (
+          <div className="bg-warm-cream border-2 border-retro-black p-3.5 rounded mt-3 space-y-3 shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] transition-all">
+            <h5 className="font-serif font-extrabold text-xs text-retro-black uppercase tracking-tight">
+              CALIBRATE CUSTOM EMISSION SIGNAL
+            </h5>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block font-mono text-[9px] text-retro-gray uppercase font-bold mb-1">
+                  EMISSION TITLE
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. My Favorite Melody"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  className="w-full bg-retro-cream-dark border border-retro-black rounded p-1.5 text-xs font-mono text-retro-black focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block font-mono text-[9px] text-retro-gray uppercase font-bold mb-1">
+                  BROADCAST SIGNAL TYPE
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewType("mp3");
+                      setFormError("");
+                    }}
+                    className={`flex-1 py-1 px-1.5 border text-[9px] font-mono font-bold rounded uppercase cursor-pointer transition-colors ${
+                      newType === "mp3"
+                        ? "bg-retro-black text-warm-cream border-retro-black"
+                        : "bg-warm-cream text-retro-black border-retro-black/30 hover:border-retro-black"
+                    }`}
+                  >
+                    💿 Local MP3
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewType("spotify");
+                      setFormError("");
+                    }}
+                    className={`flex-1 py-1 px-1.5 border text-[9px] font-mono font-bold rounded uppercase cursor-pointer transition-colors ${
+                      newType === "spotify"
+                        ? "bg-retro-black text-warm-cream border-retro-black"
+                        : "bg-warm-cream text-retro-black border-retro-black/30 hover:border-retro-black"
+                    }`}
+                  >
+                    🟢 Spotify
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewType("synth");
+                      setFormError("");
+                    }}
+                    className={`flex-1 py-1 px-1.5 border text-[9px] font-mono font-bold rounded uppercase cursor-pointer transition-colors ${
+                      newType === "synth"
+                        ? "bg-retro-black text-warm-cream border-retro-black"
+                        : "bg-warm-cream text-retro-black border-retro-black/30 hover:border-retro-black"
+                    }`}
+                  >
+                    🎹 Synth
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {newType === "mp3" ? (
+              <div className="border-2 border-dashed border-retro-orange/40 p-4 bg-retro-cream/40 rounded flex flex-col items-center justify-center text-center">
+                <Upload size={22} className="text-retro-orange mb-1.5 animate-bounce" />
+                <span className="font-serif font-black text-xs text-retro-black uppercase">CHOOSE YOUR LOCAL MP3 FILE</span>
+                <input
+                  type="file"
+                  accept="audio/mp3, audio/*"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      const file = e.target.files[0];
+                      setSelectedFile(file);
+                      if (!newTitle.trim()) {
+                        setNewTitle(file.name.replace(/\.[^/.]+$/, ""));
+                      }
+                    }
+                  }}
+                  className="mt-2 text-[10px] font-mono text-retro-charcoal border-2 border-retro-black p-1 bg-warm-cream rounded cursor-pointer w-full max-w-xs focus:outline-none"
+                />
+                {selectedFile && (
+                  <span className="text-[10px] text-green-700 font-mono font-bold mt-2">
+                    ✓ File Selected: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                  </span>
+                )}
+              </div>
+            ) : newType === "spotify" ? (
+              <div>
+                <label className="block font-mono text-[9px] text-retro-gray uppercase font-bold mb-1">
+                  SPOTIFY OPEN SIGNAL LINK
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://open.spotify.com/track/..."
+                  value={newSpotifyUrl}
+                  onChange={(e) => setNewSpotifyUrl(e.target.value)}
+                  className="w-full bg-retro-cream-dark border border-retro-black rounded p-1.5 text-xs font-mono text-retro-black focus:outline-none"
+                />
+                <span className="text-[8px] font-mono text-retro-gray mt-1 block">
+                  * Note: Insert any valid track, playlist, album, or user link from your Spotify app (Share &gt; Copy Link).
+                </span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-mono text-[9px] text-retro-gray uppercase font-bold mb-1">
+                    AMBIENT GENRE MOOD
+                  </label>
+                  <select
+                    value={newVibe}
+                    onChange={(e: any) => setNewVibe(e.target.value)}
+                    className="w-full bg-retro-cream-dark border border-retro-black rounded p-1.5 text-xs font-mono text-retro-black focus:outline-none appearance-none"
+                  >
+                    <option value="warm">Atmospheric Lounge Jazz</option>
+                    <option value="space">Space Ambient Sci-Fi</option>
+                    <option value="coffee">Late Night Coffee Jazz</option>
+                    <option value="neon">Neon Synthwave Pulse</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-mono text-[9px] text-retro-gray uppercase font-bold mb-1">
+                    TEMPO VALUE SPEED ({newBpm} BPM)
+                  </label>
+                  <input
+                    type="range"
+                    min="60"
+                    max="140"
+                    value={newBpm}
+                    onChange={(e) => setNewBpm(Number(e.target.value))}
+                    className="w-full h-1 mt-3 bg-retro-black rounded appearance-none cursor-ew-resize opacity-85"
+                  />
+                </div>
+              </div>
+            )}
+
+            {formError && (
+              <div className="text-[10px] font-mono text-red-600 font-bold bg-red-100 p-1 px-2 rounded border border-red-300">
+                ⚠️ Error: {formError}
+              </div>
+            )}
+
+            {formSuccess && (
+              <div className="text-[10px] font-mono text-green-700 font-bold bg-green-100 p-1 px-2 rounded border border-green-300">
+                🎉 Success: Emission record registered and selected!
+              </div>
+            )}
+
+            <button
+              onClick={() => {
+                setFormError("");
+                setFormSuccess(false);
+
+                if (!newTitle.trim()) {
+                  setFormError("Title is required to press the record.");
+                  return;
+                }
+
+                if (newType === "mp3") {
+                  if (!selectedFile) {
+                    setFormError("Please select an MP3/audio file to press the record.");
+                    return;
+                  }
+                  
+                  const url = URL.createObjectURL(selectedFile);
+                  const newTrackObj = {
+                    title: newTitle.trim(),
+                    genre: "Imported MP3 Signal",
+                    bpm: 100, // unit rating 
+                    audioUrl: url,
+                    audioFile: selectedFile
+                  };
+
+                  setTracks(prev => [...prev, newTrackObj]);
+                  setFormSuccess(true);
+                  // Select immediately & spin vinyl
+                  setTimeout(() => {
+                    selectTrack(newTrackObj);
+                  }, 150);
+
+                  // reset
+                  setNewTitle("");
+                  setSelectedFile(null);
+                } else if (newType === "spotify") {
+                  if (!newSpotifyUrl.trim()) {
+                    setFormError("Spotify URL is required for Spotify broadcast type.");
+                    return;
+                  }
+                  if (!newSpotifyUrl.toLowerCase().includes("spotify.com")) {
+                    setFormError("Please enter a valid open.spotify.com URL.");
+                    return;
+                  }
+
+                  const newTrackObj = {
+                    title: newTitle.trim(),
+                    genre: "Spotify Broadcast",
+                    bpm: 0,
+                    spotifyUrl: newSpotifyUrl.trim()
+                  };
+
+                  setTracks(prev => [...prev, newTrackObj]);
+                  setFormSuccess(true);
+                  // Select immediately
+                  setTimeout(() => {
+                    selectTrack(newTrackObj);
+                  }, 150);
+
+                  // reset
+                  setNewTitle("");
+                  setNewSpotifyUrl("");
+                } else {
+                  const chordOptions = {
+                    warm: [
+                      [174.61, 220.00, 261.63, 329.63], // Fmaj7
+                      [146.83, 174.61, 220.00, 261.63], // Dm7
+                      [196.00, 233.08, 293.66, 349.23], // Gm7
+                      [130.81, 164.81, 196.00, 233.08]  // C7
+                    ],
+                    space: [
+                      [130.81, 155.56, 196.00, 233.08],
+                      [103.83, 155.56, 207.65, 246.94],
+                      [174.61, 207.65, 261.63, 311.13],
+                      [98.00, 146.83, 196.00, 246.94]
+                    ],
+                    coffee: [
+                      [110.00, 164.81, 220.00, 277.18],
+                      [146.83, 220.00, 293.66, 369.99],
+                      [123.47, 146.83, 220.00, 293.66],
+                      [164.81, 246.94, 329.63, 392.00]
+                    ],
+                    neon: [
+                      [146.83, 185.00, 220.00, 293.66],
+                      [110.00, 130.81, 196.00, 246.94],
+                      [130.81, 164.81, 196.00, 261.63],
+                      [98.00, 146.83, 196.00, 246.94]
+                    ]
+                  };
+
+                  const genreLabels = {
+                    warm: "Lounge Jazz",
+                    space: "Space Ambient Sci-Fi",
+                    coffee: "Late Night Coffee Jazz",
+                    neon: "Synthwave Pulse"
+                  };
+
+                  const newTrackObj = {
+                    title: newTitle.trim(),
+                    genre: genreLabels[newVibe] || "Atmospheric Lounge",
+                    bpm: newBpm,
+                    chords: chordOptions[newVibe]
+                  };
+
+                  setTracks(prev => [...prev, newTrackObj]);
+                  setFormSuccess(true);
+                  // Select immediately & play
+                  setTimeout(() => {
+                    selectTrack(newTrackObj);
+                  }, 150);
+
+                  // reset
+                  setNewTitle("");
+                }
+              }}
+              className="w-full py-2 border-2 border-retro-black bg-retro-yellow hover:bg-opacity-95 text-retro-black font-mono font-bold text-xs uppercase flex items-center justify-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_0px_rgba(30,28,26,1)] transition-all cursor-pointer"
+            >
+              <span>PRESS & PRESS SIGNAL INTO CASSETTE RECORD</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

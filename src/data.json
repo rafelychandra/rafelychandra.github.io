@@ -1,12 +1,12 @@
 {
   "profile": {
     "name": "Rafely Chandra Rizkilillah",
-    "role": "Senior Back-end Engineer",
-    "subtitle": "Meticulous Craftsmanship in Scalable Payment Systems, High-Velocity APIs & Fintech Architecture",
+    "role": "Senior Backend Engineer",
+    "subtitle": "Architecting high-throughput payment infrastructure, single API orchestration, and core banking migrations under scale.",
     "establishmentYear": "Est. 2019",
     "location": "Jakarta, Indonesia",
     "avatarPlaceholderSeed": "retro-analyst",
-    "picture": "",
+    "picture": "/src/assets/images/photo.png",
     "retroNarrative": [
       "In an era of rapid digital transactions, Rafely operates at the precise intersection of concurrent Go code, high-throughput payment pipelines, and secure ledger telemetry. Fabricating robust digital apparatuses that handle millions of micro-finance data transmissions with absolute mathematical reliability.",
       "With over five years of documented practice in fintech payment workshops, Rafely has mastered the alignment of core financial flows. His digital workbench delivers resilient full-stack elements, safe server-side gateway relays (KrakenD, Kong), and databases engineered with high-fidelity performance.",
@@ -28,7 +28,7 @@
     ],
     "contact": {
       "email": "rafelychandra@gmail.com",
-      "phone": "(+62) 851-2130-5545",
+      "phone": "+62 851-2130-5545",
       "address": "Jakarta, Indonesia"
     }
   },
@@ -36,90 +36,115 @@
     {
       "id": "exp-1",
       "company": "Amartha Financial",
-      "role": "Senior Engineer (Payment & Wealth Platforms)",
+      "role": "Senior Backend Engineer (Payment Platform Team)",
       "period": "Jan 2023 - Present",
       "location": "Jakarta, Indonesia",
       "description": [
-        "Handle the Payment Platform Team, ensuring exceptional reliability and high scalability for all core financial transaction pathways, including disbursement, repayment, cash-in/out, remittance, and Virtual Account management.",
-        "Lead the high-priority QRIS integration project with 3 engineers under my direction, expanding the platform's monetary ecosystem with QR-based payments.",
-        "Pioneered secure integrations with major third-party payment providers (BRI, Midtrans, Digiasia, Xendit) containing resilient failed-payment retry triggers.",
-        "Built automatic e-wallet top-up pathways (GoPay, OVO, DANA, ShopeePay, LinkAja), cash-out processing, and secure order loan services."
+        "Architected and owned Single API, the central payment orchestration layer for cash-in, cash-out, QRIS, remittance, and e-wallet flows, introducing adapter-based architecture and state transition validations.",
+        "Led end-to-end QRIS Acquiring and Issuing integration with Artajasa/ASPI, delivering static/dynamic QR APIs, payment credits, refund options, Luhn validation, and retry logic.",
+        "Integrated multi-provider remittance (bank transfer money-out) with BRI, Digiasia, and FLIP with callback orchestration and scheduled status checks.",
+        "Prevented critical financial incidents by resolving Sev-0 and Sev-2 events (wallet double-hit, double responses to BRI VA, and idempotency failures)."
       ],
-      "tags": ["Go (go-echo)", "KrakenD", "Kong", "PostgreSQL", "Kafka Messenger", "GCP/GCS", "Docker & K8s"]
+      "tags": ["Go (echo)", "KrakenD", "Kafka", "Google Pub/Sub", "PostgreSQL", "Redis", "GCP", "Docker", "Kubernetes", "ArgoCD", "Unleash", "Grafana"]
     },
     {
       "id": "exp-2",
-      "company": "Amartha Micro Fintech",
-      "role": "Software Engineer (Core Money-Flow & MIS Systems)",
-      "period": "Nov 2019 - Dec 2021",
+      "company": "Amartha Financial",
+      "role": "Software Developer Engineer Sr. Analyst (Wealth Team)",
+      "period": "Sept 2021 - Dec 2022",
       "location": "Jakarta, Indonesia",
       "description": [
-        "Managed the main MIS Dashboard, overseeing all loan allocations, investor transactions, and automated installment payment ledger transactions.",
-        "Led the integration and software migration of the core banking system with vendor FDS, ensuring seamless data-flow with robust failure safety.",
-        "Rebuilt critical core money flow pathways handling automated disbursements, repayment, and partial-repayment calculations.",
-        "Redesigned the automated loan insurance claim system for PAR loans with consecutive defaults, minimizing risk profile and protecting investors."
+        "Led a 4-engineer team delivering e-wallet top-up, cash-out, and loan order services for hundreds of thousands of Amartha investors.",
+        "Integrated Xendit and Midtrans for e-wallet funding flows, enabling fast onboarding of new wallet providers with minimal platform changes.",
+        "Implemented Kafka-driven event sourcing for asynchronous loan order processing, decoupling upstream services and reducing timeout failures.",
+        "Managed priority loan partial repayment flows, ensuring correct installment allocation and accurate investor ledger updates."
       ],
-      "tags": ["Go (go-echo)", "Postgres", "MongoDB", "Kong API Gateway", "Kafka", "Docker", "GCP"]
+      "tags": ["Go (echo)", "Kong", "Google Pub/Sub", "PostgreSQL", "Redis", "MongoDB", "GCP", "Docker"]
     },
     {
       "id": "exp-3",
-      "company": "Tunaiku (PT Bank Amar Indonesia Tbk)",
-      "role": "Back-end Developer (Unsecured Loans Engine)",
-      "period": "April 2019 - Nov 2019",
+      "company": "Amartha Micro Fintech",
+      "role": "Software Engineer (Backoffice Team)",
+      "period": "Nov 2019 - Dec 2021",
+      "location": "Jakarta, Indonesia",
+      "description": [
+        "Rebuilt core money-flow services (disbursement, failed disbursement, repayment, partial repayment) from scratch, improving reliability across all loan types.",
+        "Led core banking migration to vendor FDS, coordinating cross-functional alignment and ensuring zero-downtime cutover for all company transactions.",
+        "Redesigned the loan insurance claim system to auto-trigger claims for PAR loans with 4+ consecutive defaults, protecting investor capital automatically.",
+        "Maintained the MIS Dashboard covering all loans, investors, and installment transactions, supporting data-driven decisions for risk and operations teams."
+      ],
+      "tags": ["Go (echo)", "Kong", "Kafka", "Jenkins", "PostgreSQL", "Redis", "MongoDB", "GCP", "Docker"]
+    },
+    {
+      "id": "exp-4",
+      "company": "Tunaiku (PT Bank Amar Indonesia)",
+      "role": "Backend Developer (Customer Service Improvement Team)",
+      "period": "Apr 2019 - Nov 2019",
       "location": "Surabaya / Jakarta, Indonesia",
       "description": [
-        "Designed and implemented high-availability CRUD operations using RESTful API structures, PostgreSQL, and custom-tailored middleware solutions.",
-        "Developed and maintained rapid API endpoints for the public FAQ database and customer-facing support documentation indexes.",
-        "Collaborated with the Customer Service Improvement team to implement logging telemetry, reducing action latency and boosting service efficiency."
+        "Designed and implemented RESTful CRUD APIs for Tunaiku's customer-facing FAQ and Help Center platform using Go and PostgreSQL.",
+        "Collaborated with the Customer Service Improvement team to streamline information flows and reduce customer support ticket volume."
       ],
-      "tags": ["Go (go-gin)", "SQL", "PostgreSQL", "JavaScript (Gateway)", "Git", "Docker"]
+      "tags": ["Go (gin)", "JavaScript", "PostgreSQL", "Docker"]
     }
   ],
   "educations": [
     {
       "id": "edu-1",
-      "school": "University of Brawijaya",
+      "school": "Universitas Brawijaya",
       "degree": "Bachelor of Computer Science",
-      "major": "Computer Science & Distributed Systems",
+      "major": "Computer Science",
       "period": "Jul 2014 - Jan 2019",
       "achievements": [
-        "Conducted studies in distributed algorithms, multi-thread mechanics, relational algebra databases, and internet-protocol engineering.",
-        "Engineered visual database dashboards and high-performance programming lab tooling."
+        "Graduand with a deep theoretical and practical focus on computing systems, data engineering, and software structures.",
+        "Participated in comprehensive programming and database lab development work."
+      ]
+    },
+    {
+      "id": "edu-2",
+      "school": "Certifications & Competitions",
+      "degree": "Professional Accreditation & Competitions",
+      "major": "Indonesian Software Engineering Arena",
+      "period": "Active / 2021 - 2026",
+      "achievements": [
+        "HackerRank Certified Go (Basic) Developer, 2021.",
+        "Udemy: Golang Comprehensive Deep-Dive certification, 2021.",
+        "Google AI Competition: #JuaraVibeCoding, 2026 — Developed and deployed two AI-powered web applications on Google Cloud Run using Gemini AI Studio: 'Make It 24' (math puzzle game) and 'Indonesian E-Voting Simulation'."
       ]
     }
   ],
   "skills": [
     {
       "id": "skill-group-1",
-      "category": "Linguistic & Core Algorithms",
+      "category": "Linguistic & Core Databases",
       "items": [
-        { "name": "Golang (Go)", "proficiency": 5, "description": "Highly concurrent services" },
-        { "name": "Javascript & NodeJS", "proficiency": 4, "description": "Dynamic script automation" },
-        { "name": "SQL & Relational Algebra", "proficiency": 5, "description": "Complex queries & database indexing" },
-        { "name": "Java & PHP", "proficiency": 3, "description": "Enterprise application engines" },
-        { "name": "HTML & Basic Web Elements", "proficiency": 4, "description": "Document layouts & views" }
+        { "name": "Golang (Go)", "proficiency": 5, "description": "Highly concurrent services & payment microservices" },
+        { "name": "SQL & PostgreSQL", "proficiency": 5, "description": "Database design, indexing, and complex query optimizations" },
+        { "name": "JavaScript & NodeJS", "proficiency": 4, "description": "Dynamic script automation & full-stack development" },
+        { "name": "Java & PHP", "proficiency": 3, "description": "Enterprise software and legacy backend architectures" },
+        { "name": "HTML & Basic Web Elements", "proficiency": 4, "description": "Document layouts, structural elements, and interfaces" }
       ]
     },
     {
       "id": "skill-group-2",
-      "category": "Platform Frameworks & Gateways",
+      "category": "Core Frameworks & Event Streaming",
       "items": [
-        { "name": "Go-Echo / Go-Gin / Go-Chi", "proficiency": 5, "description": "Microservice web routers" },
-        { "name": "KrakenD & Kong", "proficiency": 5, "description": "API Gateways & rate-limiting" },
-        { "name": "Kafka & Google PubSub", "proficiency": 5, "description": "Asynchronous messaging pipelines" },
-        { "name": "ReactJS & Web Clients", "proficiency": 4, "description": "Dynamic front-end administration" },
-        { "name": "Grafana & Prometheus", "proficiency": 4, "description": "Telemetry and service health dashboards" }
+        { "name": "Go-Echo / Go-Gin / Go-Chi", "proficiency": 5, "description": "Microservice web routers and Go workspace frameworks" },
+        { "name": "Kafka & Google Pub/Sub", "proficiency": 5, "description": "Asynchronous messaging pipelines and decoupling streams" },
+        { "name": "KrakenD & Kong", "proficiency": 5, "description": "API Gateway design, security rate-limiting, and state validation" },
+        { "name": "ReactJS & Web Clients", "proficiency": 4, "description": "Dynamic admin portals and responsive user-facing views" },
+        { "name": "Grafana & Prometheus", "proficiency": 4, "description": "Service health telemetry, incident tracing, and MIS dashboards" }
       ]
     },
     {
       "id": "skill-group-3",
-      "category": "Infrastructure & Mechanical Tools",
+      "category": "Infrastructure, Cloud & Operations",
       "items": [
-        { "name": "GCP (Compute Engine & GCS)", "proficiency": 5, "description": "Cloud orchestration & storage arrays" },
-        { "name": "Docker & Kubernetes", "proficiency": 5, "description": "Containerized isolation & deployment scale" },
-        { "name": "PostgreSQL & MongoDB", "proficiency": 5, "description": "Structured & document databases" },
-        { "name": "Redis Cache Relays", "proficiency": 5, "description": "High-throughput concurrent memory store" },
-        { "name": "Git Version Controller", "proficiency": 5, "description": "Meticulous collaboration history" }
+        { "name": "GCP (Compute Engine & GCS)", "proficiency": 5, "description": "Cloud orchestration, storage structures, and project routing" },
+        { "name": "Docker & Kubernetes", "proficiency": 5, "description": "Containerized isolation and scalable orchestrated deployments" },
+        { "name": "ArgoCD & Jenkins CI/CD", "proficiency": 5, "description": "Automated deployment, cron jobs, and delivery pipelines" },
+        { "name": "Redis & MongoDB", "proficiency": 5, "description": "High-throughput memory store caching and document databases" },
+        { "name": "Git & unleashed flags", "proficiency": 5, "description": "Meticulous collaboration history and runtime feature flags" }
       ]
     }
   ],
@@ -129,26 +154,49 @@
     "todaysDateOverride": "MONDAY, JUNE 1, 2026",
     "quoteOfTheDay": "FINANCIAL SCALABILITY SECURES THE INTEGRITY OF GRASSTOOTS ECONOMIES. HIGH THROUGHPUT CONQUERS SPACE AND TIME.",
     "vinylMelody": {
-      "title": "Bossa Nova Compiler (Mono No. 9)",
-      "genre": "Retro Synth Jazz Beat",
-      "bpm": 96,
+      "title": "Wouldn't It Be Nice (Intro)",
+      "genre": "1960s Sunshine Pop",
+      "bpm": 128,
       "chords": [
-        [174.61, 220.00, 261.63, 329.63],
-        [146.83, 174.61, 220.00, 261.63],
-        [196.00, 233.08, 293.66, 349.23],
-        [130.81, 164.81, 196.00, 233.08]
+        [220.00, 277.18, 329.63, 440.00],
+        [185.00, 220.00, 277.18, 369.99],
+        [246.94, 293.66, 369.99, 493.88],
+        [146.83, 185.00, 220.00, 293.66],
+        [220.00, 277.18, 329.63, 440.00],
+        [185.00, 220.00, 277.18, 369.99],
+        [130.81, 164.81, 196.00, 261.63],
+        [130.81, 164.81, 196.00, 261.63]
       ]
     },
     "vinylPlaylist": [
       {
-        "title": "Bossa Nova Compiler (Mono No. 9)",
-        "genre": "Retro Synth Jazz Beat",
-        "bpm": 96,
+        "title": "Wouldn't It Be Nice (Intro)",
+        "genre": "1960s Sunshine Pop",
+        "bpm": 128,
         "chords": [
-          [174.61, 220.00, 261.63, 329.63],
-          [146.83, 174.61, 220.00, 261.63],
-          [196.00, 233.08, 293.66, 349.23],
-          [130.81, 164.81, 196.00, 233.08]
+          [220.00, 277.18, 329.63, 440.00],
+          [185.00, 220.00, 277.18, 369.99],
+          [246.94, 293.66, 369.99, 493.88],
+          [146.83, 185.00, 220.00, 293.66],
+          [220.00, 277.18, 329.63, 440.00],
+          [185.00, 220.00, 277.18, 369.99],
+          [130.81, 164.81, 196.00, 261.63],
+          [130.81, 164.81, 196.00, 261.63]
+        ]
+      },
+      {
+        "title": "God Only Knows (Intro)",
+        "genre": "Vintage Pop Masterpiece",
+        "bpm": 116,
+        "chords": [
+          [196.00, 246.94, 293.66, 392.00],
+          [146.83, 185.00, 220.00, 293.66],
+          [196.00, 246.94, 293.66, 392.00],
+          [146.83, 185.00, 220.00, 293.66],
+          [196.00, 246.94, 293.66, 392.00],
+          [185.00, 220.00, 293.66, 369.99],
+          [164.81, 196.00, 246.94, 293.66],
+          [146.83, 146.83, 164.81, 174.61]
         ]
       },
       {

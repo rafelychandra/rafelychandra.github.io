@@ -57,7 +57,7 @@ Hosted on [GitHub Pages](https://rafelychandra.github.io).
    ```bash
    npm run dev
    ```
-   Open your browser at `http://localhost:5173` (or the port shown in your terminal).
+   Open your browser at `http://localhost:1411`.
 
 ---
 

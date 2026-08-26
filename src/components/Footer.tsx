@@ -78,7 +78,7 @@ export default function Footer({ name, year, location, email }: FooterProps) {
 
       {/* Extreme bottom line print credits */}
       <div className="max-w-7xl mx-auto border-t border-retro-gray border-opacity-30 mt-6 pt-4 text-center text-[8px] font-mono text-retro-gray uppercase tracking-[0.2em]">
-        TRANSMITTED VIA AIRWAVES • HIGH FIDELITY TRANSISTOR SYSTEM • POWERED BY GEMINI BUILDERS
+        TRANSMITTED VIA AIRWAVES • HIGH FIDELITY TRANSISTOR SYSTEM • ENGINEERED WITH PRECISION
       </div>
     </footer>
   );

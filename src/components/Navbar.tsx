@@ -81,14 +81,14 @@ export default function Navbar({
             Skill Grid
           </a>
 
-          {/* Secret Vault Navigation Link */}
+          {/* Secret KYC Navigation Link */}
           {onOpenVault && (
             <button
               onClick={onOpenVault}
-              className="px-3 py-1.5 border-2 border-retro-black font-display font-medium text-xs uppercase flex items-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] cursor-pointer transition-colors bg-warm-cream text-retro-black hover:bg-retro-yellow hover:text-retro-black"
-              title="Access restricted vault (/vault)"
+              className="px-3 py-1.5 border-2 border-retro-black font-display font-medium text-xs uppercase flex items-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] cursor-pointer transition-colors bg-warm-cream text-retro-black hover:bg-purple-900 hover:text-white"
+              title="Access KYC Presentation (/kyc)"
             >
-              <span>🔒 Vault</span>
+              <span>🪪 KYC</span>
             </button>
           )}
 

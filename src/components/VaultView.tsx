@@ -406,16 +406,16 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       )
     },
 
-    // 1: INTRODUCTION / IDENTITY SLIDE (MULTI-PHOTO GRID TEMPLATE)
+    // 1: INTRODUCTION / IDENTITY SLIDE (10-PHOTO GRID TEMPLATE)
     {
       id: "intro",
       title: "Introduction",
       subtitle: "WHO IS CHANKEEY?",
-      notes: "Nama lengkap, nama panggilan, tanggal lahir, zodiak, MBTI, dan galeri foto kehidupan Chandra.",
+      notes: "Nama lengkap, nama panggilan, tanggal lahir, zodiak, MBTI, dan 10 foto perjalanan hidup Chandra.",
       render: () => (
         <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
           {/* Header Info & Identity */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-purple-900/10 pb-2 mb-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-purple-900/10 pb-2 mb-1.5">
             <div className="flex items-center gap-2.5">
               <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Introduction</span>
               <span className="bg-purple-900 text-white font-mono font-black text-xs px-2.5 py-0.5 rounded-md tracking-wider">
@@ -439,25 +439,18 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             </div>
           </div>
 
-          {/* Dynamic Multi-Photo Bento Mosaic Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 my-auto py-1">
-            {/* Slot 1: Large Featured Portrait (Span 2x2 on desktop) */}
-            <div className="col-span-2 row-span-2 h-full min-h-[180px]">
-              <IntroPhotoCard 
-                idx={0} 
-                label="Portrait / Profile" 
-                theme="from-purple-200 via-purple-50 to-amber-100" 
-              />
-            </div>
-
-            {/* Slots 2 to 9 */}
-            <IntroPhotoCard idx={1} label="Basketball Court" theme="from-amber-100 to-orange-50" />
-            <IntroPhotoCard idx={2} label="Vinyl Collection" theme="from-pink-100 to-rose-50" />
-            <IntroPhotoCard idx={3} label="Concert / Music" theme="from-indigo-100 to-blue-50" />
-            <IntroPhotoCard idx={4} label="Office / Squad" theme="from-emerald-100 to-teal-50" />
-            <IntroPhotoCard idx={5} label="Travel & Life" theme="from-cyan-100 to-sky-50" />
-            <IntroPhotoCard idx={6} label="Filkom UB Campus" theme="from-purple-100 to-fuchsia-50" />
-            <IntroPhotoCard idx={7} label="Hobbies & Casual" theme="from-yellow-100 to-amber-50" />
+          {/* Dynamic 10-Photo Grid (5 columns x 2 rows) */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 my-auto py-1">
+            <IntroPhotoCard idx={0} label="Portrait / Profile" aspect="aspect-[4/3]" theme="from-purple-200 via-purple-50 to-amber-100" />
+            <IntroPhotoCard idx={1} label="Basketball Court" aspect="aspect-[4/3]" theme="from-amber-100 to-orange-50" />
+            <IntroPhotoCard idx={2} label="Vinyl Collection" aspect="aspect-[4/3]" theme="from-pink-100 to-rose-50" />
+            <IntroPhotoCard idx={3} label="Concert / Music" aspect="aspect-[4/3]" theme="from-indigo-100 to-blue-50" />
+            <IntroPhotoCard idx={4} label="Office / Squad" aspect="aspect-[4/3]" theme="from-emerald-100 to-teal-50" />
+            <IntroPhotoCard idx={5} label="Travel & Life" aspect="aspect-[4/3]" theme="from-cyan-100 to-sky-50" />
+            <IntroPhotoCard idx={6} label="Filkom UB Campus" aspect="aspect-[4/3]" theme="from-purple-100 to-fuchsia-50" />
+            <IntroPhotoCard idx={7} label="Hobbies & Passion" aspect="aspect-[4/3]" theme="from-yellow-100 to-amber-50" />
+            <IntroPhotoCard idx={8} label="Childhood / Family" aspect="aspect-[4/3]" theme="from-rose-100 to-red-50" />
+            <IntroPhotoCard idx={9} label="Daily / Candid" aspect="aspect-[4/3]" theme="from-teal-100 to-emerald-50" />
           </div>
         </div>
       )

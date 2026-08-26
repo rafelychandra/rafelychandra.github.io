@@ -26,28 +26,30 @@ export default function App() {
   const [grainIntensity, setGrainIntensity] = useState<number>(4);
 
   // Determine initial view based on URL path, hash, or search query
-  const isVaultUrl = () => {
+  const isKycUrl = () => {
     if (typeof window === "undefined") return false;
     const path = window.location.pathname.toLowerCase();
     const hash = window.location.hash.toLowerCase();
     const search = window.location.search.toLowerCase();
     return (
+      path === "/kyc" ||
+      path.endsWith("/kyc") ||
+      hash === "#kyc" ||
+      hash === "#/kyc" ||
+      search.includes("kyc=true") ||
       path === "/vault" ||
-      path.endsWith("/vault") ||
-      hash === "#vault" ||
-      hash === "#/vault" ||
-      search.includes("vault=true")
+      hash === "#/vault"
     );
   };
 
   const [currentView, setCurrentView] = useState<"home" | "vault">(
-    isVaultUrl() ? "vault" : "home"
+    isKycUrl() ? "vault" : "home"
   );
 
   // Sync routing on popstate / hashchange
   useEffect(() => {
     const handleLocationChange = () => {
-      if (isVaultUrl()) {
+      if (isKycUrl()) {
         setCurrentView("vault");
       } else {
         setCurrentView("home");
@@ -65,7 +67,7 @@ export default function App() {
   const openVault = () => {
     setCurrentView("vault");
     if (window.location.protocol.startsWith("http")) {
-      window.history.pushState(null, "", "#/vault");
+      window.history.pushState(null, "", "#/kyc");
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -73,7 +75,7 @@ export default function App() {
   const exitVault = () => {
     setCurrentView("home");
     if (window.location.protocol.startsWith("http")) {
-      window.history.pushState(null, "", window.location.pathname.replace(/\/vault\/?$/, "") || "/");
+      window.history.pushState(null, "", window.location.pathname.replace(/\/(kyc|vault)\/?$/, "") || "/");
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

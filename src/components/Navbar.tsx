@@ -14,6 +14,7 @@ interface NavbarProps {
   setVintageMode: (mode: boolean) => void;
   grainIntensity: number;
   setGrainIntensity: (val: number) => void;
+  onOpenVault?: () => void;
 }
 
 export default function Navbar({
@@ -23,6 +24,7 @@ export default function Navbar({
   setVintageMode,
   grainIntensity,
   setGrainIntensity,
+  onOpenVault,
 }: NavbarProps) {
   const [controlsOpen, setControlsOpen] = useState(false);
 
@@ -30,7 +32,14 @@ export default function Navbar({
     <nav className="w-full bg-warm-cream border-b-4 border-retro-black relative z-30 select-none">
       {/* Top Banner: Vintage Classification banner */}
       <div className="bg-retro-black text-warm-cream text-center py-1.5 px-4 font-mono text-[10px] uppercase tracking-[0.25em] font-medium flex justify-between items-center">
-        <span>CLASSIFIED PORTFOLIO ENVELOPE</span>
+        <button
+          onClick={onOpenVault}
+          className="hover:text-retro-yellow transition-colors cursor-pointer flex items-center gap-1 font-bold text-left"
+          title="Open Classified Vault (/vault)"
+        >
+          <span>CLASSIFIED PORTFOLIO ENVELOPE</span>
+          <span className="text-retro-orange text-[9px] lowercase">[#vault]</span>
+        </button>
         <span className="hidden sm:inline">OFFICIAL COMPUTATIONAL REGISTRY • {profile.establishmentYear}</span>
         <span className="font-mono">{profile.location}</span>
       </div>
@@ -71,6 +80,17 @@ export default function Navbar({
           >
             Skill Grid
           </a>
+
+          {/* Secret Vault Navigation Link */}
+          {onOpenVault && (
+            <button
+              onClick={onOpenVault}
+              className="px-3 py-1.5 border-2 border-retro-black font-display font-medium text-xs uppercase flex items-center gap-1.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] active:translate-x-[1px] active:translate-y-[1px] cursor-pointer transition-colors bg-warm-cream text-retro-black hover:bg-retro-yellow hover:text-retro-black"
+              title="Access restricted vault (/vault)"
+            >
+              <span>🔒 Vault</span>
+            </button>
+          )}
 
           {/* Interactive Lab Control Button */}
           <button

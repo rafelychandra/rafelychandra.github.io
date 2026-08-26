@@ -10,9 +10,10 @@ interface FooterProps {
   year: string;
   location: string;
   email?: string;
+  onOpenVault?: () => void;
 }
 
-export default function Footer({ name, year, location, email }: FooterProps) {
+export default function Footer({ name, year, location, email, onOpenVault }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -49,16 +50,20 @@ export default function Footer({ name, year, location, email }: FooterProps) {
           )}
         </div>
 
-        {/* Decorative Seal insignia center */}
-        <div className="hidden lg:flex flex-col items-center border border-retro-gray border-opacity-45 p-2 rounded max-w-[170px] text-center select-none">
-          <Landmark size={14} className="text-retro-yellow" />
-          <span className="font-serif text-[9px] font-bold text-warm-cream uppercase mt-1">
+        {/* Decorative Seal insignia center - Clickable secret vault trigger */}
+        <button 
+          onClick={onOpenVault}
+          className="hidden lg:flex flex-col items-center border border-retro-gray border-opacity-45 hover:border-retro-yellow hover:bg-retro-charcoal/40 p-2.5 rounded max-w-[190px] text-center select-none cursor-pointer transition-all group"
+          title="Access restricted terminal vault (/vault)"
+        >
+          <Landmark size={14} className="text-retro-yellow group-hover:scale-110 transition-transform" />
+          <span className="font-serif text-[9px] font-bold text-warm-cream uppercase mt-1 group-hover:text-retro-yellow transition-colors">
             CYBERNETIC SEAL OF CRAFT
           </span>
           <span className="font-mono text-[8px] text-retro-gray uppercase block mt-0.5">
-            Meticulous Pixel Geometry
+            [ 🔒 ACCESS VAULT ]
           </span>
-        </div>
+        </button>
 
         {/* Right column credits/navigation */}
         <div className="flex flex-col items-center md:items-end text-center md:text-right gap-2">

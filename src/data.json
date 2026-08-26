@@ -148,6 +148,104 @@
       ]
     }
   ],
+  "vault": {
+    "defaultPasscode": "1411",
+    "terminalName": "DEFENSE FINTECH LEDGER SEC-4",
+    "dossiers": [
+      {
+        "title": "Sev-0 Ledger Race Condition Mitigation Protocol",
+        "classification": "EYES ONLY // LEVEL-4",
+        "date": "OCTOBER 2024",
+        "summary": "Full post-mortem analysis and atomic distributed locking architecture on Redis + PostgreSQL advisory locks to eliminate duplicate wallet settlement transactions under 10k RPS burst loads.",
+        "details": [
+          "Implemented idempotent transaction idempotency keys using sha256 hashes of incoming request payloads combined with client token signatures.",
+          "Introduced a 2-phase commit state machine validation ensuring ledger entries and bank adapter dispatches can never desynchronize during transient network timeouts.",
+          "Stress tested with k6 distributed agents generating 12,000 synthetic payment hits across 4 worker nodes with 0 ledger discrepancies."
+        ],
+        "tags": ["Golang", "PostgreSQL", "Redis Locking", "Distributed Systems", "Sev-0 Postmortem"]
+      },
+      {
+        "title": "Next-Gen QRIS Acquiring Adapter Architecture",
+        "classification": "RESTRICTED // TECHNICAL BLUEPRINT",
+        "date": "MARCH 2025",
+        "summary": "Internal routing topology for multi-acquirer switching with automated fallback, real-time fee calculations, and sub-millisecond reverse-Luhn verification.",
+        "details": [
+          "Decoupled third-party switching latency from consumer payment flows using buffered event streaming via Kafka.",
+          "Configured circuit-breakers with 300ms SLA cutoff to instantly reroute failed QRIS transaction requests to secondary banking rails.",
+          "Integrated automated reconciliation daemon running hourly delta validations."
+        ],
+        "tags": ["QRIS", "ASPI/Artajasa", "KrakenD", "Kafka", "High Throughput"]
+      },
+      {
+        "title": "Confidential Career Milestones & Technical Aspirations",
+        "classification": "INTERNAL MEMORANDUM",
+        "date": "ACTIVE 2026",
+        "summary": "Personal engineering roadmap focusing on high-availability distributed financial systems, AI-accelerated developer tooling, and modern distributed storage runtimes.",
+        "details": [
+          "Targeting Staff / Principal level distributed architecture roles in Southeast Asian & global fintech ecosystems.",
+          "Deep research into Raft consensus algorithms, custom Go runtime profiling, and zero-knowledge ledger verification.",
+          "Open to strategic advisory and architect consulting on high-scale Go systems."
+        ],
+        "tags": ["Career Blueprint", "Staff Engineer", "Distributed Consensus", "Fintech Scaling"]
+      }
+    ],
+    "movies": [
+      {
+        "id": "movie-1",
+        "title": "Forrest Gump",
+        "year": "1994",
+        "genre": "Drama / Comedy",
+        "poster": "/assets/movies/forrest-gump.png",
+        "tagline": "Life is like a box of chocolates.",
+        "description": "Tom Hanks delivers a timeless, heartfelt journey through key moments of history with pure innocence."
+      },
+      {
+        "id": "movie-2",
+        "title": "The Truman Show",
+        "year": "1998",
+        "genre": "Sci-Fi / Drama",
+        "poster": "/assets/movies/truman-show.jpg",
+        "tagline": "On the air. Unaware.",
+        "description": "Jim Carrey's existential masterpiece about a man unknowingly living inside a 24/7 reality television broadcast."
+      },
+      {
+        "id": "movie-3",
+        "title": "Catch Me If You Can",
+        "year": "2002",
+        "genre": "Biography / Crime",
+        "poster": "/assets/movies/catch-me-if-you-can.jpg",
+        "tagline": "The true story of a real fake.",
+        "description": "Spielberg's thrilling cat-and-mouse dynamic between Leonardo DiCaprio's brilliant con artist and Tom Hanks' FBI agent."
+      },
+      {
+        "id": "movie-4",
+        "title": "Ferris Bueller's Day Off",
+        "year": "1986",
+        "genre": "Comedy / Coming-of-Age",
+        "poster": "/assets/movies/ferris-bueller.jpg",
+        "tagline": "One man's struggle to take it easy.",
+        "description": "John Hughes' quintessential 80s tribute to breaking the fourth wall, living in the moment, and pure freedom."
+      },
+      {
+        "id": "movie-5",
+        "title": "Fight Club",
+        "year": "1999",
+        "genre": "Psychological Thriller",
+        "poster": "/assets/movies/fight-club.jpg",
+        "tagline": "Mischief. Mayhem. Soap.",
+        "description": "David Fincher, Brad Pitt, and Edward Norton craft an anarchic cult classic exploring modern alienation."
+      },
+      {
+        "id": "movie-6",
+        "title": "Scott Pilgrim vs. The World",
+        "year": "2010",
+        "genre": "Action / Comedy / Retro",
+        "poster": "/assets/movies/scott-pilgrim.jpg",
+        "tagline": "An epic of epic epicness.",
+        "description": "Edgar Wright's ultra-kinetic, video-game infused comedy packed with 8-bit energy and indie rock riffs."
+      }
+    ]
+  },
   "aestheticSettings": {
     "siteTitle": "Rafely Chandra Portfolio",
     "newspaperName": "THE FINTECH COURIER",

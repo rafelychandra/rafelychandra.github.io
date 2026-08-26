@@ -59,11 +59,38 @@ export interface VinylMelody {
   chords?: number[][]; // Optional custom frequencies list for chord synths
 }
 
+export interface ConfidentialDossier {
+  title: string;
+  classification: string;
+  date: string;
+  summary: string;
+  details: string[];
+  tags: string[];
+}
+
+export interface MovieItem {
+  id: string;
+  title: string;
+  year: string;
+  genre: string;
+  poster: string;
+  tagline?: string;
+  description?: string;
+}
+
+export interface VaultConfig {
+  defaultPasscode?: string;
+  terminalName?: string;
+  dossiers?: ConfidentialDossier[];
+  movies?: MovieItem[];
+}
+
 export interface PortfolioData {
   profile: Profile;
   experiences: Experience[];
   educations: Education[];
   skills: SkillCategory[];
+  vault?: VaultConfig;
   aestheticSettings: {
     siteTitle: string;
     newspaperName: string;

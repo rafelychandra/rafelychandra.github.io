@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PortfolioData } from "./types";
 import rawPortfolioData from "./data.json";
 
@@ -16,6 +16,7 @@ import ExperienceTimeline from "./components/ExperienceTimeline";
 import EducationCard from "./components/EducationCard";
 import SkillsGrid from "./components/SkillsGrid";
 import Footer from "./components/Footer";
+import VaultView from "./components/VaultView";
 
 // Cast JSON to strictly typed PortfolioData interface
 const data = rawPortfolioData as unknown as PortfolioData;
@@ -23,6 +24,59 @@ const data = rawPortfolioData as unknown as PortfolioData;
 export default function App() {
   const [vintageMode, setVintageMode] = useState<boolean>(true);
   const [grainIntensity, setGrainIntensity] = useState<number>(4);
+
+  // Determine initial view based on URL path, hash, or search query
+  const isVaultUrl = () => {
+    if (typeof window === "undefined") return false;
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    const search = window.location.search.toLowerCase();
+    return (
+      path === "/vault" ||
+      path.endsWith("/vault") ||
+      hash === "#vault" ||
+      hash === "#/vault" ||
+      search.includes("vault=true")
+    );
+  };
+
+  const [currentView, setCurrentView] = useState<"home" | "vault">(
+    isVaultUrl() ? "vault" : "home"
+  );
+
+  // Sync routing on popstate / hashchange
+  useEffect(() => {
+    const handleLocationChange = () => {
+      if (isVaultUrl()) {
+        setCurrentView("vault");
+      } else {
+        setCurrentView("home");
+      }
+    };
+
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
+  }, []);
+
+  const openVault = () => {
+    setCurrentView("vault");
+    if (window.location.protocol.startsWith("http")) {
+      window.history.pushState(null, "", "#/vault");
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const exitVault = () => {
+    setCurrentView("home");
+    if (window.location.protocol.startsWith("http")) {
+      window.history.pushState(null, "", window.location.pathname.replace(/\/vault\/?$/, "") || "/");
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Dynamic inline grain generation using high-quality fractal SVG
   const grainOverlayStyle = {
@@ -48,56 +102,71 @@ export default function App() {
         style={grainOverlayStyle}
       ></div>
 
-      {/* 2. Top-level Editorial navigation */}
-      <Navbar
-        profile={data.profile}
-        siteTitle={data.aestheticSettings.siteTitle}
-        vintageMode={vintageMode}
-        setVintageMode={setVintageMode}
-        grainIntensity={grainIntensity}
-        setGrainIntensity={setGrainIntensity}
-      />
-
-      {/* Main Body */}
-      <main className="flex-grow">
-        {/* 3. Hero Editorial section (Front Page of Newspaper) */}
-        <HeroSection
+      {currentView === "vault" ? (
+        /* Secret Private Vault View */
+        <VaultView
+          vaultConfig={data.vault}
           profile={data.profile}
-          newspaperName={data.aestheticSettings.newspaperName}
-          todaysDateOverride={data.aestheticSettings.todaysDateOverride}
-          quoteOfTheDay={data.aestheticSettings.quoteOfTheDay}
+          onExit={exitVault}
         />
-
-        {/* Live Broadcast / Audio Turntable & Spotify Section */}
-        <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12 space-y-8">
-          <AudioPlayer
-            melodyConfig={data.aestheticSettings.vinylMelody}
-            playlist={data.aestheticSettings.vinylPlaylist}
+      ) : (
+        /* Public Broadsheet Portfolio */
+        <>
+          {/* 2. Top-level Editorial navigation */}
+          <Navbar
+            profile={data.profile}
+            siteTitle={data.aestheticSettings.siteTitle}
             vintageMode={vintageMode}
+            setVintageMode={setVintageMode}
+            grainIntensity={grainIntensity}
+            setGrainIntensity={setGrainIntensity}
+            onOpenVault={openVault}
           />
-          <SpotifyPlaylists />
-        </section>
 
-        {/* 4. Experience History ledger */}
-        <div className="border-t-4 border-retro-black my-4"></div>
-        <ExperienceTimeline experiences={data.experiences} />
+          {/* Main Body */}
+          <main className="flex-grow">
+            {/* 3. Hero Editorial section (Front Page of Newspaper) */}
+            <HeroSection
+              profile={data.profile}
+              newspaperName={data.aestheticSettings.newspaperName}
+              todaysDateOverride={data.aestheticSettings.todaysDateOverride}
+              quoteOfTheDay={data.aestheticSettings.quoteOfTheDay}
+            />
 
-        {/* 5. Education grid details */}
-        <div className="border-t-4 border-retro-black my-4"></div>
-        <EducationCard educations={data.educations} />
+            {/* Live Broadcast / Audio Turntable & Spotify Section */}
+            <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12 space-y-8">
+              <AudioPlayer
+                melodyConfig={data.aestheticSettings.vinylMelody}
+                playlist={data.aestheticSettings.vinylPlaylist}
+                vintageMode={vintageMode}
+              />
+              <SpotifyPlaylists />
+            </section>
 
-        {/* 6. Classified skill ads clipping coupon */}
-        <div className="border-t-4 border-retro-black my-4"></div>
-        <SkillsGrid skills={data.skills} />
-      </main>
+            {/* 4. Experience History ledger */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <ExperienceTimeline experiences={data.experiences} />
 
-      {/* 7. Footer credits */}
-      <Footer
-        name={data.profile.name}
-        year={data.profile.establishmentYear}
-        location={data.profile.location}
-        email={data.profile.contact.email}
-      />
+            {/* 5. Education grid details */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <EducationCard educations={data.educations} />
+
+            {/* 6. Classified skill ads clipping coupon */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <SkillsGrid skills={data.skills} />
+          </main>
+
+          {/* 7. Footer credits */}
+          <Footer
+            name={data.profile.name}
+            year={data.profile.establishmentYear}
+            location={data.profile.location}
+            email={data.profile.contact.email}
+            onOpenVault={openVault}
+          />
+        </>
+      )}
     </div>
   );
 }
+

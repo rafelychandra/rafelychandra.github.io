@@ -27,6 +27,63 @@ interface AudioPlayerProps {
   vintageMode?: boolean;
 }
 
+function VinylCenterLabel({ coverSrc, title, artist }: { coverSrc?: string; title: string; artist: string }) {
+  const [extIdx, setExtIdx] = useState(0);
+  const exts = [".png", ".jpg", ".jpeg", ".webp"];
+  const [imgFailed, setImgFailed] = useState(false);
+
+  useEffect(() => {
+    setExtIdx(0);
+    setImgFailed(false);
+  }, [coverSrc]);
+
+  if (!coverSrc) {
+    return (
+      <div className="absolute w-[44%] h-[44%] bg-gradient-to-br from-retro-orange to-amber-600 text-warm-cream border-2 border-retro-black rounded-full flex flex-col items-center justify-center select-none text-center p-1 shadow-inner overflow-hidden">
+        <span className="text-[7px] uppercase font-black tracking-tight leading-tight line-clamp-1">
+          {title}
+        </span>
+        <div className="w-2.5 h-2.5 bg-retro-cream-dark border-2 border-retro-black rounded-full mt-0.5 z-10 shadow-inner"></div>
+      </div>
+    );
+  }
+
+  const basePath = coverSrc.replace(/\.[^/.]+$/, "");
+  const currentSrc = extIdx === 0 ? coverSrc : `${basePath}${exts[extIdx]}`;
+
+  const handleError = () => {
+    if (extIdx < exts.length - 1) {
+      setExtIdx((prev) => prev + 1);
+    } else {
+      setImgFailed(true);
+    }
+  };
+
+  return (
+    <div className="absolute w-[44%] h-[44%] rounded-full border-2 border-retro-black overflow-hidden shadow-inner flex items-center justify-center bg-slate-900">
+      {!imgFailed ? (
+        <img
+          src={currentSrc}
+          alt={title}
+          onError={handleError}
+          className="w-full h-full object-cover select-none pointer-events-none"
+        />
+      ) : (
+        <div className="w-full h-full bg-gradient-to-br from-retro-orange to-amber-600 text-warm-cream flex flex-col items-center justify-center p-1 text-center">
+          <span className="text-[6.5px] uppercase font-black tracking-tight leading-tight line-clamp-1">
+            {title}
+          </span>
+          <span className="text-[5.5px] font-mono opacity-80 line-clamp-1">
+            {artist}
+          </span>
+        </div>
+      )}
+      {/* Center turntable spindle hole */}
+      <div className="absolute w-2.5 h-2.5 bg-retro-cream-dark border-2 border-retro-black rounded-full z-10 shadow-sm pointer-events-none"></div>
+    </div>
+  );
+}
+
 const DEFAULT_TRACKS: AudioTrack[] = [
   {
     id: "track-1",
@@ -35,6 +92,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: "Pet Sounds (1966)",
     genre: "Sunshine Pop / Chamber Rock",
     src: "/assets/audio/track-1.mp3",
+    cover: "/assets/audio/cover-track-1.png",
     duration: "2:25"
   },
   {
@@ -44,6 +102,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: "Pet Sounds (1966)",
     genre: "Baroque Pop",
     src: "/assets/audio/track-2.mp3",
+    cover: "/assets/audio/cover-track-2.png",
     duration: "2:53"
   },
   {
@@ -53,6 +112,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: "Sgt. Pepper's (1967)",
     genre: "Psychedelic Rock",
     src: "/assets/audio/track-3.mp3",
+    cover: "/assets/audio/cover-track-3.png",
     duration: "5:38"
   },
   {
@@ -62,6 +122,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: "Meddle (1971)",
     genre: "Progressive Rock",
     src: "/assets/audio/track-4.mp3",
+    cover: "/assets/audio/cover-track-4.png",
     duration: "4:42"
   },
   {
@@ -71,6 +132,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     album: "Jazz (1978)",
     genre: "Glam Rock",
     src: "/assets/audio/track-5.mp3",
+    cover: "/assets/audio/cover-track-5.png",
     duration: "3:29"
   }
 ];
@@ -275,13 +337,12 @@ export default function AudioPlayer({ tracks, vintageMode = true }: AudioPlayerP
               <div className="absolute w-[74%] h-[74%] rounded-full border border-retro-charcoal/30"></div>
               <div className="absolute w-[56%] h-[56%] rounded-full border border-retro-charcoal/50"></div>
               
-              {/* Inner Vinyl Label */}
-              <div className="absolute w-[36%] h-[36%] bg-gradient-to-br from-retro-orange to-amber-600 text-warm-cream border-2 border-retro-black rounded-full flex flex-col items-center justify-center select-none text-center p-1 font-sans shadow-inner">
-                <span className="text-[6.5px] uppercase font-black tracking-tight leading-none text-warm-cream">
-                  {isPlaying ? "33⅓ RPM" : "STEREO"}
-                </span>
-                <div className="w-2.5 h-2.5 bg-retro-cream-dark border border-retro-black rounded-full mt-0.5"></div>
-              </div>
+              {/* Inner Vinyl Album Cover Label */}
+              <VinylCenterLabel
+                coverSrc={customAudioUrl ? undefined : currentTrack.cover}
+                title={activeTitle}
+                artist={activeArtist}
+              />
             </div>
 
             {/* Tonearm Needle */}

@@ -353,6 +353,7 @@
         "album": "Pet Sounds (1966)",
         "genre": "Sunshine Pop / Chamber Rock",
         "src": "/assets/audio/track-1.mp3",
+        "cover": "/assets/audio/cover-track-1.png",
         "duration": "2:25"
       },
       {
@@ -362,6 +363,7 @@
         "album": "Pet Sounds (1966)",
         "genre": "Baroque Pop",
         "src": "/assets/audio/track-2.mp3",
+        "cover": "/assets/audio/cover-track-2.png",
         "duration": "2:53"
       },
       {
@@ -371,6 +373,7 @@
         "album": "Sgt. Pepper's (1967)",
         "genre": "Psychedelic Rock",
         "src": "/assets/audio/track-3.mp3",
+        "cover": "/assets/audio/cover-track-3.png",
         "duration": "5:38"
       },
       {
@@ -380,6 +383,7 @@
         "album": "Meddle (1971)",
         "genre": "Progressive Rock",
         "src": "/assets/audio/track-4.mp3",
+        "cover": "/assets/audio/cover-track-4.png",
         "duration": "4:42"
       },
       {
@@ -389,6 +393,7 @@
         "album": "Jazz (1978)",
         "genre": "Glam Rock",
         "src": "/assets/audio/track-5.mp3",
+        "cover": "/assets/audio/cover-track-5.png",
         "duration": "3:29"
       }
     ],

@@ -96,6 +96,7 @@ export interface AudioTrack {
   album?: string;
   genre: string;
   src: string;
+  cover?: string;
   duration?: string;
 }
 

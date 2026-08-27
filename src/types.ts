@@ -89,6 +89,16 @@ export interface VaultConfig {
   musicians?: MediaPosterItem[];
 }
 
+export interface AudioTrack {
+  id: string;
+  title: string;
+  artist: string;
+  album?: string;
+  genre: string;
+  src: string;
+  duration?: string;
+}
+
 export interface PortfolioData {
   profile: Profile;
   experiences: Experience[];
@@ -100,7 +110,8 @@ export interface PortfolioData {
     newspaperName: string;
     todaysDateOverride?: string;
     quoteOfTheDay: string;
-    vinylMelody: VinylMelody;
-    vinylPlaylist?: VinylMelody[]; // Custom dynamic playlist
+    vinylMelody?: VinylMelody;
+    vinylPlaylist?: VinylMelody[];
+    audioTracks?: AudioTrack[];
   };
 }

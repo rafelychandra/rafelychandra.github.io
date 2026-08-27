@@ -138,8 +138,7 @@ export default function App() {
             {/* Live Broadcast / Audio Turntable & Spotify Section */}
             <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12 space-y-8">
               <AudioPlayer
-                melodyConfig={data.aestheticSettings.vinylMelody}
-                playlist={data.aestheticSettings.vinylPlaylist}
+                tracks={data.aestheticSettings.audioTracks}
                 vintageMode={vintageMode}
               />
               <SpotifyPlaylists />

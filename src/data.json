@@ -345,6 +345,53 @@
     "newspaperName": "THE FINTECH COURIER",
     "todaysDateOverride": "MONDAY, JUNE 1, 2026",
     "quoteOfTheDay": "FINANCIAL SCALABILITY SECURES THE INTEGRITY OF GRASSTOOTS ECONOMIES. HIGH THROUGHPUT CONQUERS SPACE AND TIME.",
+    "audioTracks": [
+      {
+        "id": "track-1",
+        "title": "Wouldn't It Be Nice",
+        "artist": "The Beach Boys",
+        "album": "Pet Sounds (1966)",
+        "genre": "Sunshine Pop / Chamber Rock",
+        "src": "/assets/audio/track-1.mp3",
+        "duration": "2:25"
+      },
+      {
+        "id": "track-2",
+        "title": "God Only Knows",
+        "artist": "The Beach Boys",
+        "album": "Pet Sounds (1966)",
+        "genre": "Baroque Pop",
+        "src": "/assets/audio/track-2.mp3",
+        "duration": "2:53"
+      },
+      {
+        "id": "track-3",
+        "title": "A Day in the Life",
+        "artist": "The Beatles",
+        "album": "Sgt. Pepper's (1967)",
+        "genre": "Psychedelic Rock",
+        "src": "/assets/audio/track-3.mp3",
+        "duration": "5:38"
+      },
+      {
+        "id": "track-4",
+        "title": "Echoes",
+        "artist": "Pink Floyd",
+        "album": "Meddle (1971)",
+        "genre": "Progressive Rock",
+        "src": "/assets/audio/track-4.mp3",
+        "duration": "4:42"
+      },
+      {
+        "id": "track-5",
+        "title": "Don't Stop Me Now",
+        "artist": "Queen",
+        "album": "Jazz (1978)",
+        "genre": "Glam Rock",
+        "src": "/assets/audio/track-5.mp3",
+        "duration": "3:29"
+      }
+    ],
     "vinylMelody": {
       "title": "Wouldn't It Be Nice (Intro)",
       "genre": "1960s Sunshine Pop",

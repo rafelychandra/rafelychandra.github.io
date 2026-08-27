@@ -244,6 +244,100 @@
         "tagline": "An epic of epic epicness.",
         "description": "Edgar Wright's ultra-kinetic, video-game infused comedy packed with 8-bit energy and indie rock riffs."
       }
+    ],
+    "series": [
+      {
+        "id": "series-1",
+        "title": "Black Mirror",
+        "year": "2011",
+        "genre": "Sci-Fi / Dystopia",
+        "poster": "/assets/series/black-mirror.jpg",
+        "tagline": "The future is bright... or is it?",
+        "description": "Dystopian tech cautionary tales & mindbenders"
+      },
+      {
+        "id": "series-2",
+        "title": "Stranger Things",
+        "year": "2016",
+        "genre": "Sci-Fi / Nostalgia",
+        "poster": "/assets/series/stranger-things.jpg",
+        "tagline": "One summer can change everything.",
+        "description": "80s synth-wave sci-fi nostalgia & monster mystery"
+      },
+      {
+        "id": "series-3",
+        "title": "The End of the F***ing World",
+        "year": "2017",
+        "genre": "Dark Comedy / Drama",
+        "poster": "/assets/series/the-end-of-the-fing-world.jpg",
+        "tagline": "I'm James. I'm pretty sure I'm a psychopath.",
+        "description": "Dark comedy road trip & coming-of-age"
+      },
+      {
+        "id": "series-4",
+        "title": "Alice in Borderland",
+        "year": "2020",
+        "genre": "Thriller / Survival",
+        "poster": "/assets/series/alice-in-borderland.jpg",
+        "tagline": "To live, you must play.",
+        "description": "High stakes survival psychological game arenas"
+      },
+      {
+        "id": "series-5",
+        "title": "Squid Game",
+        "year": "2021",
+        "genre": "Thriller / Drama",
+        "poster": "/assets/series/squid-game.jpg",
+        "tagline": "45.6 Billion Won is Child's Play.",
+        "description": "Intense social commentary thriller & suspense"
+      }
+    ],
+    "musicians": [
+      {
+        "id": "musician-1",
+        "title": "The Beatles",
+        "year": "1960s",
+        "genre": "Rock & Roll / Psychedelic",
+        "poster": "/assets/musicians/the-beatles.jpg",
+        "tagline": "All You Need Is Love.",
+        "description": "Fab Four songwriting revolution & iconic studio albums"
+      },
+      {
+        "id": "musician-2",
+        "title": "The Beach Boys",
+        "year": "1960s",
+        "genre": "Sunshine Pop / Harmony",
+        "poster": "/assets/musicians/the-beach-boys.jpg",
+        "tagline": "Good Vibrations & Pet Sounds.",
+        "description": "Brian Wilson's harmonic genius on Pet Sounds"
+      },
+      {
+        "id": "musician-3",
+        "title": "Pink Floyd",
+        "year": "1965",
+        "genre": "Psychedelic / Art Rock",
+        "poster": "/assets/musicians/pink-floyd.jpg",
+        "tagline": "Shine On You Crazy Diamond.",
+        "description": "Early Syd Barrett whimsy & immersive atmospheric rock"
+      },
+      {
+        "id": "musician-4",
+        "title": "Queen",
+        "year": "1970s",
+        "genre": "Glam Rock / Operatic",
+        "poster": "/assets/musicians/queen.jpg",
+        "tagline": "Don't Stop Me Now.",
+        "description": "Freddie Mercury's boundless vocals & epic compositions"
+      },
+      {
+        "id": "musician-5",
+        "title": "Michael Jackson",
+        "year": "1980s",
+        "genre": "King of Pop / Funk",
+        "poster": "/assets/musicians/michael-jackson.jpg",
+        "tagline": "The King of Pop.",
+        "description": "Legendary groove production, basslines & stage presence"
+      }
     ]
   },
   "aestheticSettings": {

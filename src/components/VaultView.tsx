@@ -30,7 +30,7 @@ import {
   Calendar,
   Layers
 } from "lucide-react";
-import { VaultConfig, Profile, MovieItem } from "../types";
+import { VaultConfig, Profile, MediaPosterItem } from "../types";
 import { motion, AnimatePresence } from "motion/react";
 
 interface VaultViewProps {
@@ -42,19 +42,21 @@ interface VaultViewProps {
 const STORAGE_KEY_AUTH = "rc_vault_authenticated";
 const STORAGE_KEY_PASS = "rc_vault_passcode";
 
-interface MoviePosterCardProps {
-  movie: MovieItem;
+interface MediaPosterCardProps {
+  media: MediaPosterItem;
   idx: number;
+  badgePrefix?: string;
+  icon?: "film" | "tv" | "music";
 }
 
-function MoviePosterCard({ movie, idx }: MoviePosterCardProps) {
+function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: MediaPosterCardProps) {
   const [extIdx, setExtIdx] = useState(0);
   const exts = [".jpg", ".png", ".jpeg", ".webp"];
   const [imgFailed, setImgFailed] = useState(false);
 
   // Extract base filename without extension
-  const basePath = movie.poster.replace(/\.[^/.]+$/, "");
-  const currentSrc = extIdx === 0 ? movie.poster : `${basePath}${exts[extIdx]}`;
+  const basePath = media.poster.replace(/\.[^/.]+$/, "");
+  const currentSrc = extIdx === 0 ? media.poster : `${basePath}${exts[extIdx]}`;
 
   const handleError = () => {
     if (extIdx < exts.length - 1) {
@@ -80,20 +82,20 @@ function MoviePosterCard({ movie, idx }: MoviePosterCardProps) {
         <div className="w-full h-full relative overflow-hidden bg-slate-900 flex items-center justify-center">
           <img
             src={currentSrc}
-            alt={movie.title}
+            alt={media.title}
             onError={handleError}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-2.5">
             <span className="font-mono text-[8px] text-amber-400 font-bold uppercase tracking-wider">
-              {movie.year} • {movie.genre.split("/")[0]}
+              {media.year} • {media.genre.split("/")[0]}
             </span>
             <h4 className="font-sans font-black text-xs text-white leading-tight mt-0.5 drop-shadow">
-              {movie.title}
+              {media.title}
             </h4>
-            {movie.tagline && (
+            {media.tagline && (
               <p className="font-serif italic text-[9px] text-slate-300 mt-1 line-clamp-2 leading-tight">
-                "{movie.tagline}"
+                "{media.tagline}"
               </p>
             )}
           </div>
@@ -102,29 +104,31 @@ function MoviePosterCard({ movie, idx }: MoviePosterCardProps) {
         <div className={`w-full h-full p-2.5 flex flex-col justify-between bg-gradient-to-b ${theme} relative`}>
           <div className="flex items-center justify-between border-b border-white/20 pb-1">
             <span className="font-mono text-[7.5px] uppercase font-bold tracking-widest opacity-80">
-              CINEMA #{idx + 1}
+              {badgePrefix} #{idx + 1}
             </span>
             <span className="font-mono text-[8px] bg-white/20 px-1 py-0.2 rounded font-black text-white">
-              {movie.year}
+              {media.year}
             </span>
           </div>
 
           <div className="text-center my-auto py-1">
-            <Film size={18} className="mx-auto mb-1 opacity-70" />
+            {icon === "film" && <Film size={18} className="mx-auto mb-1 opacity-70" />}
+            {icon === "tv" && <Tv size={18} className="mx-auto mb-1 opacity-70" />}
+            {icon === "music" && <Music size={18} className="mx-auto mb-1 opacity-70" />}
             <h4 className="font-serif font-black text-xs uppercase leading-tight tracking-tight text-white drop-shadow">
-              {movie.title}
+              {media.title}
             </h4>
             <span className="font-mono text-[8px] opacity-75 uppercase tracking-wide block mt-1">
-              {movie.genre}
+              {media.genre}
             </span>
           </div>
 
           <div className="border-t border-dashed border-white/30 pt-1 text-center">
             <p className="font-serif italic text-[8.5px] opacity-90 leading-tight">
-              "{movie.tagline}"
+              "{media.tagline}"
             </p>
             <span className="text-[7px] font-mono text-white/50 block mt-0.5 uppercase tracking-tighter">
-              Drop: {movie.poster.split("/").pop()}
+              Drop: {media.poster.split("/").pop()}
             </span>
           </div>
         </div>
@@ -673,7 +677,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             title: "Forrest Gump",
             year: "1994",
             genre: "Drama / Comedy",
-            poster: "/assets/movies/forrest-gump.jpg",
+            poster: "/assets/movies/forrest-gump.png",
             tagline: "Life is like a box of chocolates.",
             description: "Classic Tom Hanks timeless storytelling"
           },
@@ -739,7 +743,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 my-auto py-1">
               {movieList.map((movie, idx) => (
                 <div key={movie.id || idx} className="h-full">
-                  <MoviePosterCard movie={movie} idx={idx} />
+                  <MediaPosterCard media={movie} idx={idx} badgePrefix="CINEMA" icon="film" />
                 </div>
               ))}
             </div>
@@ -748,72 +752,162 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       }
     },
 
-    // 6: FAV! SERIES SLIDE
+    // 6: FAV! SERIES SLIDE (POSTER GALLERY)
     {
       id: "series",
       title: "Fav! — Series",
       subtitle: "BINGE-WORTHY SHOWS",
       notes: "Series favorit: Black Mirror, Stranger Things, The End of the F***ing World, Alice in Borderland, Squid Game.",
-      render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Fav! — Series 📺</span>
-            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 07
-            </span>
-          </div>
+      render: () => {
+        const seriesList = vaultConfig?.series && vaultConfig.series.length > 0 ? vaultConfig.series : [
+          {
+            id: "series-1",
+            title: "Black Mirror",
+            year: "2011",
+            genre: "Sci-Fi / Dystopia",
+            poster: "/assets/series/black-mirror.jpg",
+            tagline: "The future is bright... or is it?",
+            description: "Dystopian tech cautionary tales & mindbenders"
+          },
+          {
+            id: "series-2",
+            title: "Stranger Things",
+            year: "2016",
+            genre: "Sci-Fi / Nostalgia",
+            poster: "/assets/series/stranger-things.jpg",
+            tagline: "One summer can change everything.",
+            description: "80s synth-wave sci-fi nostalgia & monster mystery"
+          },
+          {
+            id: "series-3",
+            title: "The End of the F***ing World",
+            year: "2017",
+            genre: "Dark Comedy / Drama",
+            poster: "/assets/series/the-end-of-the-fing-world.jpg",
+            tagline: "I'm James. I'm pretty sure I'm a psychopath.",
+            description: "Dark comedy road trip & coming-of-age"
+          },
+          {
+            id: "series-4",
+            title: "Alice in Borderland",
+            year: "2020",
+            genre: "Thriller / Survival",
+            poster: "/assets/series/alice-in-borderland.jpg",
+            tagline: "To live, you must play.",
+            description: "High stakes survival psychological game arenas"
+          },
+          {
+            id: "series-5",
+            title: "Squid Game",
+            year: "2021",
+            genre: "Thriller / Drama",
+            poster: "/assets/series/squid-game.jpg",
+            tagline: "45.6 Billion Won is Child's Play.",
+            description: "Intense social commentary thriller & suspense"
+          }
+        ];
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 my-auto">
-            {[
-              { name: "Black Mirror", desc: "Dystopian tech cautionary tales & mindbenders", color: "bg-slate-900 text-white" },
-              { name: "Stranger Things", desc: "80s synth-wave sci-fi nostalgia & monster mystery", color: "bg-purple-900 text-white" },
-              { name: "The End of the F***ing World", desc: "Dark comedy road trip & coming-of-age", color: "bg-amber-100 text-amber-950 border border-amber-300" },
-              { name: "Alice in Borderland", desc: "High stakes survival psychological game arenas", color: "bg-emerald-900 text-white" },
-              { name: "Squid Game", desc: "Intense social commentary thriller & suspense", color: "bg-rose-900 text-white" }
-            ].map((item, idx) => (
-              <div key={idx} className={`p-4 rounded-xl shadow-sm ${item.color}`}>
-                <span className="font-mono text-[9px] font-bold block uppercase opacity-80">SERIES #{idx + 1}</span>
-                <h4 className="font-black text-base mt-0.5">{item.name}</h4>
-                <p className="text-xs font-sans mt-1 opacity-90">{item.desc}</p>
+        return (
+          <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
+            <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Fav! — Series 📺</span>
+                <span className="text-xs font-mono bg-purple-100 text-purple-900 px-2 py-0.5 rounded font-bold">
+                  POSTER GALLERY
+                </span>
               </div>
-            ))}
+            </div>
+
+            {/* 5 Series Posters Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 my-auto py-1">
+              {seriesList.map((series, idx) => (
+                <div key={series.id || idx} className="h-full">
+                  <MediaPosterCard media={series} idx={idx} badgePrefix="SERIES" icon="tv" />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )
+        );
+      }
     },
 
-    // 7: FAV! MUSICIANS SLIDE
+    // 7: FAV! MUSICIANS SLIDE (POSTER GALLERY)
     {
       id: "musicians",
       title: "Fav! — Musicians",
       subtitle: "TIMELESS SOUNDSCAPES",
       notes: "Musisi favorit: The Beatles, The Beach Boys, Pink Floyd, Queen, Michael Jackson.",
-      render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Fav! — Musicians 🎸</span>
-            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 08
-            </span>
-          </div>
+      render: () => {
+        const musicianList = vaultConfig?.musicians && vaultConfig.musicians.length > 0 ? vaultConfig.musicians : [
+          {
+            id: "musician-1",
+            title: "The Beatles",
+            year: "1960s",
+            genre: "Rock & Roll / Psychedelic",
+            poster: "/assets/musicians/the-beatles.jpg",
+            tagline: "All You Need Is Love.",
+            description: "Fab Four songwriting revolution & iconic studio albums"
+          },
+          {
+            id: "musician-2",
+            title: "The Beach Boys",
+            year: "1960s",
+            genre: "Sunshine Pop / Harmony",
+            poster: "/assets/musicians/the-beach-boys.jpg",
+            tagline: "Good Vibrations & Pet Sounds.",
+            description: "Brian Wilson's harmonic genius on Pet Sounds"
+          },
+          {
+            id: "musician-3",
+            title: "Pink Floyd",
+            year: "1965",
+            genre: "Psychedelic / Art Rock",
+            poster: "/assets/musicians/pink-floyd.jpg",
+            tagline: "Shine On You Crazy Diamond.",
+            description: "Early Syd Barrett whimsy & immersive atmospheric rock"
+          },
+          {
+            id: "musician-4",
+            title: "Queen",
+            year: "1970s",
+            genre: "Glam Rock / Operatic",
+            poster: "/assets/musicians/queen.jpg",
+            tagline: "Don't Stop Me Now.",
+            description: "Freddie Mercury's boundless vocals & epic compositions"
+          },
+          {
+            id: "musician-5",
+            title: "Michael Jackson",
+            year: "1980s",
+            genre: "King of Pop / Funk",
+            poster: "/assets/musicians/michael-jackson.jpg",
+            tagline: "The King of Pop.",
+            description: "Legendary groove production, basslines & stage presence"
+          }
+        ];
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 my-auto">
-            {[
-              { name: "The Beatles", genre: "Rock & Roll / Psychedelic", desc: "Fab Four songwriting revolution & iconic studio albums" },
-              { name: "The Beach Boys", genre: "Sunshine Pop / Chamber Rock", desc: "Brian Wilson's harmonic genius on Pet Sounds" },
-              { name: "Pink Floyd", genre: "Psychedelic / Progressive", desc: "Early Syd Barrett whimsy & immersive atmospheric rock" },
-              { name: "Queen", genre: "Glam Rock / Operatic Rock", desc: "Freddie Mercury's boundless vocals & epic compositions" },
-              { name: "Michael Jackson", genre: "King of Pop / Funk", desc: "Legendary groove production, basslines & stage presence" }
-            ].map((item, idx) => (
-              <div key={idx} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:border-amber-400 transition-all">
-                <span className="font-mono text-[9px] text-amber-700 font-bold block uppercase">{item.genre}</span>
-                <h4 className="font-black text-base text-slate-900 mt-0.5">{item.name}</h4>
-                <p className="text-xs text-slate-500 font-sans mt-1">{item.desc}</p>
+        return (
+          <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
+            <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Fav! — Musicians 🎸</span>
+                <span className="text-xs font-mono bg-purple-100 text-purple-900 px-2 py-0.5 rounded font-bold">
+                  POSTER GALLERY
+                </span>
               </div>
-            ))}
+            </div>
+
+            {/* 5 Musician Posters Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 my-auto py-1">
+              {musicianList.map((musician, idx) => (
+                <div key={musician.id || idx} className="h-full">
+                  <MediaPosterCard media={musician} idx={idx} badgePrefix="ARTIST" icon="music" />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )
+        );
+      }
     },
 
     // 8: PERSONAL LIFE - WEDDING & FAMILY SLIDE

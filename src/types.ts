@@ -68,21 +68,25 @@ export interface ConfidentialDossier {
   tags: string[];
 }
 
-export interface MovieItem {
+export interface MediaPosterItem {
   id: string;
   title: string;
-  year: string;
+  year?: string;
   genre: string;
   poster: string;
   tagline?: string;
   description?: string;
 }
 
+export type MovieItem = MediaPosterItem;
+
 export interface VaultConfig {
   defaultPasscode?: string;
   terminalName?: string;
   dossiers?: ConfidentialDossier[];
-  movies?: MovieItem[];
+  movies?: MediaPosterItem[];
+  series?: MediaPosterItem[];
+  musicians?: MediaPosterItem[];
 }
 
 export interface PortfolioData {

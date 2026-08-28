@@ -88,7 +88,7 @@ function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: Me
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-2.5">
             <span className="font-mono text-[8px] text-amber-400 font-bold uppercase tracking-wider">
-              {media.year} • {media.genre.split("/")[0]}
+              {badgePrefix === "CINEMA" ? media.year : `${media.year || ""}${media.genre ? ` • ${media.genre.split("/")[0]}` : ""}`}
             </span>
             <h4 className="font-sans font-black text-xs text-white leading-tight mt-0.5 drop-shadow">
               {media.title}
@@ -118,9 +118,11 @@ function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: Me
             <h4 className="font-serif font-black text-xs uppercase leading-tight tracking-tight text-white drop-shadow">
               {media.title}
             </h4>
-            <span className="font-mono text-[8px] opacity-75 uppercase tracking-wide block mt-1">
-              {media.genre}
-            </span>
+            {badgePrefix !== "CINEMA" && media.genre && (
+              <span className="font-mono text-[8px] opacity-75 uppercase tracking-wide block mt-1">
+                {media.genre}
+              </span>
+            )}
           </div>
 
           <div className="border-t border-dashed border-white/30 pt-1 text-center">

@@ -109,7 +109,7 @@ const DEFAULT_TRACKS: AudioTrack[] = [
     id: "track-3",
     title: "A Day in the Life",
     artist: "The Beatles",
-    album: "Sgt. Pepper's (1967)",
+    album: "Sgt. Pepper's Lonely Hearts Club Band (1967)",
     genre: "Psychedelic Rock",
     src: "/assets/audio/track-3.mp3",
     cover: "/assets/audio/cover-track-3.png",
@@ -117,23 +117,33 @@ const DEFAULT_TRACKS: AudioTrack[] = [
   },
   {
     id: "track-4",
-    title: "Echoes",
-    artist: "Pink Floyd",
-    album: "Meddle (1971)",
-    genre: "Progressive Rock",
+    title: "Anyone Who Knows What Love Is",
+    artist: "Irma Thomas",
+    album: "Wish Someone Would Care (1964)",
+    genre: "R&B / Deep Soul",
     src: "/assets/audio/track-4.mp3",
     cover: "/assets/audio/cover-track-4.png",
-    duration: "4:42"
+    duration: "3:01"
   },
   {
     id: "track-5",
-    title: "Don't Stop Me Now",
-    artist: "Queen",
-    album: "Jazz (1978)",
-    genre: "Glam Rock",
+    title: "I Want You (She's So Heavy)",
+    artist: "The Beatles",
+    album: "Abbey Road (1969)",
+    genre: "Blues Rock / Hard Rock",
     src: "/assets/audio/track-5.mp3",
     cover: "/assets/audio/cover-track-5.png",
-    duration: "3:29"
+    duration: "7:47"
+  },
+  {
+    id: "track-6",
+    title: "Don't Worry Baby",
+    artist: "The Beach Boys",
+    album: "Shut Down Volume 2 (1964)",
+    genre: "Sunshine Pop / Vocal Harmony",
+    src: "/assets/audio/track-6.mp3",
+    cover: "/assets/audio/cover-track-6.png",
+    duration: "2:49"
   }
 ];
 
@@ -462,26 +472,41 @@ export default function AudioPlayer({ tracks, vintageMode = true }: AudioPlayerP
             </div>
           </div>
 
-          {/* Quick Track Pill Selector */}
-          <div className="flex gap-1.5 overflow-x-auto pt-2">
-            {playlist.map((track, idx) => (
-              <button
-                key={track.id || idx}
-                onClick={() => {
-                  setCustomAudioUrl(null);
-                  setCustomTrackTitle(null);
-                  setLoadError(false);
-                  setCurrentTrackIndex(idx);
-                }}
-                className={`px-2.5 py-1 rounded font-mono text-[9.5px] font-bold uppercase transition-all whitespace-nowrap cursor-pointer border ${
-                  currentTrackIndex === idx && !customAudioUrl
-                    ? "bg-purple-900 text-white border-retro-black shadow-xs"
-                    : "bg-warm-cream hover:bg-white text-slate-700 border-slate-300"
-                }`}
-              >
-                {idx + 1}. {track.title}
-              </button>
-            ))}
+          {/* Tracklist Menu: Grid layout downwards without horizontal scrolling */}
+          <div className="pt-2.5 border-t border-retro-gray/25 space-y-1.5">
+            <div className="flex items-center justify-between font-mono text-[9px] uppercase font-bold text-retro-gray">
+              <span>TURNTABLE PLAYLIST ({playlist.length} TRACKS)</span>
+              <span>SELECT TRACK TO PLAY</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5">
+              {playlist.map((track, idx) => {
+                const isSelected = currentTrackIndex === idx && !customAudioUrl;
+                return (
+                  <button
+                    key={track.id || idx}
+                    onClick={() => {
+                      setCustomAudioUrl(null);
+                      setCustomTrackTitle(null);
+                      setLoadError(false);
+                      setCurrentTrackIndex(idx);
+                    }}
+                    className={`px-2.5 py-1.5 rounded font-mono text-left text-[9.5px] transition-all cursor-pointer border flex items-center justify-between gap-1.5 ${
+                      isSelected
+                        ? "bg-purple-950 text-amber-300 border-retro-black shadow-xs font-bold"
+                        : "bg-warm-cream hover:bg-white text-slate-800 border-slate-300 font-medium"
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5 truncate">
+                      <span className={`text-[8.5px] px-1 py-0.2 rounded font-bold shrink-0 ${isSelected ? "bg-amber-400 text-purple-950" : "bg-retro-cream-dark text-slate-700"}`}>
+                        0{idx + 1}
+                      </span>
+                      <span className="truncate font-bold">{track.title}</span>
+                    </div>
+                    <span className="text-[8px] opacity-70 shrink-0 font-sans">{track.duration}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

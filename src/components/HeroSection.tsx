@@ -1,9 +1,5 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { Mail, ArrowDownRight, Globe, Landmark, Clock, FileBadge } from "lucide-react";
+import { useState } from "react";
+import { Mail, ArrowDownRight, Globe, Landmark, Clock, FileBadge, Zap } from "lucide-react";
 import { Profile } from "../types";
 import { motion } from "motion/react";
 
@@ -20,6 +16,20 @@ export default function HeroSection({
   todaysDateOverride,
   quoteOfTheDay,
 }: HeroSectionProps) {
+  const [photoExtIdx, setPhotoExtIdx] = useState(0);
+  const photoExts = [".jpg", ".png", ".jpeg", ".webp"];
+  const [photoFailed, setPhotoFailed] = useState(false);
+
+  const currentPhotoSrc = `/assets/profile/photo${photoExts[photoExtIdx]}`;
+
+  const handlePhotoError = () => {
+    if (photoExtIdx < photoExts.length - 1) {
+      setPhotoExtIdx((prev) => prev + 1);
+    } else {
+      setPhotoFailed(true);
+    }
+  };
+
   // Simple functional date string
   const formattedDate = todaysDateOverride || new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -46,7 +56,7 @@ export default function HeroSection({
           </div>
           
           <div className="font-serif italic text-lg text-retro-black tracking-wide font-semibold text-center">
-            "The Authority on Electronic Machinery & Structural Typography"
+            "All the Code & Architecture That's Fit to Ship"
           </div>
 
           <div className="bg-retro-black text-warm-cream text-xs font-mono px-3 py-1 font-bold rounded">
@@ -81,30 +91,26 @@ export default function HeroSection({
                   {profile.role.toUpperCase()}
                 </span>
                 <span className="font-sans font-bold text-retro-black text-lg uppercase tracking-tight leading-tight block sm:inline mt-1.5 sm:mt-0">
-                  RAFELY CHANDRA UNVEILS DIGITAL APPARATUS CODE
+                  ENGINEERING DISPATCH: THE TECHNICAL DOSSIER OF CHANDRA
                 </span>
               </div>
 
-              {/* Internal layout grid to put profile portrait side by side with the news article */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                
-                {/* Left side within Editorial: Profile picture section */}
-                <div className="md:col-span-4 flex flex-col">
+              {/* Float-Wrap Editorial Layout: Photo floated on left, text flows around and beneath it seamlessly with text-justify */}
+              <div className="flow-root pt-2">
+                {/* Floated Profile picture frame */}
+                <div className="w-full sm:w-[260px] md:w-[290px] float-none sm:float-left sm:mr-6 mb-4 sm:mb-2">
                   {/* Aspect ratio frame with vintage grayscale/sepia filter support */}
-                  <div className="aspect-[4/5] bg-retro-yellow/10 border-4 border-retro-black mb-3 relative flex flex-col items-center justify-center overflow-hidden transition-all duration-500 shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] hover:shadow-[4px_4px_0px_0px_rgba(242,100,25,1)] group rounded-xs">
+                  <div className="aspect-[4/5] bg-retro-yellow/10 border-4 border-retro-black mb-2 relative flex flex-col items-center justify-center overflow-hidden transition-all duration-500 shadow-[3px_3px_0px_0px_rgba(30,28,26,1)] hover:shadow-[4px_4px_0px_0px_rgba(242,100,25,1)] group rounded-xs">
                     <div className="absolute inset-0 border-[6px] border-warm-cream/30 z-10 pointer-events-none"></div>
                     
-                    {profile.picture ? (
+                    {!photoFailed ? (
                       <div className="relative w-full h-full overflow-hidden flex items-center justify-center bg-retro-cream-dark">
                         <img
-                          src={profile.picture}
+                          src={currentPhotoSrc}
                           alt={profile.name}
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover grayscale sepia-[0.15] contrast-[1.25] brightness-[0.92] group-hover:scale-105 transition-transform duration-500"
-                          onError={(e) => {
-                            // If the local file is not found, fallback gracefully to the classic tech schematic
-                            e.currentTarget.style.display = 'none';
-                          }}
+                          onError={handlePhotoError}
                         />
                         {/* 1960s Newsprint Screen Halftone Overlay */}
                         <div 
@@ -153,41 +159,72 @@ export default function HeroSection({
                       {profile.name}
                     </div>
                   </div>
-
-                  {/* Identification registry number */}
-                  <div className="border-2 border-dashed border-retro-gray p-1.5 text-center bg-retro-cream-dark/40 rounded-xs">
-                    <span className="font-mono text-[8px] font-bold text-retro-gray block uppercase">REGULATION CODE</span>
-                    <span className="font-mono text-[10px] font-black text-retro-orange select-all">AV-620941-F</span>
-                  </div>
                 </div>
 
-                {/* Right side within Editorial: Main dropcap narrative & paragraphs */}
-                <div className="md:col-span-8 space-y-4">
-                  {/* Bold first paragraph with dynamic drop cap */}
-                  <p className="font-serif text-retro-black text-base md:text-lg font-medium leading-relaxed italic relative">
-                    <span className="float-left text-4xl font-extrabold text-retro-orange mr-2 sm:mr-3 mt-1 font-serif border-4 border-retro-black px-1.5 pb-0.5 bg-retro-cream-dark shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
+                {/* Main Article Body: Flowing around the floated image with text-justify */}
+                <div className="space-y-3.5">
+                  {/* First paragraph with Drop Cap */}
+                  <p className="font-serif text-retro-black text-sm sm:text-[15px] font-normal leading-relaxed text-justify relative select-all">
+                    <span className="float-left text-4xl font-extrabold text-retro-orange mr-2 sm:mr-2.5 mt-0.5 font-serif border-4 border-retro-black px-1.5 pb-0.5 bg-retro-cream-dark shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">
                       {profile.retroNarrative[0]?.charAt(0)}
                     </span>
                     {profile.retroNarrative[0]?.slice(1)}
                   </p>
 
-                  <p className="text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed select-all">
+                  {/* Second paragraph */}
+                  <p className="text-xs sm:text-sm text-retro-charcoal font-sans leading-relaxed text-justify select-all">
                     {profile.retroNarrative[1]}
                   </p>
 
-                  {/* Extra narrative block and quote */}
-                  <div className="pt-2 text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed w-full">
-                    <div className="w-full space-y-4 border-t border-retro-gray pt-4 bg-retro-cream-dark bg-opacity-30 p-3 rounded-xs font-serif font-medium">
-                      <p className="font-sans text-xs md:text-sm text-retro-charcoal leading-relaxed">{profile.retroNarrative[2]}</p>
-                      
-                      {/* Retro blockquote quoteOfTheDay */}
-                      <div className="border-l-4 border-retro-orange pl-3 italic text-xs text-retro-black py-0.5 select-all leading-normal bg-warm-cream/40 p-1.5 rounded-r">
+                  {/* Third paragraph and quote */}
+                  <div className="border-t border-retro-gray pt-3.5 bg-retro-cream-dark/30 p-3 rounded-xs font-serif">
+                    <p className="font-sans text-xs sm:text-sm text-retro-charcoal leading-relaxed text-justify">
+                      {profile.retroNarrative[2]}
+                    </p>
+                    
+                    {/* Retro blockquote quoteOfTheDay */}
+                    {quoteOfTheDay && (
+                      <div className="border-l-4 border-retro-orange pl-3 mt-3 italic text-xs text-retro-black py-0.5 select-all leading-normal bg-warm-cream/40 p-1.5 rounded-r">
                         "{quoteOfTheDay}"
                       </div>
+                    )}
+                  </div>
+
+                  {/* Core Engineering Rails & Specializations Strip */}
+                  <div className="border-2 border-retro-black p-3 bg-retro-cream-dark/50 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] mt-3.5 space-y-2">
+                    <div className="flex items-center justify-between border-b border-retro-black/20 pb-1 font-mono text-[9px] uppercase font-extrabold text-retro-black">
+                      <span className="flex items-center gap-1.5 text-retro-orange">
+                        <Zap size={11} className="text-retro-orange fill-retro-orange" />
+                        CORE ENGINEERING RAILS & SPECIALIZATIONS
+                      </span>
+                      <span className="text-[8px] text-retro-gray hidden sm:inline">HIGH-THROUGHPUT STACK</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 font-mono text-[9px] uppercase font-bold text-retro-black">
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        ⚡ Golang (Echo / Gin)
+                      </span>
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        🛡️ Money Flow Orchestration
+                      </span>
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        💳 QRIS & Remittance Rails
+                      </span>
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        🔄 Kafka Event Streams
+                      </span>
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        🗄️ PostgreSQL & Redis Cache
+                      </span>
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        🌐 KrakenD & Kong Gateways
+                      </span>
+                      <span className="px-2 py-0.5 bg-warm-cream border border-retro-black rounded shadow-[1px_1px_0px_0px_rgba(0,0,0,1)]">
+                        ☁️ GCP & Kubernetes Deployments
+                      </span>
                     </div>
                   </div>
                 </div>
-
               </div>
             </div>
 

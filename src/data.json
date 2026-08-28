@@ -2,15 +2,15 @@
   "profile": {
     "name": "Rafely Chandra Rizkilillah",
     "role": "Senior Backend Engineer",
-    "subtitle": "Architecting high-throughput payment infrastructure, single API orchestration, and core banking migrations under scale.",
+    "subtitle": "Architecting high-throughput payment infrastructure, money flow orchestration, and core banking migrations under scale.",
     "establishmentYear": "Est. 2019",
     "location": "Jakarta, Indonesia",
     "avatarPlaceholderSeed": "retro-analyst",
-    "picture": "/src/assets/images/photo.png",
+    "picture": "/assets/profile/photo.jpg",
     "retroNarrative": [
-      "In an era of rapid digital transactions, Rafely operates at the precise intersection of concurrent Go code, high-throughput payment pipelines, and secure ledger telemetry. Fabricating robust digital apparatuses that handle millions of micro-finance data transmissions with absolute mathematical reliability.",
-      "With over five years of documented practice in fintech payment workshops, Rafely has mastered the alignment of core financial flows. His digital workbench delivers resilient full-stack elements, safe server-side gateway relays (KrakenD, Kong), and databases engineered with high-fidelity performance.",
-      "Whether launching QRIS integration nodes, tuning database query metrics, or structuring secure e-wallet top-ups, he approaches code with rigorous standards corresponding to the classic Swiss grid layouts of early computational systems."
+      "In an era of high-velocity distributed systems, Chandra operates at the precise intersection of concurrent Go engineering, high-throughput payment orchestration, and resilient financial ledger telemetry, building robust backend infrastructure capable of processing millions of mission-critical transactions with zero data loss.",
+      "With over six years of specialized experience in fintech and banking infrastructure, Chandra has mastered core money-flow engineering. His architectural toolkit encompasses resilient microservices, high-performance API gateways (KrakenD, Kong), event-driven Kafka pipelines, and meticulously tuned PostgreSQL databases.",
+      "Whether scaling QRIS acquiring nodes, integrating multi-provider payment rails, or mitigating high-severity production incidents, he approaches software craftsmanship with the rigorous precision of timeless engineering principles."
     ],
     "socials": [
       {
@@ -342,8 +342,8 @@
   },
   "aestheticSettings": {
     "siteTitle": "Rafely Chandra Portfolio",
-    "newspaperName": "THE FINTECH COURIER",
-    "todaysDateOverride": "MONDAY, JUNE 1, 2026",
+    "newspaperName": "THE DAILY DISPATCH",
+    "todaysDateOverride": "",
     "quoteOfTheDay": "FINANCIAL SCALABILITY SECURES THE INTEGRITY OF GRASSTOOTS ECONOMIES. HIGH THROUGHPUT CONQUERS SPACE AND TIME.",
     "audioTracks": [
       {
@@ -370,7 +370,7 @@
         "id": "track-3",
         "title": "A Day in the Life",
         "artist": "The Beatles",
-        "album": "Sgt. Pepper's (1967)",
+        "album": "Sgt. Pepper's Lonely Hearts Club Band (1967)",
         "genre": "Psychedelic Rock",
         "src": "/assets/audio/track-3.mp3",
         "cover": "/assets/audio/cover-track-3.png",
@@ -378,23 +378,33 @@
       },
       {
         "id": "track-4",
-        "title": "Echoes",
-        "artist": "Pink Floyd",
-        "album": "Meddle (1971)",
-        "genre": "Progressive Rock",
+        "title": "Anyone Who Knows What Love Is",
+        "artist": "Irma Thomas",
+        "album": "Wish Someone Would Care (1964)",
+        "genre": "R&B / Deep Soul",
         "src": "/assets/audio/track-4.mp3",
         "cover": "/assets/audio/cover-track-4.png",
-        "duration": "4:42"
+        "duration": "3:01"
       },
       {
         "id": "track-5",
-        "title": "Don't Stop Me Now",
-        "artist": "Queen",
-        "album": "Jazz (1978)",
-        "genre": "Glam Rock",
+        "title": "I Want You (She's So Heavy)",
+        "artist": "The Beatles",
+        "album": "Abbey Road (1969)",
+        "genre": "Blues Rock / Hard Rock",
         "src": "/assets/audio/track-5.mp3",
         "cover": "/assets/audio/cover-track-5.png",
-        "duration": "3:29"
+        "duration": "7:47"
+      },
+      {
+        "id": "track-6",
+        "title": "Don't Worry Baby",
+        "artist": "The Beach Boys",
+        "album": "Shut Down Volume 2 (1964)",
+        "genre": "Sunshine Pop / Vocal Harmony",
+        "src": "/assets/audio/track-6.mp3",
+        "cover": "/assets/audio/cover-track-6.png",
+        "duration": "2:49"
       }
     ],
     "vinylMelody": {

@@ -32,14 +32,9 @@ export default function Navbar({
     <nav className="w-full bg-warm-cream border-b-4 border-retro-black relative z-30 select-none">
       {/* Top Banner: Vintage Classification banner */}
       <div className="bg-retro-black text-warm-cream text-center py-1.5 px-4 font-mono text-[10px] uppercase tracking-[0.25em] font-medium flex justify-between items-center">
-        <button
-          onClick={onOpenVault}
-          className="hover:text-retro-yellow transition-colors cursor-pointer flex items-center gap-1 font-bold text-left"
-          title="Open Classified Vault (/vault)"
-        >
-          <span>CLASSIFIED PORTFOLIO ENVELOPE</span>
-          <span className="text-retro-orange text-[9px] lowercase">[#vault]</span>
-        </button>
+        <span className="font-bold text-left text-warm-cream">
+          CLASSIFIED PORTFOLIO ENVELOPE
+        </span>
         <span className="hidden sm:inline">OFFICIAL COMPUTATIONAL REGISTRY • {profile.establishmentYear}</span>
         <span className="font-mono">{profile.location}</span>
       </div>

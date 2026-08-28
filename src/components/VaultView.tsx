@@ -784,7 +784,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "1998",
             genre: "Sci-Fi / Drama",
             poster: "/assets/movies/truman-show.jpg",
-            tagline: "On the air. Unaware.",
+            tagline: "In case I don't see ya: good afternoon, good evening, and good night!",
             description: "Jim Carrey existential masterpiece"
           },
           {

@@ -234,6 +234,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [showNotes, setShowNotes] = useState<boolean>(false);
+  const currentYear = new Date().getFullYear();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -256,15 +257,16 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
 
   // Keyboard navigation for presentation
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isAuthenticated) return;
       if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
         e.preventDefault();
         setCurrentSlide((prev) => Math.min(prev + 1, SLIDES.length - 1));
       } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
         e.preventDefault();
         setCurrentSlide((prev) => Math.max(prev - 1, 0));
-      } else if (e.key === "f" || e.key === "F") {
+      } else if (e.key.toLowerCase() === "f") {
         e.preventDefault();
         toggleFullscreen();
       } else if (e.key === "Escape" && isFullscreen) {
@@ -380,7 +382,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
     {
       id: "cover",
       title: "KYC - Know Your Colleague",
-      subtitle: "CHANKEEY • 2024",
+      subtitle: `CHANKEEY • ${currentYear}`,
       notes: "Sapaan pembuka & pengenalan sesi KYC Chandra.",
       render: () => (
         <div className="h-full w-full flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-[#451B69] via-[#351253] to-[#200A34] text-white relative overflow-hidden">
@@ -404,7 +406,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
 
           <div className="mt-10 flex items-center justify-between w-full max-w-xl border-t border-white/20 pt-4 text-xs font-mono text-white/70">
             <span>KYC — Chandra</span>
-            <span>2024 EDITION</span>
+            <span>{currentYear} EDITION</span>
           </div>
         </div>
       )
@@ -1194,7 +1196,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           </div>
           <div className="flex items-center gap-4">
             <span className="hidden sm:inline text-retro-gray">
-              CHANKEEY-KYC-2024
+              CHANKEEY-KYC-{currentYear}
             </span>
             <button
               onClick={onExit}
@@ -1357,10 +1359,10 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                   <button
                     onClick={toggleFullscreen}
                     className="px-3 py-1 bg-purple-900 hover:bg-purple-950 text-white border-2 border-retro-black rounded font-mono text-xs font-bold uppercase cursor-pointer flex items-center gap-1 shadow-sm"
-                    title="Toggle 1-Screen Fullscreen (F)"
+                    title="Toggle Fullscreen (F)"
                   >
                     <Maximize size={12} />
-                    <span>Full Screen (1 Layar)</span>
+                    <span>Fullscreen</span>
                   </button>
 
                   <button
@@ -1465,7 +1467,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       {/* Extreme Bottom Bar (Hidden in Fullscreen) */}
       {!isFullscreen && (
         <div className="border-t-2 border-retro-black bg-retro-charcoal text-warm-cream py-2 px-4 text-center font-mono text-[8px] uppercase tracking-widest">
-          KYC PRESENTATION DECK • BUILT FOR WEB RUNTIME • CHANKEEY 2024
+          KYC PRESENTATION DECK • BUILT FOR WEB RUNTIME • CHANKEEY {currentYear}
         </div>
       )}
     </div>

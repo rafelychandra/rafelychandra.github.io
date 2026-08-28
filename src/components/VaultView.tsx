@@ -216,6 +216,92 @@ function IntroPhotoCard({ idx, label, theme, span, aspect }: IntroPhotoCardProps
   );
 }
 
+interface VinylPhotoCardProps {
+  idx: number;
+  label: string;
+  subLabel?: string;
+  theme?: string;
+}
+
+function VinylPhotoCard({ idx, label, subLabel, theme }: VinylPhotoCardProps) {
+  const [extIdx, setExtIdx] = useState(0);
+  const exts = [".jpg", ".png", ".jpeg", ".webp"];
+  const [hasError, setHasError] = useState(false);
+
+  const currentSrc = `/assets/vinyl/vinyl-${idx + 1}${exts[extIdx]}`;
+
+  const handleError = () => {
+    if (extIdx < exts.length - 1) {
+      setExtIdx((prev) => prev + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  const defaultTheme = theme || "from-amber-950 via-slate-900 to-black text-amber-200";
+
+  return (
+    <div className="group relative aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-amber-500 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-950 text-white">
+      {!hasError ? (
+        <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
+          <img
+            src={currentSrc}
+            alt={label}
+            onError={handleError}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          {/* Subtle vinyl groove border highlight */}
+          <div className="absolute inset-0 border-4 border-black/20 rounded-2xl pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-3">
+            <span className="font-mono text-[8.5px] text-amber-400 font-bold uppercase tracking-wider">
+              DISC 0{idx + 1}
+            </span>
+            <h4 className="font-sans font-black text-xs sm:text-sm text-white leading-tight mt-0.5 drop-shadow">
+              {label}
+            </h4>
+            {subLabel && (
+              <p className="font-serif italic text-[9.5px] text-slate-300 mt-0.5 line-clamp-1">
+                {subLabel}
+              </p>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className={`w-full h-full p-3 flex flex-col justify-between bg-gradient-to-br ${defaultTheme} relative`}>
+          <div className="flex items-center justify-between border-b border-white/20 pb-1">
+            <span className="font-mono text-[8px] uppercase font-bold tracking-widest text-amber-300">
+              VINYL #{idx + 1}
+            </span>
+            <Disc size={13} className="text-amber-400 animate-spin" style={{ animationDuration: "8s" }} />
+          </div>
+
+          <div className="text-center my-auto py-1">
+            <div className="w-10 h-10 mx-auto rounded-full bg-black/40 border border-amber-400/40 flex items-center justify-center mb-1.5 shadow-inner">
+              <div className="w-2.5 h-2.5 bg-amber-400 rounded-full"></div>
+            </div>
+            <h5 className="font-sans font-black text-xs uppercase tracking-tight text-white leading-tight">
+              {label}
+            </h5>
+            {subLabel && (
+              <span className="font-mono text-[8px] text-amber-200/80 block mt-0.5">
+                {subLabel}
+              </span>
+            )}
+          </div>
+
+          <div className="border-t border-dashed border-white/20 pt-1 text-center font-mono text-[7px] text-slate-400">
+            Drop: vinyl-{idx + 1}.jpg
+          </div>
+        </div>
+      )}
+
+      <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-xs text-amber-300 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded-md z-10 border border-amber-500/30">
+        33⅓ RPM
+      </div>
+    </div>
+  );
+}
+
 export default function VaultView({ vaultConfig, profile, onExit }: VaultViewProps) {
   // Passcode resolution
   const defaultPass = vaultConfig?.defaultPasscode || "1411";
@@ -592,16 +678,22 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       )
     },
 
-    // 4: HOBBY - VINYL COLLECTION SLIDE
+    // 4: HOBBY - VINYL COLLECTION SLIDE (4-PHOTO TEMPLATE)
     {
       id: "vinyl",
       title: "Hobby: Koleksi Vinyl",
       subtitle: "@echoespinrecords",
       notes: "Koleksi piringan hitam, turntable vintage, hunting piringan hitam di Record Store Day.",
       render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Hobby — Koleksi Vinyl 💿</span>
+        <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
+          {/* Header Info & Instagram */}
+          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-2">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Hobby — Koleksi Vinyl 💿</span>
+              <span className="text-xs font-mono bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold hidden sm:inline">
+                4-PHOTO SHOWCASE
+              </span>
+            </div>
             <a 
               href="https://instagram.com/echoespinrecords" 
               target="_blank" 
@@ -613,53 +705,56 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             </a>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 my-auto items-center">
-            <div className="md:col-span-5 space-y-4">
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 my-auto items-center">
+            {/* Left Bio & Turntable Info */}
+            <div className="md:col-span-4 space-y-3">
+              <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
                 <span className="text-xs font-mono font-bold text-amber-700 uppercase">Analog Sound Collector</span>
-                <h3 className="text-2xl font-black text-slate-900 mt-1">
-                  The Warmth of 33⅓ RPM Grooves
+                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1 leading-tight">
+                  The Warmth of 33⅓ RPM
                 </h3>
                 <p className="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
                   Menikmati pengalaman mendengarkan musik fisik melalui piringan hitam era 60-70an, hunting vinyl langka di Record Store Day, dan merawat turntable analog stereo setup.
                 </p>
 
-                <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-3">
+                <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center gap-2.5">
                   <div className="p-2 bg-amber-100 text-amber-900 rounded-lg">
-                    <Disc size={20} className="animate-spin" style={{ animationDuration: "6s" }} />
+                    <Disc size={18} className="animate-spin" style={{ animationDuration: "6s" }} />
                   </div>
                   <div>
                     <span className="text-xs font-bold text-slate-800 block">Stereo Turntable Station</span>
-                    <span className="text-[10px] font-mono text-slate-500">Parchment Warmth • High Fidelity</span>
+                    <span className="text-[10px] font-mono text-slate-500">Parchment Warmth • Hi-Fi</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="md:col-span-7 grid grid-cols-2 gap-3">
-              <div className="bg-purple-900 text-white p-4 rounded-xl flex flex-col justify-between">
-                <span className="text-xs font-mono text-amber-300 font-bold">GRAIL DISCS</span>
-                <h4 className="font-bold text-sm mt-1">The Beatles — 1962-1966</h4>
-                <p className="text-[10px] text-purple-200 mt-1">Original pressing collection & rare albums.</p>
-              </div>
-
-              <div className="bg-amber-100 text-amber-950 p-4 rounded-xl border border-amber-200 flex flex-col justify-between">
-                <span className="text-xs font-mono text-amber-800 font-bold">SUNSHINE POP</span>
-                <h4 className="font-bold text-sm mt-1">The Beach Boys — Pet Sounds</h4>
-                <p className="text-[10px] text-amber-900 mt-1">Masterpiece harmonic arrangements.</p>
-              </div>
-
-              <div className="bg-slate-900 text-white p-4 rounded-xl flex flex-col justify-between">
-                <span className="text-xs font-mono text-cyan-300 font-bold">PSYCHEDELIC</span>
-                <h4 className="font-bold text-sm mt-1">Pink Floyd — Piper At The Gates</h4>
-                <p className="text-[10px] text-slate-300 mt-1">Syd Barrett era vintage soundscapes.</p>
-              </div>
-
-              <div className="bg-red-50 text-red-950 p-4 rounded-xl border border-red-200 flex flex-col justify-between">
-                <span className="text-xs font-mono text-red-700 font-bold">EVENT ARCHIVE</span>
-                <h4 className="font-bold text-sm mt-1">Record Store Day Drops</h4>
-                <p className="text-[10px] text-red-800 mt-1">Gathering with fellow audiophile collectors.</p>
-              </div>
+            {/* Right 4-Photo Vinyl Grid (2x2) */}
+            <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 gap-3">
+              <VinylPhotoCard 
+                idx={0} 
+                label="The Beatles" 
+                subLabel="Grail Discs / 1962-1966"
+                theme="from-purple-950 via-slate-900 to-black text-purple-200"
+              />
+              <VinylPhotoCard 
+                idx={1} 
+                label="The Beach Boys" 
+                subLabel="Pet Sounds Masterpiece"
+                theme="from-amber-950 via-slate-900 to-black text-amber-200"
+              />
+              <VinylPhotoCard 
+                idx={2} 
+                label="Pink Floyd" 
+                subLabel="Piper At The Gates of Dawn"
+                theme="from-cyan-950 via-slate-900 to-black text-cyan-200"
+              />
+              <VinylPhotoCard 
+                idx={3} 
+                label="Turntable Setup" 
+                subLabel="Record Store Day Drops"
+                theme="from-rose-950 via-slate-900 to-black text-rose-200"
+              />
             </div>
           </div>
         </div>

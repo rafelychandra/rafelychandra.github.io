@@ -149,7 +149,20 @@ export default function App() {
 
             {/* 5. Live Broadcast / Audio Turntable & Spotify Section (Vinyl Lounge) */}
             <div className="border-t-4 border-retro-black my-4"></div>
-            <section id="vinyl-lounge" className="px-4 md:px-8 max-w-7xl mx-auto my-12 space-y-8">
+            <section id="vinyl-lounge" className="px-4 md:px-8 max-w-7xl mx-auto my-12 space-y-8 select-none">
+              {/* Editorial Section Header */}
+              <div className="text-center border-y-4 border-retro-black py-5 bg-retro-cream-dark shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rounded">
+                <div className="inline-block bg-retro-orange bg-opacity-15 border border-retro-orange text-retro-orange font-mono text-[10px] font-bold px-3 py-0.5 uppercase rounded tracking-widest mb-2">
+                  PERSONAL FAVORITES & SOUNDTRACK
+                </div>
+                <h2 className="font-serif text-3xl md:text-4xl font-black text-retro-black uppercase tracking-tight">
+                  THE VINYL LOUNGE
+                </h2>
+                <p className="font-mono text-xs text-retro-gray uppercase tracking-wider mt-1.5 font-bold max-w-2xl mx-auto">
+                  A curated collection of my all-time favorite records — the soundtrack to my late-night coding sessions and deep-focus flows
+                </p>
+              </div>
+
               <AudioPlayer
                 tracks={data.aestheticSettings.audioTracks}
                 vintageMode={vintageMode}

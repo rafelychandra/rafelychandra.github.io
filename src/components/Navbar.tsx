@@ -56,24 +56,31 @@ export default function Navbar({
         </div>
 
         {/* Navigation items / controls */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
           <a
             href="#chronological-experiences"
-            className="px-3.5 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all"
+            className="px-3 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all"
           >
-            Work History
+            Experience
+          </a>
+          <a
+            href="#technical-advertising"
+            className="px-3 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all"
+          >
+            Skills
           </a>
           <a
             href="#educational-creds"
-            className="px-3.5 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all"
+            className="px-3 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all"
           >
             Education
           </a>
           <a
-            href="#technical-advertising"
-            className="px-3.5 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all"
+            href="#vinyl-lounge"
+            className="px-3 py-1.5 font-display text-xs uppercase font-medium text-retro-black hover:bg-retro-cream-dark border-2 border-transparent hover:border-retro-black rounded transition-all flex items-center gap-1"
           >
-            Skill Grid
+            <Radio size={12} className="text-retro-orange" />
+            <span>Vinyl Lounge</span>
           </a>
 
           {/* Interactive Lab Control Button */}

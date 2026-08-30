@@ -127,7 +127,7 @@ export default function App() {
 
           {/* Main Body */}
           <main className="flex-grow">
-            {/* 3. Hero Editorial section (Front Page of Newspaper) */}
+            {/* 1. Hero Editorial section (Front Page of Newspaper) */}
             <HeroSection
               profile={data.profile}
               newspaperName={data.aestheticSettings.newspaperName}
@@ -135,26 +135,27 @@ export default function App() {
               quoteOfTheDay={data.aestheticSettings.quoteOfTheDay}
             />
 
-            {/* Live Broadcast / Audio Turntable & Spotify Section */}
-            <section className="px-4 md:px-8 max-w-7xl mx-auto mb-12 space-y-8">
+            {/* 2. Experience History ledger */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <ExperienceTimeline experiences={data.experiences} />
+
+            {/* 3. Technical Skills Arsenal */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <SkillsGrid skills={data.skills} />
+
+            {/* 4. Education & Certifications */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <EducationCard educations={data.educations} />
+
+            {/* 5. Live Broadcast / Audio Turntable & Spotify Section (Vinyl Lounge) */}
+            <div className="border-t-4 border-retro-black my-4"></div>
+            <section id="vinyl-lounge" className="px-4 md:px-8 max-w-7xl mx-auto my-12 space-y-8">
               <AudioPlayer
                 tracks={data.aestheticSettings.audioTracks}
                 vintageMode={vintageMode}
               />
               <SpotifyPlaylists />
             </section>
-
-            {/* 4. Experience History ledger */}
-            <div className="border-t-4 border-retro-black my-4"></div>
-            <ExperienceTimeline experiences={data.experiences} />
-
-            {/* 5. Education grid details */}
-            <div className="border-t-4 border-retro-black my-4"></div>
-            <EducationCard educations={data.educations} />
-
-            {/* 6. Classified skill ads clipping coupon */}
-            <div className="border-t-4 border-retro-black my-4"></div>
-            <SkillsGrid skills={data.skills} />
           </main>
 
           {/* 7. Footer credits */}

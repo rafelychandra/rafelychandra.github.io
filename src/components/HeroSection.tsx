@@ -109,19 +109,9 @@ export default function HeroSection({
                           src={currentPhotoSrc}
                           alt={profile.name}
                           referrerPolicy="no-referrer"
-                          className="w-full h-full object-cover grayscale sepia-[0.15] contrast-[1.25] brightness-[0.92] group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           onError={handlePhotoError}
                         />
-                        {/* 1960s Newsprint Screen Halftone Overlay */}
-                        <div 
-                          className="absolute inset-0 pointer-events-none opacity-[0.22] mix-blend-multiply bg-repeat"
-                          style={{
-                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='%23000'/%3E%3C/svg%3E")`,
-                            backgroundSize: '3px 3px'
-                          }}
-                        ></div>
-                        {/* Editorial Warm Sepia Multiply Accent */}
-                        <div className="absolute inset-0 bg-retro-orange/5 mix-blend-multiply pointer-events-none"></div>
                       </div>
                     ) : (
                       /* Classic modular vector schematic of mid-century technical operator */

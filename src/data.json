@@ -2,15 +2,15 @@
   "profile": {
     "name": "Rafely Chandra Rizkilillah",
     "role": "Senior Backend Engineer",
-    "subtitle": "Architecting high-throughput payment infrastructure, money flow orchestration, and core banking migrations under scale.",
+    "subtitle": "Specializing in Go backends, robust money-flow orchestration, and mission-critical financial systems.",
     "establishmentYear": "Est. 2019",
     "location": "Jakarta, Indonesia",
     "avatarPlaceholderSeed": "retro-analyst",
     "picture": "/assets/profile/photo.jpg",
     "retroNarrative": [
-      "In an era of high-velocity distributed systems, Chandra operates at the precise intersection of concurrent Go engineering, high-throughput payment orchestration, and resilient financial ledger telemetry, building robust backend infrastructure capable of processing millions of mission-critical transactions with zero data loss.",
-      "With over six years of specialized experience in fintech and banking infrastructure, Chandra has mastered core money-flow engineering. His architectural toolkit encompasses resilient microservices, high-performance API gateways (KrakenD, Kong), event-driven Kafka pipelines, and meticulously tuned PostgreSQL databases.",
-      "Whether scaling QRIS acquiring nodes, integrating multi-provider payment rails, or mitigating high-severity production incidents, he approaches software craftsmanship with the rigorous precision of timeless engineering principles."
+      "As a software engineer, especially in backend development, with over 7 years of deep specialization in payment and financial infrastructure, I focus on one core mission: building resilient money-movement systems that scale reliably and never drop a single transaction.",
+      "I architect central money-flow orchestration, build end-to-end QRIS acquiring and issuing systems, and integrate multi-vendor rails for remittance and virtual accounts using Go microservices, Kafka event pipelines, and finely tuned databases.",
+      "From resolving high-stakes Sev-0 production incidents to leading zero-downtime core banking migrations, I approach backend engineering with rigorous discipline, proactive reliability, and a focus on long-term scalability."
     ],
     "socials": [
       {
@@ -40,12 +40,14 @@
       "period": "Jan 2023 - Present",
       "location": "Jakarta, Indonesia",
       "description": [
-        "Architected and owned Single API, the central payment orchestration layer for cash-in, cash-out, QRIS, remittance, and e-wallet flows, introducing adapter-based architecture and state transition validations.",
-        "Led end-to-end QRIS Acquiring and Issuing integration with Artajasa/ASPI, delivering static/dynamic QR APIs, payment credits, refund options, Luhn validation, and retry logic.",
-        "Integrated multi-provider remittance (bank transfer money-out) with BRI, Digiasia, and FLIP with callback orchestration and scheduled status checks.",
-        "Prevented critical financial incidents by resolving Sev-0 and Sev-2 events (wallet double-hit, double responses to BRI VA, and idempotency failures)."
+        "Architected and maintained the central Single API payment layer, orchestrating cash-in, cash-out, QRIS, remittance, and e-wallet transactions with strict state validations.",
+        "Led the end-to-end development of QRIS acquiring and issuing systems integrated with Artajasa/ASPI, delivering static/dynamic QR APIs, merchant credits, refund flows, and resilient retry logic.",
+        "Integrated multi-provider remittance and Virtual Account rails (BRI, Midtrans, FLIP) with real-time callback orchestration and automated settlement status reconciliations.",
+        "Engineered reliable webhook integration pipelines to process real-time transaction notifications from third-party banking vendors with signature verification and retry mechanisms.",
+        "Deployed an observability stack using Prometheus, Grafana, and Elasticsearch for real-time payment metrics, latency tracing, and proactive alerting.",
+        "Safeguarded ledger integrity during peak traffic by resolving critical Sev-0 concurrency issues, eliminating duplicate wallet debits and idempotency race conditions."
       ],
-      "tags": ["Go (echo)", "KrakenD", "Kafka", "Google Pub/Sub", "PostgreSQL", "Redis", "GCP", "Docker", "Kubernetes", "ArgoCD", "Unleash", "Grafana"]
+      "tags": ["Go (echo)", "KrakenD", "Kafka", "Google Pub/Sub", "PostgreSQL", "Redis", "Elasticsearch", "Prometheus", "Grafana", "GCP", "Docker", "Kubernetes", "ArgoCD", "Unleash"]
     },
     {
       "id": "exp-2",
@@ -54,10 +56,10 @@
       "period": "Sept 2021 - Dec 2022",
       "location": "Jakarta, Indonesia",
       "description": [
-        "Led a 4-engineer team delivering e-wallet top-up, cash-out, and loan order services for hundreds of thousands of Amartha investors.",
-        "Integrated Xendit and Midtrans for e-wallet funding flows, enabling fast onboarding of new wallet providers with minimal platform changes.",
-        "Implemented Kafka-driven event sourcing for asynchronous loan order processing, decoupling upstream services and reducing timeout failures.",
-        "Managed priority loan partial repayment flows, ensuring correct installment allocation and accurate investor ledger updates."
+        "Led a team of 4 engineers delivering e-wallet funding, cash-out, and investment order services for hundreds of thousands of active retail investors.",
+        "Integrated payment aggregators (Xendit, Midtrans) for seamless wallet funding, enabling rapid onboarding of new digital payment channels.",
+        "Implemented Kafka-driven event pipelines for asynchronous loan order settlement, decoupling upstream dependencies and eliminating request timeout bottlenecks.",
+        "Designed priority installment repayment workflows, ensuring mathematically precise repayment allocations and accurate investor ledger balances."
       ],
       "tags": ["Go (echo)", "Kong", "Google Pub/Sub", "PostgreSQL", "Redis", "MongoDB", "GCP", "Docker"]
     },
@@ -68,10 +70,10 @@
       "period": "Nov 2019 - Dec 2021",
       "location": "Jakarta, Indonesia",
       "description": [
-        "Rebuilt core money-flow services (disbursement, failed disbursement, repayment, partial repayment) from scratch, improving reliability across all loan types.",
-        "Led core banking migration to vendor FDS, coordinating cross-functional alignment and ensuring zero-downtime cutover for all company transactions.",
-        "Redesigned the loan insurance claim system to auto-trigger claims for PAR loans with 4+ consecutive defaults, protecting investor capital automatically.",
-        "Maintained the MIS Dashboard covering all loans, investors, and installment transactions, supporting data-driven decisions for risk and operations teams."
+        "Rebuilt core disbursement and repayment microservices from the ground up, significantly improving transaction reliability across micro-loan products.",
+        "Led core banking migration to third-party vendor FDS, coordinating cross-team alignment and ensuring a zero-downtime cutover for all live company transactions.",
+        "Automated loan insurance claim triggers for non-performing loans with 4+ consecutive missed installments, actively protecting investor capital without manual operational overhead.",
+        "Developed and maintained operational MIS dashboards tracking loan health, investor portfolios, and installment lifecycles to support data-driven risk decisions."
       ],
       "tags": ["Go (echo)", "Kong", "Kafka", "Jenkins", "PostgreSQL", "Redis", "MongoDB", "GCP", "Docker"]
     },
@@ -80,10 +82,11 @@
       "company": "Tunaiku (PT Bank Amar Indonesia)",
       "role": "Backend Developer (Customer Service Improvement Team)",
       "period": "Apr 2019 - Nov 2019",
-      "location": "Surabaya / Jakarta, Indonesia",
+      "location": "Jakarta, Indonesia",
       "description": [
-        "Designed and implemented RESTful CRUD APIs for Tunaiku's customer-facing FAQ and Help Center platform using Go and PostgreSQL.",
-        "Collaborated with the Customer Service Improvement team to streamline information flows and reduce customer support ticket volume."
+        "Designed and implemented high-performance REST APIs for Tunaiku's customer-facing Help Center and FAQ platform using Go and PostgreSQL.",
+        "Built FAQ helpfulness tracking metrics and feedback telemetry, enabling Customer Service teams to measure article resolution rates and discover unresolved user pain points.",
+        "Collaborated with Customer Experience teams to streamline self-service workflows, directly reducing repetitive support ticket volume."
       ],
       "tags": ["Go (gin)", "JavaScript", "PostgreSQL", "Docker"]
     }
@@ -96,27 +99,27 @@
       "major": "Computer Science",
       "period": "Jul 2014 - Jan 2019",
       "achievements": [
-        "Graduand with a deep theoretical and practical focus on computing systems, data engineering, and software structures.",
-        "Participated in comprehensive programming and database lab development work."
+        "Graduated with a Bachelor of Computer Science, focusing on distributed computing, relational database systems, and concurrent algorithms.",
+        "Undergraduate Thesis: \"Penerapan Penjadwalan Program Kerja Indonesian Future Leaders Chapter Malang Menggunakan Algoritme Genetika\", researching and applying Genetic Algorithms (GA) for combinatorial schedule optimization.",
+        "Published Scientific Journal: [J-PTIIK Universitas Brawijaya Paper](https://j-ptiik.ub.ac.id/index.php/j-ptiik/article/view/4876/2286)."
       ]
     },
     {
       "id": "edu-2",
       "school": "Certifications & Competitions",
       "degree": "Professional Accreditation & Competitions",
-      "major": "Indonesian Software Engineering Arena",
-      "period": "Active / 2021 - 2026",
+      "period": "2021 - Present",
       "achievements": [
         "HackerRank Certified Go (Basic) Developer, 2021.",
         "Udemy: Golang Comprehensive Deep-Dive certification, 2021.",
-        "Google AI Competition: #JuaraVibeCoding, 2026 — Developed and deployed two AI-powered web applications on Google Cloud Run using Gemini AI Studio: 'Make It 24' (math puzzle game) and 'Indonesian E-Voting Simulation'."
+        "Google AI Competition Certification: #JuaraVibeCoding, 2026, awarded for developing and deploying two AI-powered web applications on Google Cloud Run using Gemini AI Studio: 'Make It 24' (math puzzle game) and 'Indonesian E-Voting Simulation'."
       ]
     }
   ],
   "skills": [
     {
       "id": "skill-group-1",
-      "category": "Linguistic & Core Databases",
+      "category": "Languages & Core Databases",
       "items": [
         { "name": "Golang (Go)", "proficiency": 5, "description": "Highly concurrent services & payment microservices" },
         { "name": "SQL & PostgreSQL", "proficiency": 5, "description": "Database design, indexing, and complex query optimizations" },
@@ -127,9 +130,9 @@
     },
     {
       "id": "skill-group-2",
-      "category": "Core Frameworks & Event Streaming",
+      "category": "Frameworks & Event Streaming",
       "items": [
-        { "name": "Go-Echo / Go-Gin / Go-Chi", "proficiency": 5, "description": "Microservice web routers and Go workspace frameworks" },
+        { "name": "Go-Echo / Go-Gin / Go-Fiber / Go-Chi", "proficiency": 5, "description": "High-performance microservice routers and middleware frameworks" },
         { "name": "Kafka & Google Pub/Sub", "proficiency": 5, "description": "Asynchronous messaging pipelines and decoupling streams" },
         { "name": "KrakenD & Kong", "proficiency": 5, "description": "API Gateway design, security rate-limiting, and state validation" },
         { "name": "ReactJS & Web Clients", "proficiency": 4, "description": "Dynamic admin portals and responsive user-facing views" },
@@ -138,12 +141,12 @@
     },
     {
       "id": "skill-group-3",
-      "category": "Infrastructure, Cloud & Operations",
+      "category": "Cloud, DevOps & Observability",
       "items": [
-        { "name": "GCP (Compute Engine & GCS)", "proficiency": 5, "description": "Cloud orchestration, storage structures, and project routing" },
+        { "name": "GCP & DigitalOcean", "proficiency": 5, "description": "Cloud infrastructure, Compute VMs, storage, and project routing" },
         { "name": "Docker & Kubernetes", "proficiency": 5, "description": "Containerized isolation and scalable orchestrated deployments" },
         { "name": "ArgoCD & Jenkins CI/CD", "proficiency": 5, "description": "Automated deployment, cron jobs, and delivery pipelines" },
-        { "name": "Redis & MongoDB", "proficiency": 5, "description": "High-throughput memory store caching and document databases" },
+        { "name": "Redis & MongoDB", "proficiency": 5, "description": "In-memory caching, distributed locks, and document databases" },
         { "name": "Git & unleashed flags", "proficiency": 5, "description": "Meticulous collaboration history and runtime feature flags" }
       ]
     }
@@ -344,7 +347,7 @@
     "siteTitle": "Rafely Chandra Portfolio",
     "newspaperName": "THE DAILY DISPATCH",
     "todaysDateOverride": "",
-    "quoteOfTheDay": "FINANCIAL SCALABILITY SECURES THE INTEGRITY OF GRASSTOOTS ECONOMIES. HIGH THROUGHPUT CONQUERS SPACE AND TIME.",
+    "quoteOfTheDay": "FINANCIAL SCALABILITY SECURES THE INTEGRITY OF GRASSROOTS ECONOMIES. HIGH THROUGHPUT CONQUERS SPACE AND TIME.",
     "audioTracks": [
       {
         "id": "track-1",

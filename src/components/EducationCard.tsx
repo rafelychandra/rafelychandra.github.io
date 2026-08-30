@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BookOpen, GraduationCap, Trophy, ClipboardCheck } from "lucide-react";
+import { GraduationCap, Trophy, ExternalLink } from "lucide-react";
 import { Education } from "../types";
 import { motion } from "motion/react";
 
@@ -11,15 +11,48 @@ interface EducationCardProps {
   educations: Education[];
 }
 
+function renderFormattedAchievement(text: string) {
+  const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = markdownLinkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.substring(lastIndex, match.index));
+    }
+    const [, label, url] = match;
+    parts.push(
+      <a
+        key={match.index}
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1 font-bold text-retro-orange hover:text-retro-charcoal underline underline-offset-2 decoration-retro-orange/60 hover:decoration-retro-black transition-colors"
+      >
+        <span>{label}</span>
+        <ExternalLink size={12} className="inline flex-shrink-0" />
+      </a>
+    );
+    lastIndex = markdownLinkRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.substring(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : text;
+}
+
 export default function EducationCard({ educations }: EducationCardProps) {
   return (
     <section id="educational-creds" className="py-12 px-4 md:px-8 max-w-7xl mx-auto select-none">
       <div className="text-center mb-10">
         <div className="inline-block bg-retro-green bg-opacity-20 border-2 border-retro-green text-retro-green font-mono text-[10px] font-bold px-3 py-1 uppercase rounded tracking-widest mb-2.5">
-          SCHOLASTIC CERTIFICATION RECORDS
+          ACADEMIC & PROFESSIONAL CREDENTIALS
         </div>
         <h2 className="font-serif text-3xl md:text-4xl font-extrabold text-retro-black uppercase tracking-tight">
-          ACADEMIC APPRENTICESHIP
+          EDUCATION & CERTIFICATIONS
         </h2>
         <div className="w-24 h-1 bg-retro-black mx-auto mt-3"></div>
       </div>
@@ -36,8 +69,8 @@ export default function EducationCard({ educations }: EducationCardProps) {
               className="bg-warm-cream border-4 border-retro-black p-6 md:p-8 rounded relative shadow-[6px_6px_0px_0px_rgba(30,28,26,1)] flex flex-col justify-between"
             >
               {/* Retro top corner decorative label */}
-              <div className="absolute top-3 right-3 font-mono text-[9px] uppercase tracking-wide text-retro-orange bg-retro-cream-dark px-2 py-0.5 border border-retro-black rounded">
-                Record No: ACC-{100 + idx}
+              <div className="absolute top-3 right-3 font-mono text-[9px] uppercase tracking-wide text-retro-orange bg-retro-cream-dark px-2.5 py-0.5 border border-retro-black rounded font-bold">
+                CREDENTIAL #0{idx + 1}
               </div>
 
               <div>
@@ -55,20 +88,20 @@ export default function EducationCard({ educations }: EducationCardProps) {
                 </h3>
                 
                 <div className="font-mono text-xs text-retro-gray uppercase font-bold mt-1 max-w-md">
-                  Major: {edu.major} • Academic Period: {edu.period}
+                  {edu.major ? `Major: ${edu.major} • ` : ""}Period: {edu.period}
                 </div>
 
                 <div className="mt-6 space-y-3">
                   <div className="font-serif text-xs italic text-retro-charcoal uppercase font-bold flex items-center gap-1">
-                    <Trophy size={11} className="text-retro-yellow" />
-                    Recognized Milestones:
+                    <Trophy size={12} className="text-retro-yellow" />
+                    Highlights & Key Achievements:
                   </div>
 
                   <ul className="space-y-2 text-xs md:text-sm text-retro-charcoal font-sans leading-relaxed pl-1">
                     {edu.achievements.map((achieve, aIdx) => (
                       <li key={aIdx} className="flex items-start gap-1.5 select-all">
                         <span className="text-retro-green font-bold text-base leading-none">•</span>
-                        <span>{achieve}</span>
+                        <span>{renderFormattedAchievement(achieve)}</span>
                       </li>
                     ))}
                   </ul>
@@ -76,7 +109,7 @@ export default function EducationCard({ educations }: EducationCardProps) {
               </div>
 
               <div className="border-t border-retro-gray mt-6 pt-4 flex justify-between items-center text-[10px] font-mono text-retro-gray uppercase font-bold">
-                <span>Verified Seal Signed Ledger</span>
+                <span>Accredited & Verified</span>
                 <span className="text-retro-green text-opacity-80">● Status Active</span>
               </div>
             </motion.div>

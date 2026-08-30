@@ -15,28 +15,17 @@ export default function ExperienceTimeline({ experiences }: ExperienceTimelinePr
   return (
     <section id="chronological-experiences" className="py-12 px-4 md:px-8 max-w-7xl mx-auto select-none">
       
-      {/* Title block formatted like a scientific report ledger header */}
-      <div className="border-4 border-retro-black p-4 mb-10 bg-retro-cream-dark rounded shadow-[4px_4px_0px_0px_rgba(30,28,26,1)] flex flex-col md:flex-row justify-between items-center gap-4">
-        <div>
-          <span className="font-mono text-xs text-retro-orange uppercase font-bold tracking-wider">
-            RECORD DATA LEDGER SEC. XII
-          </span>
-          <h2 className="font-serif text-3xl font-extrabold text-retro-black uppercase tracking-tight mt-0.5">
-            CHRONOLOGICAL WORK ADVISORY
-          </h2>
-          <p className="font-mono text-xs text-retro-gray uppercase tracking-wider block mt-1">
-            An auditing of computer engineering practices, operational periods, and physical deployments
-          </p>
-        </div>
-        
-        <div className="bg-warm-cream border-2 border-retro-black p-2.5 rounded shadow-[2px_2px_0px_0px_rgba(30,28,26,1)] text-center md:text-right min-w-[150px]">
-          <span className="font-mono text-[9px] uppercase tracking-wide text-retro-gray font-bold block">
-            ACCUMULATED FIELDWORK
-          </span>
-          <span className="font-serif text-2xl font-black text-retro-black uppercase leading-none">
-            {experiences.length} AGGREGATED CARDS
-          </span>
-        </div>
+      {/* Title block header */}
+      <div className="border-4 border-retro-black p-4 md:p-6 mb-10 bg-retro-cream-dark rounded shadow-[4px_4px_0px_0px_rgba(30,28,26,1)]">
+        <span className="font-mono text-xs text-retro-orange uppercase font-bold tracking-wider">
+          EXPERIENCE ARCHIVE
+        </span>
+        <h2 className="font-serif text-3xl font-extrabold text-retro-black uppercase tracking-tight mt-0.5">
+          PROFESSIONAL JOURNEY & IMPACT
+        </h2>
+        <p className="font-mono text-xs text-retro-gray uppercase tracking-wider block mt-1">
+          Architecting resilient payment rails, Go microservices, and core financial infrastructure
+        </p>
       </div>
 
       {/* Main Timeline track */}
@@ -88,7 +77,7 @@ export default function ExperienceTimeline({ experiences }: ExperienceTimelinePr
               {/* Achievements bullet lists */}
               <div className="space-y-3 mb-6">
                 <div className="font-serif text-xs italic text-retro-gray uppercase font-bold tracking-wider">
-                  Operational Achievements:
+                  Key Contributions & Technical Impact:
                 </div>
                 <ul className="space-y-2 text-sm text-retro-charcoal font-sans leading-relaxed">
                   {exp.description.map((bullet, idx) => (
@@ -103,8 +92,8 @@ export default function ExperienceTimeline({ experiences }: ExperienceTimelinePr
               {/* Mechanical Tag badges */}
               <div className="border-t border-dashed border-retro-gray pt-4 flex flex-wrap gap-2 items-center">
                 <span className="font-mono text-[9px] uppercase text-retro-gray tracking-wide font-extrabold flex items-center gap-1 mr-1">
-                  <FileCode size={10} className="text-retro-green" />
-                  Deployed Frameworks:
+                  <FileCode size={10} className="text-retro-orange" />
+                  Tech Stack & Tooling:
                 </span>
                 {exp.tags.map((tag, idx) => (
                   <span

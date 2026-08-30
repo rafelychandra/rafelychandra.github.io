@@ -32,14 +32,14 @@ export default function Footer({ name, year, location, email, onOpenVault }: Foo
             </span>
           </div>
           
-          <p className="font-mono text-[9px] text-retro-gray uppercase tracking-widest mt-1.5 leading-normal">
-            OPERATING DIRECTLY OUT OF THE {location.toUpperCase()}<br />
-            © {currentYear} ALL CODES COMPILED AND REGISTERED LEGALLY.
+          <p className="font-mono text-[10px] text-retro-gray uppercase tracking-wider mt-1.5 leading-normal">
+            Based in {location}<br />
+            © {currentYear} {name}. Crafted with precision & clean code.
           </p>
 
           {email && (
             <div className="mt-4 bg-retro-charcoal/50 border border-retro-gray/30 p-2.5 rounded max-w-sm inline-block text-left shadow-[2px_2px_0px_0px_rgba(226,93,52,0.3)]">
-              <span className="block font-mono text-[8px] uppercase tracking-wider text-retro-gray font-bold">DIRECT DISPATCH CABLE</span>
+              <span className="block font-mono text-[8px] uppercase tracking-wider text-retro-gray font-bold">GET IN TOUCH / DIRECT INQUIRIES</span>
               <a 
                 href={`mailto:${email}`} 
                 className="text-retro-yellow hover:text-retro-orange font-mono text-xs font-black uppercase tracking-tight block mt-0.5 select-all hover:underline"
@@ -56,15 +56,15 @@ export default function Footer({ name, year, location, email, onOpenVault }: Foo
         >
           <Landmark size={14} className="text-retro-yellow" />
           <span className="font-serif text-[9px] font-bold text-warm-cream uppercase mt-1">
-            CYBERNETIC SEAL OF CRAFT
+            OPEN FOR OPPORTUNITIES
           </span>
           <span className="font-mono text-[8px] text-retro-gray uppercase block mt-0.5">
-            AUTHENTICATED BROADSHEET
+            BACKEND & DISTRIBUTED SYSTEMS
           </span>
         </div>
 
         {/* Right column credits/navigation */}
-        <div className="flex flex-col items-center md:items-end text-center md:text-right gap-2">
+        <div className="flex flex-col items-center md:items-end text-center md:text-right">
           <a
             href="#"
             className="flex items-center gap-1 font-display text-xs uppercase text-retro-yellow hover:text-retro-orange transition-colors font-bold"
@@ -72,16 +72,13 @@ export default function Footer({ name, year, location, email, onOpenVault }: Foo
             <span>Back to top index</span>
             <ArrowUpRight size={12} />
           </a>
-          <span className="font-mono text-[9px] text-retro-gray uppercase">
-            Designed for 100% Client-Side Hardware Efficiency
-          </span>
         </div>
 
       </div>
 
       {/* Extreme bottom line print credits */}
-      <div className="max-w-7xl mx-auto border-t border-retro-gray border-opacity-30 mt-6 pt-4 text-center text-[8px] font-mono text-retro-gray uppercase tracking-[0.2em]">
-        TRANSMITTED VIA AIRWAVES • HIGH FIDELITY TRANSISTOR SYSTEM • ENGINEERED WITH PRECISION
+      <div className="max-w-7xl mx-auto border-t border-retro-gray border-opacity-30 mt-6 pt-4 text-center text-[9px] font-mono text-retro-gray uppercase tracking-[0.25em] italic font-semibold">
+        "I got blisters on my fingers!"
       </div>
     </footer>
   );

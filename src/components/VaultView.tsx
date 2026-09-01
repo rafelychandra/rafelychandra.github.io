@@ -689,7 +689,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       render: () => (
         <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
           {/* Header Info & Instagram */}
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-2">
+          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Hobby — Koleksi Vinyl 💿</span>
               <span className="text-xs font-mono bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold hidden sm:inline">
@@ -700,64 +700,45 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
               href="https://instagram.com/echoespinrecords" 
               target="_blank" 
               rel="noreferrer"
-              className="flex items-center gap-1.5 font-mono text-xs text-pink-700 bg-pink-50 hover:bg-pink-100 border border-pink-200 px-3 py-1 rounded-full font-bold transition-all"
+              className="flex items-center gap-1.5 font-mono text-xs text-pink-700 bg-pink-50 hover:bg-pink-100 border border-pink-200 px-3 py-1 rounded-full font-bold transition-all shadow-xs"
             >
               <Instagram size={13} />
               <span>@echoespinrecords</span>
             </a>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 my-auto items-center">
-            {/* Left Bio & Turntable Info */}
-            <div className="md:col-span-4 space-y-3">
-              <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
-                <span className="text-xs font-mono font-bold text-amber-700 uppercase">Analog Sound Collector</span>
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900 mt-1 leading-tight">
-                  The Warmth of 33⅓ RPM
-                </h3>
-                <p className="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
-                  Menikmati pengalaman mendengarkan musik fisik melalui piringan hitam era 60-70an, hunting vinyl langka di Record Store Day, dan merawat turntable analog stereo setup.
-                </p>
+          {/* 4-Photo Vinyl Grid Template */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 my-auto w-full max-w-6xl mx-auto">
+            <VinylPhotoCard 
+              idx={0} 
+              label="The Beatles" 
+              subLabel="Grail Discs / 1962-1966"
+              theme="from-purple-950 via-slate-900 to-black text-purple-200"
+            />
+            <VinylPhotoCard 
+              idx={1} 
+              label="The Beach Boys" 
+              subLabel="Pet Sounds Masterpiece"
+              theme="from-amber-950 via-slate-900 to-black text-amber-200"
+            />
+            <VinylPhotoCard 
+              idx={2} 
+              label="Pink Floyd" 
+              subLabel="Piper At The Gates of Dawn"
+              theme="from-cyan-950 via-slate-900 to-black text-cyan-200"
+            />
+            <VinylPhotoCard 
+              idx={3} 
+              label="Turntable Setup" 
+              subLabel="Record Store Day Drops"
+              theme="from-rose-950 via-slate-900 to-black text-rose-200"
+            />
+          </div>
 
-                <div className="mt-3.5 pt-3 border-t border-slate-100 flex items-center gap-2.5">
-                  <div className="p-2 bg-amber-100 text-amber-900 rounded-lg">
-                    <Disc size={18} className="animate-spin" style={{ animationDuration: "6s" }} />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-slate-800 block">Stereo Turntable Station</span>
-                    <span className="text-[10px] font-mono text-slate-500">Parchment Warmth • Hi-Fi</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right 4-Photo Vinyl Grid (2x2) */}
-            <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 gap-3">
-              <VinylPhotoCard 
-                idx={0} 
-                label="The Beatles" 
-                subLabel="Grail Discs / 1962-1966"
-                theme="from-purple-950 via-slate-900 to-black text-purple-200"
-              />
-              <VinylPhotoCard 
-                idx={1} 
-                label="The Beach Boys" 
-                subLabel="Pet Sounds Masterpiece"
-                theme="from-amber-950 via-slate-900 to-black text-amber-200"
-              />
-              <VinylPhotoCard 
-                idx={2} 
-                label="Pink Floyd" 
-                subLabel="Piper At The Gates of Dawn"
-                theme="from-cyan-950 via-slate-900 to-black text-cyan-200"
-              />
-              <VinylPhotoCard 
-                idx={3} 
-                label="Turntable Setup" 
-                subLabel="Record Store Day Drops"
-                theme="from-rose-950 via-slate-900 to-black text-rose-200"
-              />
-            </div>
+          {/* Bottom hint banner */}
+          <div className="border-t border-slate-200 pt-2.5 mt-4 flex items-center justify-between text-[11px] font-mono text-slate-500">
+            <span>DROP IMAGES IN public/assets/vinyl/ (vinyl-1.jpg s/d vinyl-4.jpg)</span>
+            <span className="text-amber-700 font-bold">4 VINYL GALLERY</span>
           </div>
         </div>
       )

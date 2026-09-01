@@ -4,11 +4,11 @@
  */
 
 import { useState, useEffect, useRef } from "react";
-import { 
-  Lock, 
-  Unlock, 
-  ShieldAlert, 
-  ArrowLeft, 
+import {
+  Lock,
+  Unlock,
+  ShieldAlert,
+  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   Maximize,
@@ -170,9 +170,8 @@ function IntroPhotoCard({ idx, label, theme, span, aspect }: IntroPhotoCardProps
 
   return (
     <div
-      className={`group relative rounded-xl overflow-hidden shadow-xs border-2 border-slate-200 hover:border-purple-600 hover:shadow-md transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white ${
-        span || "col-span-1"
-      } ${aspect || "h-full min-h-[90px]"}`}
+      className={`group relative rounded-xl overflow-hidden shadow-xs border-2 border-slate-200 hover:border-purple-600 hover:shadow-md transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white ${span || "col-span-1"
+        } ${aspect || "h-full min-h-[90px]"}`}
     >
       {!hasError ? (
         <div className="w-full h-full relative overflow-hidden bg-slate-900 flex items-center justify-center">
@@ -220,12 +219,10 @@ function IntroPhotoCard({ idx, label, theme, span, aspect }: IntroPhotoCardProps
 
 interface VinylPhotoCardProps {
   idx: number;
-  label: string;
-  subLabel?: string;
   theme?: string;
 }
 
-function VinylPhotoCard({ idx, label, subLabel, theme }: VinylPhotoCardProps) {
+function VinylPhotoCard({ idx, theme }: VinylPhotoCardProps) {
   const [extIdx, setExtIdx] = useState(0);
   const exts = [".jpg", ".png", ".jpeg", ".webp"];
   const [hasError, setHasError] = useState(false);
@@ -243,29 +240,21 @@ function VinylPhotoCard({ idx, label, subLabel, theme }: VinylPhotoCardProps) {
   const defaultTheme = theme || "from-amber-950 via-slate-900 to-black text-amber-200";
 
   return (
-    <div className="group relative aspect-square rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-amber-500 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-950 text-white">
+    <div className="group relative aspect-[4/3] sm:aspect-[5/6] rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-amber-500 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-950 text-white">
       {!hasError ? (
         <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
           <img
             src={currentSrc}
-            alt={label}
+            alt={`Vinyl photo ${idx + 1}`}
             onError={handleError}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           {/* Subtle vinyl groove border highlight */}
           <div className="absolute inset-0 border-4 border-black/20 rounded-2xl pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-3">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent opacity-70 group-hover:opacity-90 transition-opacity flex flex-col justify-end p-3">
             <span className="font-mono text-[8.5px] text-amber-400 font-bold uppercase tracking-wider">
               DISC 0{idx + 1}
             </span>
-            <h4 className="font-sans font-black text-xs sm:text-sm text-white leading-tight mt-0.5 drop-shadow">
-              {label}
-            </h4>
-            {subLabel && (
-              <p className="font-serif italic text-[9.5px] text-slate-300 mt-0.5 line-clamp-1">
-                {subLabel}
-              </p>
-            )}
           </div>
         </div>
       ) : (
@@ -281,18 +270,6 @@ function VinylPhotoCard({ idx, label, subLabel, theme }: VinylPhotoCardProps) {
             <div className="w-10 h-10 mx-auto rounded-full bg-black/40 border border-amber-400/40 flex items-center justify-center mb-1.5 shadow-inner">
               <div className="w-2.5 h-2.5 bg-amber-400 rounded-full"></div>
             </div>
-            <h5 className="font-sans font-black text-xs uppercase tracking-tight text-white leading-tight">
-              {label}
-            </h5>
-            {subLabel && (
-              <span className="font-mono text-[8px] text-amber-200/80 block mt-0.5">
-                {subLabel}
-              </span>
-            )}
-          </div>
-
-          <div className="border-t border-dashed border-white/20 pt-1 text-center font-mono text-[7px] text-slate-400">
-            Drop: vinyl-{idx + 1}.jpg
           </div>
         </div>
       )}
@@ -476,7 +453,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
         <div className="h-full w-full flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-[#451B69] via-[#351253] to-[#200A34] text-white relative overflow-hidden">
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-          
+
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-6 shadow-sm">
             <Sparkles size={14} className="text-amber-300 animate-pulse" />
             <span className="font-mono text-xs uppercase tracking-widest text-amber-200 font-bold">
@@ -630,7 +607,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       render: () => (
         <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
           <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Hobby — Basketball 🏀</span>
+            <span className="text-3xl font-black text-[#451B69]">| Basketball 🏀</span>
             <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
               SLIDE 04
             </span>
@@ -691,14 +668,14 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           {/* Header Info & Instagram */}
           <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-4">
             <div className="flex items-center gap-2">
-              <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Hobby — Koleksi Vinyl 💿</span>
+              <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Koleksi Vinyl 💿</span>
               <span className="text-xs font-mono bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold hidden sm:inline">
                 4-PHOTO SHOWCASE
               </span>
             </div>
-            <a 
-              href="https://instagram.com/echoespinrecords" 
-              target="_blank" 
+            <a
+              href="https://instagram.com/echoespinrecords"
+              target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 font-mono text-xs text-pink-700 bg-pink-50 hover:bg-pink-100 border border-pink-200 px-3 py-1 rounded-full font-bold transition-all shadow-xs"
             >
@@ -708,37 +685,23 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           </div>
 
           {/* 4-Photo Vinyl Grid Template */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 my-auto w-full max-w-6xl mx-auto">
-            <VinylPhotoCard 
-              idx={0} 
-              label="The Beatles" 
-              subLabel="Grail Discs / 1962-1966"
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-5 my-auto w-full max-w-6xl mx-auto py-2">
+            <VinylPhotoCard
+              idx={0}
               theme="from-purple-950 via-slate-900 to-black text-purple-200"
             />
-            <VinylPhotoCard 
-              idx={1} 
-              label="The Beach Boys" 
-              subLabel="Pet Sounds Masterpiece"
+            <VinylPhotoCard
+              idx={1}
               theme="from-amber-950 via-slate-900 to-black text-amber-200"
             />
-            <VinylPhotoCard 
-              idx={2} 
-              label="Pink Floyd" 
-              subLabel="Piper At The Gates of Dawn"
+            <VinylPhotoCard
+              idx={2}
               theme="from-cyan-950 via-slate-900 to-black text-cyan-200"
             />
-            <VinylPhotoCard 
-              idx={3} 
-              label="Turntable Setup" 
-              subLabel="Record Store Day Drops"
+            <VinylPhotoCard
+              idx={3}
               theme="from-rose-950 via-slate-900 to-black text-rose-200"
             />
-          </div>
-
-          {/* Bottom hint banner */}
-          <div className="border-t border-slate-200 pt-2.5 mt-4 flex items-center justify-between text-[11px] font-mono text-slate-500">
-            <span>DROP IMAGES IN public/assets/vinyl/ (vinyl-1.jpg s/d vinyl-4.jpg)</span>
-            <span className="text-amber-700 font-bold">4 VINYL GALLERY</span>
           </div>
         </div>
       )
@@ -1288,9 +1251,8 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       )}
 
       {/* Main Container */}
-      <div className={`w-full flex-grow flex flex-col justify-center ${
-        isFullscreen ? "p-0 m-0" : "max-w-6xl mx-auto px-3 md:px-8 py-4"
-      }`}>
+      <div className={`w-full flex-grow flex flex-col justify-center ${isFullscreen ? "p-0 m-0" : "max-w-6xl mx-auto px-3 md:px-8 py-4"
+        }`}>
         {!isAuthenticated ? (
           /* =================================================================
              1. LOCKED CLEARANCE GATE
@@ -1401,9 +1363,8 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           /* =================================================================
              2. UNLOCKED STATE: NATIVE WEB PPT PRESENTATION
              ================================================================= */
-          <div className={`space-y-3 flex flex-col justify-center ${
-            isFullscreen ? "fixed inset-0 z-50 bg-slate-950 p-2 sm:p-4 w-screen h-screen" : ""
-          }`}>
+          <div className={`space-y-3 flex flex-col justify-center ${isFullscreen ? "fixed inset-0 z-50 bg-slate-950 p-2 sm:p-4 w-screen h-screen" : ""
+            }`}>
             {/* Top Deck Control Header (Hidden in Fullscreen) */}
             {!isFullscreen && (
               <div className="flex flex-wrap items-center justify-between gap-3 bg-retro-cream-dark border-4 border-retro-black p-3 rounded-lg shadow-[4px_4px_0px_0px_rgba(30,28,26,1)]">
@@ -1425,9 +1386,8 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowNotes(!showNotes)}
-                    className={`px-2.5 py-1 border-2 border-retro-black rounded font-mono text-xs font-bold uppercase cursor-pointer flex items-center gap-1 transition-all ${
-                      showNotes ? "bg-amber-300 text-black shadow-xs" : "bg-warm-cream text-black hover:bg-slate-100"
-                    }`}
+                    className={`px-2.5 py-1 border-2 border-retro-black rounded font-mono text-xs font-bold uppercase cursor-pointer flex items-center gap-1 transition-all ${showNotes ? "bg-amber-300 text-black shadow-xs" : "bg-warm-cream text-black hover:bg-slate-100"
+                      }`}
                     title="Toggle Presenter Notes"
                   >
                     <FileText size={12} />
@@ -1455,11 +1415,10 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             )}
 
             {/* THE SLIDE STAGE (Aspect 16:9) */}
-            <div className={`relative mx-auto w-full bg-white border-4 border-retro-black overflow-hidden flex flex-col transition-all duration-300 ${
-              isFullscreen 
-                ? "h-full max-h-screen max-w-[177.78vh] aspect-[16/9] rounded-2xl shadow-2xl my-auto" 
-                : "aspect-[16/9] min-h-[460px] rounded-xl shadow-[8px_8px_0px_0px_rgba(30,28,26,1)]"
-            }`}>
+            <div className={`relative mx-auto w-full bg-white border-4 border-retro-black overflow-hidden flex flex-col transition-all duration-300 ${isFullscreen
+              ? "h-full max-h-screen max-w-[177.78vh] aspect-[16/9] rounded-2xl shadow-2xl my-auto"
+              : "aspect-[16/9] min-h-[460px] rounded-xl shadow-[8px_8px_0px_0px_rgba(30,28,26,1)]"
+              }`}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentSlide}
@@ -1527,11 +1486,10 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                       setCurrentSlide(idx);
                       playRetroTone(400 + idx * 30, "sine", 0.04);
                     }}
-                    className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase transition-all whitespace-nowrap cursor-pointer ${
-                      currentSlide === idx
-                        ? "bg-purple-900 text-white shadow-xs scale-105"
-                        : "bg-warm-cream text-slate-700 hover:bg-white border border-slate-300"
-                    }`}
+                    className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase transition-all whitespace-nowrap cursor-pointer ${currentSlide === idx
+                      ? "bg-purple-900 text-white shadow-xs scale-105"
+                      : "bg-warm-cream text-slate-700 hover:bg-white border border-slate-300"
+                      }`}
                   >
                     {idx + 1}. {s.title.split("—")[0].split(":")[0]}
                   </button>

@@ -28,7 +28,13 @@ import {
   Instagram,
   RotateCcw,
   Calendar,
-  Layers
+  Layers,
+  Play,
+  Pause,
+  Volume2,
+  Video,
+  X,
+  Camera
 } from "lucide-react";
 import { VaultConfig, Profile, MediaPosterItem } from "../types";
 import { motion, AnimatePresence } from "motion/react";
@@ -77,7 +83,7 @@ function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: Me
   const theme = posterThemes[idx % posterThemes.length];
 
   return (
-    <div className="group relative aspect-[2/3] rounded-xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-purple-600 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white">
+    <div className="group relative aspect-[2/3] max-h-[58vh] w-full max-w-[280px] sm:max-w-[320px] mx-auto rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-purple-600 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white">
       {!imgFailed ? (
         <div className="w-full h-full relative overflow-hidden bg-slate-900 flex items-center justify-center">
           <img
@@ -86,59 +92,47 @@ function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: Me
             onError={handleError}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-2.5">
-            <span className="font-mono text-[8px] text-amber-400 font-bold uppercase tracking-wider">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-3 sm:p-4">
+            <span className="font-mono text-[8.5px] sm:text-[10px] text-amber-400 font-bold uppercase tracking-wider">
               {badgePrefix === "CINEMA" ? media.year : `${media.year || ""}${media.genre ? ` • ${media.genre.split("/")[0]}` : ""}`}
             </span>
-            <h4 className="font-sans font-black text-xs text-white leading-tight mt-0.5 drop-shadow">
+            <h4 className="font-sans font-black text-sm sm:text-base text-white leading-tight mt-0.5 drop-shadow">
               {media.title}
             </h4>
-            {media.tagline && (
-              <p className="font-serif italic text-[9px] text-slate-300 mt-1 line-clamp-2 leading-tight">
-                "{media.tagline}"
-              </p>
-            )}
           </div>
         </div>
       ) : (
-        <div className={`w-full h-full p-2.5 flex flex-col justify-between bg-gradient-to-b ${theme} relative`}>
-          <div className="flex items-center justify-between border-b border-white/20 pb-1">
-            <span className="font-mono text-[7.5px] uppercase font-bold tracking-widest opacity-80">
-              {badgePrefix} #{idx + 1}
+        <div className={`w-full h-full p-3 sm:p-4 flex flex-col justify-between bg-gradient-to-b ${theme} relative`}>
+          <div className="flex items-center justify-between border-b border-white/20 pb-1.5">
+            <span className="font-mono text-[8px] sm:text-[9.5px] uppercase font-bold tracking-widest opacity-80">
+              {badgePrefix}
             </span>
-            <span className="font-mono text-[8px] bg-white/20 px-1 py-0.2 rounded font-black text-white">
+            <span className="font-mono text-[8.5px] sm:text-[10px] bg-white/20 px-2 py-0.5 rounded font-black text-white">
               {media.year}
             </span>
           </div>
 
-          <div className="text-center my-auto py-1">
-            {icon === "film" && <Film size={18} className="mx-auto mb-1 opacity-70" />}
-            {icon === "tv" && <Tv size={18} className="mx-auto mb-1 opacity-70" />}
-            {icon === "music" && <Music size={18} className="mx-auto mb-1 opacity-70" />}
-            <h4 className="font-serif font-black text-xs uppercase leading-tight tracking-tight text-white drop-shadow">
+          <div className="text-center my-auto py-2">
+            {icon === "film" && <Film size={26} className="mx-auto mb-2 opacity-70" />}
+            {icon === "tv" && <Tv size={26} className="mx-auto mb-2 opacity-70" />}
+            {icon === "music" && <Music size={26} className="mx-auto mb-2 opacity-70" />}
+            <h4 className="font-serif font-black text-sm sm:text-base uppercase leading-tight tracking-tight text-white drop-shadow">
               {media.title}
             </h4>
             {badgePrefix !== "CINEMA" && media.genre && (
-              <span className="font-mono text-[8px] opacity-75 uppercase tracking-wide block mt-1">
+              <span className="font-mono text-[8.5px] sm:text-[10px] opacity-75 uppercase tracking-wide block mt-1">
                 {media.genre}
               </span>
             )}
           </div>
 
-          <div className="border-t border-dashed border-white/30 pt-1 text-center">
-            <p className="font-serif italic text-[8.5px] opacity-90 leading-tight">
-              "{media.tagline}"
-            </p>
-            <span className="text-[7px] font-mono text-white/50 block mt-0.5 uppercase tracking-tighter">
+          <div className="border-t border-dashed border-white/30 pt-2 text-center">
+            <span className="text-[7.5px] sm:text-[8.5px] font-mono text-white/50 block uppercase tracking-tighter">
               Drop: {media.poster.split("/").pop()}
             </span>
           </div>
         </div>
       )}
-
-      <div className="absolute top-1.5 right-1.5 bg-black/70 backdrop-blur-xs text-white text-[7.5px] font-mono font-bold px-1 rounded z-10">
-        0{idx + 1}
-      </div>
     </div>
   );
 }
@@ -273,10 +267,244 @@ function VinylPhotoCard({ idx, theme }: VinylPhotoCardProps) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
 
-      <div className="absolute top-2 right-2 bg-black/80 backdrop-blur-xs text-amber-300 text-[8px] font-mono font-bold px-1.5 py-0.5 rounded-md z-10 border border-amber-500/30">
-        33⅓ RPM
-      </div>
+export interface CareerPhoto {
+  src: string;
+  caption?: string;
+}
+
+export interface CareerGalleryModalData {
+  company: string;
+  role: string;
+  period: string;
+  photos: CareerPhoto[];
+}
+
+function CareerGalleryPhoto({ photo, idx }: { photo: CareerPhoto; idx: number }) {
+  const [extIdx, setExtIdx] = useState(0);
+  const exts = [".jpg", ".png", ".jpeg", ".webp"];
+  const [imgFailed, setImgFailed] = useState(false);
+
+  const basePath = photo.src.replace(/\.[^/.]+$/, "");
+  const currentSrc = extIdx === 0 ? photo.src : `${basePath}${exts[extIdx]}`;
+
+  const handleError = () => {
+    if (extIdx < exts.length - 1) {
+      setExtIdx((prev) => prev + 1);
+    } else {
+      setImgFailed(true);
+    }
+  };
+
+  return (
+    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 border-2 border-slate-700 hover:border-purple-500 flex flex-col justify-end group shadow-lg transition-all">
+      {!imgFailed ? (
+        <img
+          src={currentSrc}
+          alt={`Career photo ${idx + 1}`}
+          onError={handleError}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      ) : (
+        <div className="w-full h-full p-6 flex flex-col justify-between items-center text-center bg-gradient-to-br from-purple-950 via-slate-900 to-black text-purple-200">
+          <div className="w-full flex justify-between items-center opacity-70 font-mono text-[10px] uppercase border-b border-white/10 pb-1.5">
+            <span>PHOTO {String(idx + 1).padStart(2, "0")}</span>
+            <Camera size={15} className="text-amber-400" />
+          </div>
+          <div className="my-auto py-4 flex flex-col items-center">
+            <Camera size={38} className="text-purple-400/60 mb-2" />
+            <span className="font-mono text-xs font-bold text-white/80 uppercase tracking-widest">
+              CAREER PHOTO #{idx + 1}
+            </span>
+          </div>
+          <span className="font-mono text-[9px] text-white/50 block uppercase tracking-tight">
+            Drop: {photo.src.split("/").pop()}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface VideoTemplatePlayerProps {
+  src?: string;
+  poster?: string;
+  title?: string;
+  subtitle?: string;
+}
+
+function VideoTemplatePlayer({
+  src = "/assets/basketball/video.mp4",
+  poster = "/assets/basketball/poster.jpg",
+  title = "Basketball Highlights & Tape",
+  subtitle = "Filkom UB • Amartha 3x3 • Sparring Highlights"
+}: VideoTemplatePlayerProps) {
+  const [extIdx, setExtIdx] = useState(0);
+  const exts = [".mp4", ".mov", ".webm", ".m4v"];
+  const [hasError, setHasError] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const isYoutube = src.includes("youtube.com") || src.includes("youtu.be");
+  const getEmbedUrl = (url: string) => {
+    if (url.includes("youtu.be/")) {
+      const id = url.split("youtu.be/")[1]?.split("?")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    if (url.includes("watch?v=")) {
+      const id = url.split("watch?v=")[1]?.split("&")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    return url;
+  };
+
+  const currentSrc = isYoutube || src.startsWith("http")
+    ? src
+    : src.replace(/\.[^/.]+$/, "") + exts[extIdx];
+
+  const handleVideoError = () => {
+    if (!isYoutube && extIdx < exts.length - 1) {
+      setExtIdx((prev) => prev + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setIsMuted(videoRef.current.muted);
+  };
+
+  return (
+    <div className="relative w-full h-full min-h-[300px] md:min-h-[360px] bg-slate-950 rounded-2xl overflow-hidden shadow-xl border-2 border-slate-800 flex flex-col justify-between group">
+      {/* If YouTube Embed */}
+      {isYoutube ? (
+        <iframe
+          src={getEmbedUrl(src)}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="w-full h-full min-h-[320px] rounded-2xl"
+        />
+      ) : !hasError ? (
+        <div className="relative w-full h-full flex items-center justify-center bg-black min-h-[280px]">
+          <video
+            ref={videoRef}
+            src={currentSrc}
+            poster={poster}
+            playsInline
+            loop
+            muted={isMuted}
+            onError={handleVideoError}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            className="w-full h-full object-cover max-h-[440px]"
+            onClick={togglePlay}
+          />
+
+          {/* Control overlay on hover */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-between pointer-events-none">
+            <div className="flex items-center justify-between pointer-events-auto">
+              <span className="font-mono text-[10px] text-amber-400 font-bold bg-black/60 px-2 py-0.5 rounded backdrop-blur-xs border border-amber-500/30">
+                🏀 GAME TAPE
+              </span>
+              <span className="font-mono text-[9px] text-white/80 bg-black/60 px-2 py-0.5 rounded">
+                1080P HD
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between pointer-events-auto">
+              <div>
+                <h4 className="text-sm font-bold text-white leading-tight">{title}</h4>
+                <p className="text-[11px] text-slate-300 font-mono mt-0.5">{subtitle}</p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={toggleMute}
+                  className="w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center transition-colors border border-white/20 cursor-pointer"
+                >
+                  {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                </button>
+                <button
+                  type="button"
+                  onClick={togglePlay}
+                  className="w-9 h-9 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition-transform hover:scale-105 font-bold shadow-lg cursor-pointer"
+                >
+                  {isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Big Play button when paused */}
+          {!isPlaying && (
+            <button
+              type="button"
+              onClick={togglePlay}
+              className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-500/90 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition-all hover:scale-110 shadow-2xl z-10 cursor-pointer"
+            >
+              <Play size={24} className="ml-0.5" />
+            </button>
+          )}
+        </div>
+      ) : (
+        /* Video Template Placeholder */
+        <div className="w-full h-full min-h-[300px] p-5 md:p-6 flex flex-col justify-between items-center text-center bg-gradient-to-br from-slate-900 via-purple-950 to-slate-950 text-white relative">
+          <div className="flex items-center justify-between w-full border-b border-white/10 pb-2.5">
+            <span className="font-mono text-[10px] text-amber-400 font-bold bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1.5">
+              <Video size={12} /> VIDEO TEMPLATE
+            </span>
+            <span className="font-mono text-[9px] text-purple-300 bg-purple-900/50 px-2 py-0.5 rounded font-bold">
+              MP4 / WEBM / MOV / YOUTUBE
+            </span>
+          </div>
+
+          <div className="my-auto py-3 max-w-md">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-500/20 border-2 border-amber-500/40 text-amber-400 flex items-center justify-center text-2xl mb-2.5 shadow-lg group-hover:scale-105 transition-transform">
+              🏀
+            </div>
+            <h4 className="font-black text-base text-white tracking-tight">
+              {title}
+            </h4>
+            <p className="text-xs text-purple-200 mt-0.5">
+              {subtitle}
+            </p>
+
+            <div className="mt-3.5 bg-black/50 border border-white/10 rounded-xl p-3 text-left">
+              <span className="font-mono text-[9px] text-amber-400 uppercase font-bold block mb-1">
+                Parsing Video:
+              </span>
+              <p className="text-[10.5px] text-slate-300 font-mono leading-relaxed">
+                • Taruh file di <code className="text-amber-300 bg-black/60 px-1 py-0.5 rounded">public/assets/basketball/video.mp4</code><br />
+                • Atau isi prop <code className="text-purple-300 bg-black/60 px-1 py-0.5 rounded">src="URL"</code> (MP4 / WebM / YouTube link)
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full flex items-center justify-between pt-2.5 border-t border-white/10 text-[9px] font-mono text-slate-400">
+            <span>READY FOR VIDEO SOURCE</span>
+            <span className="text-amber-400 font-bold">🏀 BASKETBALL HIGHLIGHTS</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -298,7 +526,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
   // Presentation State
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [showNotes, setShowNotes] = useState<boolean>(false);
+  const [selectedCareer, setSelectedCareer] = useState<CareerGalleryModalData | null>(null);
   const currentYear = new Date().getFullYear();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -325,6 +553,20 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
     if (!isAuthenticated) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (selectedCareer) {
+          e.preventDefault();
+          setSelectedCareer(null);
+          return;
+        }
+        if (isFullscreen) {
+          exitFullscreenMode();
+        }
+        return;
+      }
+
+      if (selectedCareer) return; // Don't navigate slides if gallery popup is open
+
       if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
         e.preventDefault();
         setCurrentSlide((prev) => Math.min(prev + 1, SLIDES.length - 1));
@@ -334,14 +576,12 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       } else if (e.key.toLowerCase() === "f") {
         e.preventDefault();
         toggleFullscreen();
-      } else if (e.key === "Escape" && isFullscreen) {
-        exitFullscreenMode();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isAuthenticated, isFullscreen]);
+  }, [isAuthenticated, isFullscreen, selectedCareer]);
 
   // Toggle true 1-screen browser fullscreen
   const toggleFullscreen = async () => {
@@ -532,7 +772,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       id: "education",
       title: "Education",
       subtitle: "SCHOLASTIC PATHWAY",
-      notes: "Riwayat pendidikan dari SD Menteng sampai Universitas Brawijaya.",
+      notes: "Riwayat pendidikan di Universitas Brawijaya.",
       render: () => (
         <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
           <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
@@ -542,55 +782,16 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-auto max-w-4xl mx-auto w-full">
-            {/* 1. SD */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-start gap-4 hover:border-purple-300 transition-all">
-              <div className="w-12 h-12 bg-blue-100 text-blue-700 rounded-xl flex items-center justify-center shrink-0 font-bold text-xl">
-                🏫
-              </div>
-              <div>
-                <span className="text-[10px] font-mono text-blue-700 uppercase font-bold">2002 / 2008</span>
-                <h3 className="text-lg font-black text-slate-900">SDN Menteng 02</h3>
-                <p className="text-xs text-slate-500 font-sans mt-0.5">Jakarta Pusat</p>
-              </div>
-            </div>
-
-            {/* 2. SMP */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-start gap-4 hover:border-purple-300 transition-all">
-              <div className="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center shrink-0 font-bold text-xl">
-                📚
-              </div>
-              <div>
-                <span className="text-[10px] font-mono text-indigo-700 uppercase font-bold">2008 / 2011</span>
-                <h3 className="text-lg font-black text-slate-900">SMPN 8 Jakarta</h3>
-                <p className="text-xs text-slate-500 font-sans mt-0.5">Jakarta</p>
-              </div>
-            </div>
-
-            {/* 3. SMA */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-start gap-4 hover:border-purple-300 transition-all relative overflow-hidden">
-              <div className="w-12 h-12 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center shrink-0 font-bold text-xl">
-                ⚡
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-amber-700 uppercase font-bold">2011 / 2014</span>
-                  <span className="text-[9px] bg-amber-500 text-white font-mono font-bold px-1.5 py-0.2 rounded">Akselerasi</span>
-                </div>
-                <h3 className="text-lg font-black text-slate-900">SMAN 3 Jakarta</h3>
-                <p className="text-xs font-bold text-amber-800 font-sans mt-0.5">IPA-CI (Cerdas Istimewa)</p>
-              </div>
-            </div>
-
-            {/* 4. Universitas */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-start gap-4 hover:border-purple-300 transition-all border-l-4 border-l-purple-700">
-              <div className="w-12 h-12 bg-purple-100 text-purple-700 rounded-xl flex items-center justify-center shrink-0 font-bold text-xl">
+          <div className="my-auto max-w-xl mx-auto w-full">
+            {/* Universitas Brawijaya */}
+            <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 flex items-start gap-5 hover:border-purple-300 transition-all border-l-4 border-l-purple-700">
+              <div className="w-14 h-14 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center shrink-0 font-bold text-2xl">
                 🎓
               </div>
-              <div>
-                <span className="text-[10px] font-mono text-purple-700 uppercase font-bold">2014 / 2019</span>
-                <h3 className="text-lg font-black text-slate-900">Universitas Brawijaya</h3>
-                <p className="text-xs font-bold text-purple-900 font-sans mt-0.5">Teknik Informatika (Filkom UB)</p>
+              <div className="flex-1">
+                <span className="text-xs font-mono text-purple-700 uppercase font-bold">2014 / 2019</span>
+                <h3 className="text-xl font-black text-slate-900 mt-0.5">Universitas Brawijaya</h3>
+                <p className="text-sm font-bold text-purple-900 font-sans mt-1">Teknik Informatika (Filkom UB)</p>
               </div>
             </div>
           </div>
@@ -598,60 +799,33 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       )
     },
 
-    // 3: HOBBY - BASKETBALL SLIDE
+    // 3: HOBBY - BASKETBALL SLIDE (VIDEO TEMPLATE)
     {
       id: "basketball",
       title: "Hobby: Basketball",
-      subtitle: "ON & OFF THE COURT",
-      notes: "Kecintaan pada olahraga basket, turnamen di Filkom UB & Amartha 3x3 League.",
+      subtitle: "HIGHLIGHTS & GAME TAPE",
+      notes: "Highlight video basket: turnamen Filkom UB & Amartha 3x3 League.",
       render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Basketball 🏀</span>
+        <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
+          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Basketball 🏀</span>
+              <span className="text-xs font-mono bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold hidden sm:inline">
+                VIDEO REEL
+              </span>
+            </div>
             <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
               SLIDE 04
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="text-3xl">🏆</span>
-                <h3 className="font-black text-lg text-slate-900 mt-2">Filkom UB Basketball</h3>
-                <p className="text-xs text-slate-600 font-sans mt-1 leading-relaxed">
-                  Aktif mengikuti turnamen basket universitas bersama tim Filkom UB dan kompetisi liga mahasiswa.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[10px] text-purple-700 font-bold">
-                POSITION: GUARD / PLAYMAKER
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white p-5 rounded-2xl shadow-md flex flex-col justify-between">
-              <div>
-                <span className="text-3xl">⚡</span>
-                <h3 className="font-black text-lg text-white mt-2">Amartha 3x3 League</h3>
-                <p className="text-xs text-purple-200 font-sans mt-1 leading-relaxed">
-                  Juara dalam turnamen internal kantor Amartha 3x3 Basketball League bersama rekan tim Payment & Tech.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-purple-700/50 font-mono text-[10px] text-amber-300 font-bold">
-                3X3 TOURNAMENT CHAMPIONS
-              </div>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="text-3xl">🔥</span>
-                <h3 className="font-black text-lg text-slate-900 mt-2">Pickup Sparring</h3>
-                <p className="text-xs text-slate-600 font-sans mt-1 leading-relaxed">
-                  Rutin sparring mingguan untuk menjaga kebugaran stamina, reflex cepat, dan chemistry kebersamaan tim.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[10px] text-slate-500 font-bold">
-                COURT: ONA SPORT / CITRA
-              </div>
-            </div>
+          <div className="my-auto max-w-3xl mx-auto w-full">
+            {/* Video Player Template */}
+            <VideoTemplatePlayer
+              src="/assets/basketball/video.mp4"
+              title="Filkom UB & Amartha 3x3 Tape"
+              subtitle="High-energy plays, fast breaks & clutch shots"
+            />
           </div>
         </div>
       )
@@ -721,7 +895,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "1994",
             genre: "Drama / Comedy",
             poster: "/assets/movies/forrest-gump.png",
-            tagline: "Life is like a box of chocolates.",
             description: "Classic Tom Hanks timeless storytelling"
           },
           {
@@ -730,7 +903,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "1998",
             genre: "Sci-Fi / Drama",
             poster: "/assets/movies/truman-show.jpg",
-            tagline: "In case I don't see ya: good afternoon, good evening, and good night!",
             description: "Jim Carrey existential masterpiece"
           },
           {
@@ -739,7 +911,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "2002",
             genre: "Biography / Crime",
             poster: "/assets/movies/catch-me-if-you-can.jpg",
-            tagline: "The true story of a real fake.",
             description: "DiCaprio & Hanks dynamic chase"
           },
           {
@@ -748,7 +919,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "1986",
             genre: "Comedy / Classic",
             poster: "/assets/movies/ferris-bueller.jpg",
-            tagline: "One man's struggle to take it easy.",
             description: "80s free-spirited comedy icon"
           },
           {
@@ -757,7 +927,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "1999",
             genre: "Psychological Thriller",
             poster: "/assets/movies/fight-club.jpg",
-            tagline: "Mischief. Mayhem. Soap.",
             description: "Fincher & Pitt psychological cult film"
           },
           {
@@ -766,7 +935,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "2010",
             genre: "Action / Retro Comedy",
             poster: "/assets/movies/scott-pilgrim.jpg",
-            tagline: "An epic of epic epicness.",
             description: "Retro 8-bit comic energy"
           }
         ];
@@ -800,7 +968,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       id: "series",
       title: "Fav! — Series",
       subtitle: "BINGE-WORTHY SHOWS",
-      notes: "Series favorit: Black Mirror, Stranger Things, The End of the F***ing World, Alice in Borderland, Squid Game.",
+      notes: "Series favorit: Black Mirror, Stranger Things, The End of the F***ing World.",
       render: () => {
         const seriesList = vaultConfig?.series && vaultConfig.series.length > 0 ? vaultConfig.series : [
           {
@@ -809,7 +977,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "2011",
             genre: "Sci-Fi / Dystopia",
             poster: "/assets/series/black-mirror.jpg",
-            tagline: "The future is bright... or is it?",
             description: "Dystopian tech cautionary tales & mindbenders"
           },
           {
@@ -818,7 +985,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "2016",
             genre: "Sci-Fi / Nostalgia",
             poster: "/assets/series/stranger-things.jpg",
-            tagline: "One summer can change everything.",
             description: "80s synth-wave sci-fi nostalgia & monster mystery"
           },
           {
@@ -827,26 +993,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
             year: "2017",
             genre: "Dark Comedy / Drama",
             poster: "/assets/series/the-end-of-the-fing-world.jpg",
-            tagline: "I'm James. I'm pretty sure I'm a psychopath.",
             description: "Dark comedy road trip & coming-of-age"
-          },
-          {
-            id: "series-4",
-            title: "Alice in Borderland",
-            year: "2020",
-            genre: "Thriller / Survival",
-            poster: "/assets/series/alice-in-borderland.jpg",
-            tagline: "To live, you must play.",
-            description: "High stakes survival psychological game arenas"
-          },
-          {
-            id: "series-5",
-            title: "Squid Game",
-            year: "2021",
-            genre: "Thriller / Drama",
-            poster: "/assets/series/squid-game.jpg",
-            tagline: "45.6 Billion Won is Child's Play.",
-            description: "Intense social commentary thriller & suspense"
           }
         ];
 
@@ -861,10 +1008,10 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
               </div>
             </div>
 
-            {/* 5 Series Posters Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 my-auto py-1">
+            {/* 3 Series Posters Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 my-auto max-w-4xl lg:max-w-5xl mx-auto w-full py-1">
               {seriesList.map((series, idx) => (
-                <div key={series.id || idx} className="h-full">
+                <div key={series.id || idx} className="h-full flex justify-center">
                   <MediaPosterCard media={series} idx={idx} badgePrefix="SERIES" icon="tv" />
                 </div>
               ))}
@@ -879,7 +1026,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       id: "musicians",
       title: "Fav! — Musicians",
       subtitle: "TIMELESS SOUNDSCAPES",
-      notes: "Musisi favorit: The Beatles, The Beach Boys, Pink Floyd, Queen, Michael Jackson.",
+      notes: "Musisi favorit: The Beatles, The Beach Boys, Pink Floyd, The Doors.",
       render: () => {
         const musicianList = vaultConfig?.musicians && vaultConfig.musicians.length > 0 ? vaultConfig.musicians : [
           {
@@ -911,21 +1058,11 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           },
           {
             id: "musician-4",
-            title: "Queen",
-            year: "1970s",
-            genre: "Glam Rock / Operatic",
-            poster: "/assets/musicians/queen.jpg",
-            tagline: "Don't Stop Me Now.",
-            description: "Freddie Mercury's boundless vocals & epic compositions"
-          },
-          {
-            id: "musician-5",
-            title: "Michael Jackson",
-            year: "1980s",
-            genre: "King of Pop / Funk",
-            poster: "/assets/musicians/michael-jackson.jpg",
-            tagline: "The King of Pop.",
-            description: "Legendary groove production, basslines & stage presence"
+            title: "The Doors",
+            year: "1965",
+            genre: "Psychedelic Rock / Blues",
+            poster: "/assets/musicians/the-doors.jpg",
+            description: "Jim Morrison's poetic lyrics & Ray Manzarek's hypnotic organ riffs"
           }
         ];
 
@@ -940,10 +1077,10 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
               </div>
             </div>
 
-            {/* 5 Musician Posters Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 my-auto py-1">
+            {/* 4 Musician Posters Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-6 my-auto max-w-5xl lg:max-w-6xl mx-auto w-full py-1">
               {musicianList.map((musician, idx) => (
-                <div key={musician.id || idx} className="h-full">
+                <div key={musician.id || idx} className="h-full flex justify-center">
                   <MediaPosterCard media={musician} idx={idx} badgePrefix="ARTIST" icon="music" />
                 </div>
               ))}
@@ -953,66 +1090,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       }
     },
 
-    // 8: PERSONAL LIFE - WEDDING & FAMILY SLIDE
-    {
-      id: "wedding",
-      title: "Personal Life: Wedding Celebration",
-      subtitle: "FAMILY & MILESTONES",
-      notes: "Momen pernikahan adat Jawa & kebersamaan bersama keluarga tercinta.",
-      render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Personal Milestones — Wedding 💍</span>
-            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 09
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-mono font-bold text-purple-700 uppercase">AKAD NIKAH</span>
-                <h3 className="text-lg font-black text-slate-900 mt-1">Sacred Akad Ceremony</h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Prosesi akad nikah khidmat dalam balutan busana adat tradisional Jawa bersama kedua orang tua dan keluarga besar.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[10px] text-purple-700">
-                TRADITIONAL ATTIRE • FAMILY BLESSINGS
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-rose-950 to-purple-950 text-white p-5 rounded-2xl shadow-md flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-mono text-rose-300 font-bold">RECEPTION</span>
-                <h3 className="text-lg font-black text-white mt-1">Wedding Reception</h3>
-                <p className="text-xs text-rose-100 mt-2 leading-relaxed">
-                  Perayaan resepsi pernikahan penuh kehangatan bersama sahabat, rekan kantor Amartha, dan keluarga.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-rose-800/50 font-mono text-[10px] text-amber-300">
-                CELEBRATION OF LOVE & PARTNERSHIP
-              </div>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="text-xs font-mono font-bold text-amber-700 uppercase">PORTRAITURE</span>
-                <h3 className="text-lg font-black text-slate-900 mt-1">Pre-wedding Moments</h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Foto monokrom intim dan kenangan hangat perjalanan menuju babak hidup baru bersama istri tercinta.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[10px] text-slate-500">
-                INTIMATE MEMORIES • NEW CHAPTER
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-
-    // 9: WORKING EXPERIENCE - EARLY CAREER
+    // 8: WORKING EXPERIENCE - EARLY CAREER
     {
       id: "early-career",
       title: "Working Experience: Early Career",
@@ -1023,35 +1101,59 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
             <span className="text-3xl font-black text-[#451B69]">| Early Career Journey 💼</span>
             <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 10
+              SLIDE 09
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="font-mono text-xs font-bold text-slate-500">JANUARI – JUNI 2018</span>
-                <h3 className="text-2xl font-black text-slate-900 mt-1">PT. Citra Media Solusindo</h3>
-                <p className="text-sm text-slate-600 font-sans mt-3 leading-relaxed">
-                  Pengalaman software engineering awal, kolaborasi pengembangan aplikasi web, dan implementasi modul software klien.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-auto max-w-4xl mx-auto w-full">
+            {/* Citra Media */}
+            <div
+              onClick={() => setSelectedCareer({
+                company: "PT. Citra Media Solusindo",
+                role: "Software Engineering Intern",
+                period: "2018",
+                photos: [
+                  { src: "/assets/career/citra-media-1.jpg", caption: "Citra Media Solusindo Office & Team" },
+                  { src: "/assets/career/citra-media-2.jpg", caption: "Web & Software Projects" }
+                ]
+              })}
+              className="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
+              title="Click to view photos"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-purple-700 uppercase">2018</span>
+                <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
+                  <Camera size={11} />
+                  <span>Photos</span>
+                </span>
               </div>
-              <div className="mt-6 pt-3 border-t border-slate-100 font-mono text-[10px] text-purple-700 font-bold">
-                EARLY SOFTWARE FOUNDATIONS
-              </div>
+              <h3 className="text-2xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">PT. Citra Media Solusindo</h3>
+              <p className="text-sm font-bold text-purple-900 font-sans mt-1">Software Engineering Intern</p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="font-mono text-xs font-bold text-blue-700">APRIL – NOVEMBER 2019</span>
-                <h3 className="text-2xl font-black text-slate-900 mt-1">Tunaiku (PT Bank Amar Indonesia)</h3>
-                <p className="text-sm text-slate-600 font-sans mt-3 leading-relaxed">
-                  Backend Developer pada tim Customer Service Improvement. Merancang RESTful CRUD API layanan FAQ dan Help Center Tunaiku menggunakan Golang & PostgreSQL.
-                </p>
+            {/* Tunaiku */}
+            <div
+              onClick={() => setSelectedCareer({
+                company: "Tunaiku (PT Bank Amar Indonesia)",
+                role: "Backend Developer",
+                period: "2019",
+                photos: [
+                  { src: "/assets/career/tunaiku-1.jpg", caption: "Tunaiku Amar Bank Team" },
+                  { src: "/assets/career/tunaiku-2.jpg", caption: "Customer Service Improvement Squad" }
+                ]
+              })}
+              className="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
+              title="Click to view photos"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-purple-700 uppercase">2019</span>
+                <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
+                  <Camera size={11} />
+                  <span>Photos</span>
+                </span>
               </div>
-              <div className="mt-6 pt-3 border-t border-slate-100 font-mono text-[10px] text-blue-700 font-bold">
-                GOLANG • POSTGRESQL • FINTECH HELP CENTER
-              </div>
+              <h3 className="text-2xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Tunaiku (PT Bank Amar Indonesia)</h3>
+              <p className="text-sm font-bold text-purple-900 font-sans mt-1">Backend Developer</p>
             </div>
           </div>
         </div>
@@ -1069,122 +1171,96 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
             <span className="text-3xl font-black text-[#451B69]">| Amartha Engineering Timeline 🚀</span>
             <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 11
+              SLIDE 10
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
-            {/* BO */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="font-mono text-[10px] font-bold text-purple-700">2019 – 2021</span>
-                <h3 className="font-black text-lg text-slate-900 mt-1">Back Office Team</h3>
-                <p className="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
-                  Membangun ulang money-flow disbursement & repayment, memimpin migrasi core banking FDS tanpa downtime, dan mengotomatiskan klaim asuransi pinjaman.
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-auto max-w-5xl mx-auto w-full">
+            {/* Back Office */}
+            <div
+              onClick={() => setSelectedCareer({
+                company: "Back Office Team (Amartha)",
+                role: "Backend Engineer",
+                period: "2019 – 2021",
+                photos: [
+                  { src: "/assets/career/amartha-bo-1.jpg", caption: "Back Office Squad Gathering" },
+                  { src: "/assets/career/amartha-bo-2.jpg", caption: "Core Banking & Money-Flow Migration" }
+                ]
+              })}
+              className="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
+              title="Click to view photos"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-purple-700 uppercase">2019 – 2021</span>
+                <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
+                  <Camera size={11} />
+                  <span>Photos</span>
+                </span>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[9px] text-purple-800 font-bold">
-                CORE BANKING MIGRATION
-              </div>
+              <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Back Office Team</h3>
+              <p className="text-sm font-bold text-purple-900 font-sans mt-1">Backend Engineer</p>
             </div>
 
             {/* Wealth */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="font-mono text-[10px] font-bold text-indigo-700">2021 – 2022</span>
-                <h3 className="font-black text-lg text-slate-900 mt-1">Wealth Team (Sr. Analyst)</h3>
-                <p className="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
-                  Memimpin 4 engineer mengelola e-wallet top-up (Xendit, Midtrans) dan arsitektur Kafka event sourcing pemrosesan order pendanaan investor.
-                </p>
+            <div
+              onClick={() => setSelectedCareer({
+                company: "Wealth Team (Amartha)",
+                role: "Senior Analyst",
+                period: "2021 – 2022",
+                photos: [
+                  { src: "/assets/career/amartha-wealth-1.jpg", caption: "Wealth Team Engineering" },
+                  { src: "/assets/career/amartha-wealth-2.jpg", caption: "E-Wallet & Funding Squad" }
+                ]
+              })}
+              className="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
+              title="Click to view photos"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-purple-700 uppercase">2021 – 2022</span>
+                <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
+                  <Camera size={11} />
+                  <span>Photos</span>
+                </span>
               </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[9px] text-indigo-800 font-bold">
-                E-WALLET & KAFKA EVENT SOURCING
-              </div>
+              <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Wealth Team</h3>
+              <p className="text-sm font-bold text-purple-900 font-sans mt-1">Senior Analyst</p>
             </div>
 
             {/* Payment Platform */}
-            <div className="bg-gradient-to-br from-purple-900 to-[#2A0E42] text-white p-5 rounded-2xl shadow-md flex flex-col justify-between border border-purple-800">
-              <div>
-                <span className="font-mono text-[10px] font-bold text-amber-400">2023 – PRESENT</span>
-                <h3 className="font-black text-lg text-white mt-1">Payment Platform Team ⚡</h3>
-                <p className="text-xs text-purple-100 font-sans mt-2 leading-relaxed">
-                  Senior Backend arsitek **Single API** (central payment gateway), QRIS Acquiring/Issuing Artajasa/ASPI, dan integrasi multi-bank Remittance.
-                </p>
+            <div
+              onClick={() => setSelectedCareer({
+                company: "Payment Platform Team (Amartha)",
+                role: "Senior Backend Engineer",
+                period: "2023 – PRESENT",
+                photos: [
+                  { src: "/assets/career/amartha-payment-1.jpg", caption: "Payment Platform Squad" },
+                  { src: "/assets/career/amartha-payment-2.jpg", caption: "Single API & QRIS Release Celebration" }
+                ]
+              })}
+              className="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
+              title="Click to view photos"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-purple-700 uppercase">2023 – PRESENT</span>
+                <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
+                  <Camera size={11} />
+                  <span>Photos</span>
+                </span>
               </div>
-              <div className="mt-4 pt-3 border-t border-purple-700/50 font-mono text-[9px] text-amber-300 font-bold">
-                SINGLE API • QRIS • HIGH THROUGHPUT
-              </div>
+              <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Payment Platform Team</h3>
+              <p className="text-sm font-bold text-purple-900 font-sans mt-1">Senior Backend Engineer</p>
             </div>
           </div>
         </div>
       )
     },
 
-    // 11: AMARTHA CULTURE & GATHERINGS SLIDE
-    {
-      id: "culture",
-      title: "Amartha Life & Gatherings",
-      subtitle: "BENE RUN • 3X3 • ALL-HANDS",
-      notes: "Momen kebersamaan tim Amartha di Beneran Festival, turnamen olahraga, dan gathering.",
-      render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
-            <span className="text-3xl font-black text-[#451B69]">| Amartha Culture & Gatherings 🎉</span>
-            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 12
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto">
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="text-2xl">🏃</span>
-                <h3 className="font-black text-lg text-slate-900 mt-1">Beneran Festival & Runs</h3>
-                <p className="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
-                  Partisipasi aktif dalam event lari tahunan Beneran Run dan festival kebersamaan karyawan Amartha.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[10px] text-purple-700 font-bold">
-                SPORTS & MARATHON SPIRIT
-              </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-purple-900 to-indigo-900 text-white p-5 rounded-2xl shadow-md flex flex-col justify-between">
-              <div>
-                <span className="text-2xl">🏆</span>
-                <h3 className="font-black text-lg text-white mt-1">3x3 Basketball League</h3>
-                <p className="text-xs text-purple-200 font-sans mt-2 leading-relaxed">
-                  Menjuarai turnamen internal Amartha 3x3 Basketball League bersama rekan tim Payment & Tech.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-purple-700/50 font-mono text-[10px] text-amber-300 font-bold">
-                1ST PLACE CHAMPIONS
-              </div>
-            </div>
-
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
-              <div>
-                <span className="text-2xl">🍲</span>
-                <h3 className="font-black text-lg text-slate-900 mt-1">Team Outings & Dinners</h3>
-                <p className="text-xs text-slate-600 font-sans mt-2 leading-relaxed">
-                  Momen syukuran rilis produk, shabu dinner bersama squad, dan outbound tahunan yang mempererat kebersamaan.
-                </p>
-              </div>
-              <div className="mt-4 pt-3 border-t border-slate-100 font-mono text-[10px] text-slate-500 font-bold">
-                SQUAD SOLIDARITY
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-
-    // 12: THANK YOU CLOSING SLIDE
+    // 11: THANK YOU CLOSING SLIDE
     {
       id: "closing",
       title: "Thank You!",
       subtitle: "Q&A SESSION",
-      notes: "Slide penutup, sesi tanya jawab, dan terima kasih kepada rekan kerja.",
+      notes: "Slide penutup dan sesi tanya jawab.",
       render: () => (
         <div className="h-full w-full flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-[#0F766E] via-[#0E5D57] to-[#0A3F3B] text-white relative overflow-hidden">
           <div className="p-4 bg-white/10 rounded-full mb-4 border border-white/20">
@@ -1194,9 +1270,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           <h2 className="text-4xl sm:text-6xl font-black tracking-tight uppercase">
             Thank You!
           </h2>
-          <p className="font-mono text-sm sm:text-base text-teal-100 max-w-md mt-2">
-            Terima kasih telah menyimak sesi KYC Chandra (CHANKEEY). Let's collaborate & build impactful fintech solutions together!
-          </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 font-mono text-xs">
             <span className="bg-white/15 px-3 py-1.5 rounded-full border border-white/20">
@@ -1385,16 +1458,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 {/* Action Controls */}
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setShowNotes(!showNotes)}
-                    className={`px-2.5 py-1 border-2 border-retro-black rounded font-mono text-xs font-bold uppercase cursor-pointer flex items-center gap-1 transition-all ${showNotes ? "bg-amber-300 text-black shadow-xs" : "bg-warm-cream text-black hover:bg-slate-100"
-                      }`}
-                    title="Toggle Presenter Notes"
-                  >
-                    <FileText size={12} />
-                    <span>Notes</span>
-                  </button>
-
-                  <button
                     onClick={toggleFullscreen}
                     className="px-3 py-1 bg-purple-900 hover:bg-purple-950 text-white border-2 border-retro-black rounded font-mono text-xs font-bold uppercase cursor-pointer flex items-center gap-1 shadow-sm"
                     title="Toggle Fullscreen (F)"
@@ -1468,14 +1531,6 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
               )}
             </div>
 
-            {/* Presenter Notes Drawer (Normal Mode) */}
-            {!isFullscreen && showNotes && (
-              <div className="bg-amber-50 border-2 border-amber-300 p-3 rounded-lg shadow-sm font-mono text-xs text-amber-950">
-                <strong className="block text-[10px] uppercase text-amber-800 mb-0.5">Presenter's Cue & Notes:</strong>
-                {currentSlideObj.notes}
-              </div>
-            )}
-
             {/* Slide Quick Navigation Strip (Normal Mode) */}
             {!isFullscreen && (
               <div className="flex gap-2 overflow-x-auto p-2 bg-retro-cream-dark border-2 border-retro-black rounded-lg select-none">
@@ -1506,6 +1561,70 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           KYC PRESENTATION DECK • BUILT FOR WEB RUNTIME • CHANKEEY {currentYear}
         </div>
       )}
+
+      {/* Career Photos Modal Popup */}
+      <AnimatePresence>
+        {selectedCareer && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedCareer(null)}
+            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 md:p-8"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 15 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#FAFAFA] text-slate-900 border-4 border-retro-black rounded-3xl max-w-5xl lg:max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-2xl"
+            >
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b-2 border-slate-200 bg-white">
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-mono text-xs bg-purple-100 text-purple-900 font-bold px-2.5 py-0.5 rounded-md">
+                      {selectedCareer.period}
+                    </span>
+                    <span className="font-mono text-xs text-purple-700 font-bold uppercase tracking-wide">
+                      {selectedCareer.role}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-[#451B69] mt-1">
+                    {selectedCareer.company}
+                  </h3>
+                </div>
+
+                <button
+                  onClick={() => setSelectedCareer(null)}
+                  className="p-2.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+                  title="Close (Esc)"
+                >
+                  <X size={26} />
+                </button>
+              </div>
+
+              {/* Photos Gallery Grid */}
+              <div className="p-6 sm:p-8 overflow-y-auto flex-grow bg-slate-50/50">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {selectedCareer.photos.map((photo, idx) => (
+                    <CareerGalleryPhoto key={idx} photo={photo} idx={idx} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="px-6 sm:px-8 py-4 border-t border-slate-200 bg-white flex items-center justify-between text-xs font-mono text-slate-500">
+                <span className="font-bold text-purple-900 flex items-center gap-1.5 text-sm">
+                  <Camera size={16} />
+                  <span>{selectedCareer.photos.length} Photo{selectedCareer.photos.length > 1 ? "s" : ""}</span>
+                </span>
+                <span className="text-slate-400">Press ESC or click outside to close</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

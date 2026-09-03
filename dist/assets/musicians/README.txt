@@ -7,5 +7,4 @@ Daftar nama file default:
 1. the-beatles.jpg (atau .png, .webp)
 2. the-beach-boys.jpg
 3. pink-floyd.jpg
-4. queen.jpg
-5. michael-jackson.jpg
+4. the-doors.jpg

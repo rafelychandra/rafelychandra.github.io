@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext } from "react";
 import {
   Lock,
   Unlock,
@@ -34,7 +34,8 @@ import {
   Volume2,
   Video,
   X,
-  Camera
+  Camera,
+  ZoomIn
 } from "lucide-react";
 import { VaultConfig, Profile, MediaPosterItem } from "../types";
 import { motion, AnimatePresence } from "motion/react";
@@ -48,6 +49,19 @@ interface VaultViewProps {
 const STORAGE_KEY_AUTH = "rc_vault_authenticated";
 const STORAGE_KEY_PASS = "rc_vault_passcode";
 
+export interface LightboxData {
+  src: string;
+  title?: string;
+}
+
+const LightboxContext = createContext<{
+  openLightbox: (src: string, title?: string) => void;
+}>({
+  openLightbox: () => {}
+});
+
+export const useLightbox = () => useContext(LightboxContext);
+
 interface MediaPosterCardProps {
   media: MediaPosterItem;
   idx: number;
@@ -56,6 +70,7 @@ interface MediaPosterCardProps {
 }
 
 function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: MediaPosterCardProps) {
+  const { openLightbox } = useLightbox();
   const [extIdx, setExtIdx] = useState(0);
   const exts = [".jpg", ".png", ".jpeg", ".webp"];
   const [imgFailed, setImgFailed] = useState(false);
@@ -83,7 +98,13 @@ function MediaPosterCard({ media, idx, badgePrefix = "ITEM", icon = "film" }: Me
   const theme = posterThemes[idx % posterThemes.length];
 
   return (
-    <div className="group relative aspect-[2/3] max-h-[58vh] w-full max-w-[280px] sm:max-w-[320px] mx-auto rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-purple-600 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white">
+    <div
+      onClick={() => !imgFailed && openLightbox(currentSrc, media.title)}
+      className={`group relative aspect-[2/3] max-h-[58vh] w-full max-w-[280px] sm:max-w-[320px] mx-auto rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-purple-600 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white ${
+        !imgFailed ? "cursor-zoom-in" : ""
+      }`}
+      title={!imgFailed ? "Click to view full size" : undefined}
+    >
       {!imgFailed ? (
         <div className="w-full h-full relative overflow-hidden bg-slate-900 flex items-center justify-center">
           <img
@@ -146,6 +167,7 @@ interface IntroPhotoCardProps {
 }
 
 function IntroPhotoCard({ idx, label, theme, span, aspect }: IntroPhotoCardProps) {
+  const { openLightbox } = useLightbox();
   const [extIdx, setExtIdx] = useState(0);
   const exts = [".jpg", ".png", ".jpeg", ".webp"];
   const [hasError, setHasError] = useState(false);
@@ -164,8 +186,11 @@ function IntroPhotoCard({ idx, label, theme, span, aspect }: IntroPhotoCardProps
 
   return (
     <div
-      className={`group relative rounded-xl overflow-hidden shadow-xs border-2 border-slate-200 hover:border-purple-600 hover:shadow-md transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white ${span || "col-span-1"
-        } ${aspect || "h-full min-h-[90px]"}`}
+      onClick={() => !hasError && openLightbox(currentSrc, label)}
+      className={`group relative rounded-xl overflow-hidden shadow-xs border border-slate-300 hover:border-purple-600 hover:shadow-md transition-all duration-300 flex flex-col justify-between bg-slate-900 text-white ${
+        aspect || "aspect-[4/3]"
+      } ${span || ""} ${!hasError ? "cursor-zoom-in" : ""}`}
+      title={!hasError ? "Click to view full size" : undefined}
     >
       {!hasError ? (
         <div className="w-full h-full relative overflow-hidden bg-slate-900 flex items-center justify-center">
@@ -175,25 +200,20 @@ function IntroPhotoCard({ idx, label, theme, span, aspect }: IntroPhotoCardProps
             onError={handleError}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
-            <span className="font-mono text-[9px] text-white font-bold">{label}</span>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2 pointer-events-none">
+            <span className="font-mono text-[8px] text-white font-bold leading-tight">{label}</span>
           </div>
         </div>
       ) : (
-        <div className={`w-full h-full p-2 flex flex-col justify-between items-center text-center bg-gradient-to-br ${defaultTheme} text-slate-800`}>
-          <div className="flex items-center justify-between w-full">
-            <span className="font-mono text-[8px] text-purple-900 font-bold bg-purple-200/70 px-1.5 py-0.5 rounded">
-              PHOTO {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
-            </span>
-            <span className="text-xs opacity-60">📸</span>
+        <div className={`w-full h-full p-2 flex flex-col justify-between bg-gradient-to-br ${defaultTheme} text-slate-800 relative`}>
+          <div className="flex items-center justify-between opacity-60 font-mono text-[6.5px] uppercase">
+            <span>#{idx + 1}</span>
+            <Camera size={10} className="text-purple-700" />
           </div>
 
-          <div className="my-auto py-0.5">
-            <h5 className="font-sans font-black text-[10px] sm:text-[11px] uppercase tracking-tight text-slate-900 leading-tight">
+          <div className="my-auto py-1 text-center">
+            <span className="font-mono text-[8.5px] font-bold text-slate-900 uppercase block leading-tight">
               {label}
-            </h5>
-            <span className="text-[7px] font-mono text-slate-500 block mt-0.5">
-              photo-{idx + 1}.jpg
             </span>
           </div>
 
@@ -217,6 +237,7 @@ interface VinylPhotoCardProps {
 }
 
 function VinylPhotoCard({ idx, theme }: VinylPhotoCardProps) {
+  const { openLightbox } = useLightbox();
   const [extIdx, setExtIdx] = useState(0);
   const exts = [".jpg", ".png", ".jpeg", ".webp"];
   const [hasError, setHasError] = useState(false);
@@ -234,7 +255,13 @@ function VinylPhotoCard({ idx, theme }: VinylPhotoCardProps) {
   const defaultTheme = theme || "from-amber-950 via-slate-900 to-black text-amber-200";
 
   return (
-    <div className="group relative aspect-[4/3] sm:aspect-[5/6] rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-amber-500 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-950 text-white">
+    <div
+      onClick={() => !hasError && openLightbox(currentSrc, `Koleksi Vinyl #${idx + 1}`)}
+      className={`group relative aspect-[4/3] sm:aspect-[5/6] rounded-2xl overflow-hidden shadow-md border-2 border-slate-300 hover:border-amber-500 hover:shadow-xl transition-all duration-300 flex flex-col justify-between bg-slate-950 text-white ${
+        !hasError ? "cursor-zoom-in" : ""
+      }`}
+      title={!hasError ? "Click to view full size" : undefined}
+    >
       {!hasError ? (
         <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
           <img
@@ -283,7 +310,14 @@ export interface CareerGalleryModalData {
   photos: CareerPhoto[];
 }
 
-function CareerGalleryPhoto({ photo, idx }: { photo: CareerPhoto; idx: number }) {
+interface CareerGalleryPhotoProps {
+  photo: CareerPhoto;
+  idx: number;
+  key?: React.Key;
+}
+
+function CareerGalleryPhoto({ photo, idx }: CareerGalleryPhotoProps) {
+  const { openLightbox } = useLightbox();
   const [extIdx, setExtIdx] = useState(0);
   const exts = [".jpg", ".png", ".jpeg", ".webp"];
   const [imgFailed, setImgFailed] = useState(false);
@@ -300,7 +334,13 @@ function CareerGalleryPhoto({ photo, idx }: { photo: CareerPhoto; idx: number })
   };
 
   return (
-    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 border-2 border-slate-700 hover:border-purple-500 flex flex-col justify-end group shadow-lg transition-all">
+    <div
+      onClick={() => !imgFailed && openLightbox(currentSrc, photo.caption || `Career Photo #${idx + 1}`)}
+      className={`relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 border-2 border-slate-700 hover:border-purple-500 flex flex-col justify-end group shadow-lg transition-all ${
+        !imgFailed ? "cursor-zoom-in" : ""
+      }`}
+      title={!imgFailed ? "Click to view full size" : undefined}
+    >
       {!imgFailed ? (
         <img
           src={currentSrc}
@@ -329,6 +369,52 @@ function CareerGalleryPhoto({ photo, idx }: { photo: CareerPhoto; idx: number })
   );
 }
 
+interface BasketballPhotoCardProps {
+  idx: number;
+  key?: React.Key;
+}
+
+function BasketballPhotoCard({ idx }: BasketballPhotoCardProps) {
+  const { openLightbox } = useLightbox();
+  const [extIdx, setExtIdx] = useState(0);
+  const exts = [".jpg", ".png", ".jpeg", ".webp"];
+  const [hasError, setHasError] = useState(false);
+
+  const currentSrc = `/assets/basketball/basketball-${idx + 1}${exts[extIdx]}`;
+
+  const handleError = () => {
+    if (extIdx < exts.length - 1) {
+      setExtIdx((prev) => prev + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  return (
+    <div
+      onClick={() => !hasError && openLightbox(currentSrc, `Basketball Moment #${idx + 1}`)}
+      className={`group relative aspect-[4/3] rounded-xl overflow-hidden shadow-sm border-2 border-slate-300 hover:border-amber-500 hover:shadow-lg transition-all duration-300 bg-slate-950 text-white ${
+        !hasError ? "cursor-zoom-in" : ""
+      }`}
+      title={!hasError ? "Click to view full size" : undefined}
+    >
+      {!hasError ? (
+        <img
+          src={currentSrc}
+          alt={`Basketball moment ${idx + 1}`}
+          onError={handleError}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      ) : (
+        <div className="w-full h-full p-2 flex flex-col justify-center items-center bg-gradient-to-br from-amber-950 via-slate-900 to-black text-amber-200 text-xs font-mono">
+          <span className="text-xl mb-1">🏀</span>
+          <span>PHOTO {idx + 1}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface VideoTemplatePlayerProps {
   src?: string;
   poster?: string;
@@ -338,19 +424,14 @@ interface VideoTemplatePlayerProps {
 
 function VideoTemplatePlayer({
   src = "/assets/basketball/video.mp4",
-  poster = "/assets/basketball/poster.jpg",
+  poster,
   title = "Basketball Highlights & Tape",
   subtitle = "Filkom UB • Amartha 3x3 • Sparring Highlights"
 }: VideoTemplatePlayerProps) {
-  const [extIdx, setExtIdx] = useState(0);
-  const exts = [".mp4", ".mov", ".webm", ".m4v"];
-  const [hasError, setHasError] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   const isYoutube = src.includes("youtube.com") || src.includes("youtu.be");
+  
   const getEmbedUrl = (url: string) => {
+    if (url.includes("embed/")) return url;
     if (url.includes("youtu.be/")) {
       const id = url.split("youtu.be/")[1]?.split("?")[0];
       return `https://www.youtube.com/embed/${id}`;
@@ -362,147 +443,112 @@ function VideoTemplatePlayer({
     return url;
   };
 
-  const currentSrc = isYoutube || src.startsWith("http")
-    ? src
-    : src.replace(/\.[^/.]+$/, "") + exts[extIdx];
-
-  const handleVideoError = () => {
-    if (!isYoutube && extIdx < exts.length - 1) {
-      setExtIdx((prev) => prev + 1);
-    } else {
-      setHasError(true);
-    }
-  };
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !videoRef.current.muted;
-    setIsMuted(videoRef.current.muted);
-  };
-
   return (
-    <div className="relative w-full h-full min-h-[300px] md:min-h-[360px] bg-slate-950 rounded-2xl overflow-hidden shadow-xl border-2 border-slate-800 flex flex-col justify-between group">
-      {/* If YouTube Embed */}
+    <div className="relative w-full aspect-[16/9] max-h-[55vh] bg-slate-950 rounded-2xl overflow-hidden shadow-2xl border-2 border-slate-800 flex flex-col justify-between">
       {isYoutube ? (
         <iframe
           src={getEmbedUrl(src)}
           title={title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          className="w-full h-full min-h-[320px] rounded-2xl"
+          className="w-full h-full rounded-2xl border-0"
         />
-      ) : !hasError ? (
-        <div className="relative w-full h-full flex items-center justify-center bg-black min-h-[280px]">
-          <video
-            ref={videoRef}
-            src={currentSrc}
-            poster={poster}
-            playsInline
-            loop
-            muted={isMuted}
-            onError={handleVideoError}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-            className="w-full h-full object-cover max-h-[440px]"
-            onClick={togglePlay}
-          />
+      ) : (
+        <video
+          src={src}
+          poster={poster}
+          playsInline
+          controls
+          className="w-full h-full object-cover rounded-2xl"
+        />
+      )}
+    </div>
+  );
+}
 
-          {/* Control overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-between pointer-events-none">
-            <div className="flex items-center justify-between pointer-events-auto">
-              <span className="font-mono text-[10px] text-amber-400 font-bold bg-black/60 px-2 py-0.5 rounded backdrop-blur-xs border border-amber-500/30">
-                🏀 GAME TAPE
-              </span>
-              <span className="font-mono text-[9px] text-white/80 bg-black/60 px-2 py-0.5 rounded">
-                1080P HD
-              </span>
-            </div>
+function BasketballSlideContent() {
+  const [viewMode, setViewMode] = useState<"photos" | "video">("video");
+  const [videoUrl, setVideoUrl] = useState<string>("/assets/basketball/video.mp4");
+  const [showInput, setShowInput] = useState<boolean>(false);
+  const [inputVal, setInputVal] = useState<string>("");
 
-            <div className="flex items-center justify-between pointer-events-auto">
-              <div>
-                <h4 className="text-sm font-bold text-white leading-tight">{title}</h4>
-                <p className="text-[11px] text-slate-300 font-mono mt-0.5">{subtitle}</p>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={toggleMute}
-                  className="w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center transition-colors border border-white/20 cursor-pointer"
-                >
-                  {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-                </button>
-                <button
-                  type="button"
-                  onClick={togglePlay}
-                  className="w-9 h-9 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition-transform hover:scale-105 font-bold shadow-lg cursor-pointer"
-                >
-                  {isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Big Play button when paused */}
-          {!isPlaying && (
+  return (
+    <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
+      <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-2">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Basketball 🏀</span>
+          {/* Mode Switcher */}
+          <div className="flex items-center bg-slate-200 p-0.5 rounded-lg font-mono text-[10px] font-bold">
             <button
-              type="button"
-              onClick={togglePlay}
-              className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-amber-500/90 hover:bg-amber-400 text-slate-950 flex items-center justify-center transition-all hover:scale-110 shadow-2xl z-10 cursor-pointer"
+              onClick={() => setViewMode("photos")}
+              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                viewMode === "photos" ? "bg-purple-900 text-white shadow-xs font-black" : "text-slate-700 hover:text-black"
+              }`}
             >
-              <Play size={24} className="ml-0.5" />
+              📸 Photos (8)
+            </button>
+            <button
+              onClick={() => setViewMode("video")}
+              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                viewMode === "video" ? "bg-amber-500 text-slate-950 shadow-xs font-black" : "text-slate-700 hover:text-black"
+              }`}
+            >
+              🎥 Video Reel
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {viewMode === "video" && (
+            <button
+              onClick={() => setShowInput(!showInput)}
+              className="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 hover:bg-amber-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+            >
+              {showInput ? "Tutup Link" : "🔗 Ubah Link Video"}
             </button>
           )}
+          <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
+            SLIDE 04
+          </span>
+        </div>
+      </div>
+
+      {showInput && viewMode === "video" && (
+        <div className="mb-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-2 max-w-3xl mx-auto w-full">
+          <input
+            type="text"
+            placeholder="Paste link YouTube (contoh: https://www.youtube.com/watch?v=...) atau link MP4..."
+            value={inputVal}
+            onChange={(e) => setInputVal(e.target.value)}
+            className="flex-1 bg-white border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono outline-none focus:border-purple-600 text-slate-900"
+          />
+          <button
+            onClick={() => {
+              if (inputVal.trim()) {
+                setVideoUrl(inputVal.trim());
+                setShowInput(false);
+              }
+            }}
+            className="bg-purple-900 text-white font-mono text-xs font-bold px-3.5 py-1.5 rounded-lg hover:bg-purple-800 transition-colors cursor-pointer"
+          >
+            Terapkan
+          </button>
+        </div>
+      )}
+
+      {viewMode === "photos" ? (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-auto max-w-5xl mx-auto w-full py-1">
+          {[0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
+            <BasketballPhotoCard key={idx} idx={idx} />
+          ))}
         </div>
       ) : (
-        /* Video Template Placeholder */
-        <div className="w-full h-full min-h-[300px] p-5 md:p-6 flex flex-col justify-between items-center text-center bg-gradient-to-br from-slate-900 via-purple-950 to-slate-950 text-white relative">
-          <div className="flex items-center justify-between w-full border-b border-white/10 pb-2.5">
-            <span className="font-mono text-[10px] text-amber-400 font-bold bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1.5">
-              <Video size={12} /> VIDEO TEMPLATE
-            </span>
-            <span className="font-mono text-[9px] text-purple-300 bg-purple-900/50 px-2 py-0.5 rounded font-bold">
-              MP4 / WEBM / MOV / YOUTUBE
-            </span>
-          </div>
-
-          <div className="my-auto py-3 max-w-md">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-500/20 border-2 border-amber-500/40 text-amber-400 flex items-center justify-center text-2xl mb-2.5 shadow-lg group-hover:scale-105 transition-transform">
-              🏀
-            </div>
-            <h4 className="font-black text-base text-white tracking-tight">
-              {title}
-            </h4>
-            <p className="text-xs text-purple-200 mt-0.5">
-              {subtitle}
-            </p>
-
-            <div className="mt-3.5 bg-black/50 border border-white/10 rounded-xl p-3 text-left">
-              <span className="font-mono text-[9px] text-amber-400 uppercase font-bold block mb-1">
-                Parsing Video:
-              </span>
-              <p className="text-[10.5px] text-slate-300 font-mono leading-relaxed">
-                • Taruh file di <code className="text-amber-300 bg-black/60 px-1 py-0.5 rounded">public/assets/basketball/video.mp4</code><br />
-                • Atau isi prop <code className="text-purple-300 bg-black/60 px-1 py-0.5 rounded">src="URL"</code> (MP4 / WebM / YouTube link)
-              </p>
-            </div>
-          </div>
-
-          <div className="w-full flex items-center justify-between pt-2.5 border-t border-white/10 text-[9px] font-mono text-slate-400">
-            <span>READY FOR VIDEO SOURCE</span>
-            <span className="text-amber-400 font-bold">🏀 BASKETBALL HIGHLIGHTS</span>
-          </div>
+        <div className="my-auto max-w-3xl mx-auto w-full py-1 flex flex-col items-center">
+          <VideoTemplatePlayer
+            src={videoUrl}
+            title="Filkom UB & Amartha 3x3 Tape"
+            subtitle="High-energy plays, fast breaks & clutch shots"
+          />
         </div>
       )}
     </div>
@@ -527,6 +573,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [selectedCareer, setSelectedCareer] = useState<CareerGalleryModalData | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<LightboxData | null>(null);
   const currentYear = new Date().getFullYear();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -554,6 +601,11 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        if (lightboxImage) {
+          e.preventDefault();
+          setLightboxImage(null);
+          return;
+        }
         if (selectedCareer) {
           e.preventDefault();
           setSelectedCareer(null);
@@ -565,7 +617,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
         return;
       }
 
-      if (selectedCareer) return; // Don't navigate slides if gallery popup is open
+      if (selectedCareer || lightboxImage) return; // Don't navigate slides if gallery/lightbox popup is open
 
       if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
         e.preventDefault();
@@ -581,7 +633,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isAuthenticated, isFullscreen, selectedCareer]);
+  }, [isAuthenticated, isFullscreen, selectedCareer, lightboxImage]);
 
   // Toggle true 1-screen browser fullscreen
   const toggleFullscreen = async () => {
@@ -717,51 +769,87 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       )
     },
 
-    // 1: INTRODUCTION / IDENTITY SLIDE (10-PHOTO GRID TEMPLATE)
+    // 1: INTRODUCTION / IDENTITY SLIDE
     {
       id: "intro",
       title: "Introduction",
       subtitle: "WHO IS CHANKEEY?",
-      notes: "Nama lengkap, nama panggilan, tanggal lahir, zodiak, MBTI, dan 10 foto perjalanan hidup Chandra.",
+      notes: "Nama lengkap, nama panggilan, tanggal lahir, zodiak, MBTI, dan profil Chandra.",
       render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
-          {/* Header Info & Identity */}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-purple-900/10 pb-2 mb-1.5">
-            <div className="flex items-center gap-2.5">
-              <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Introduction</span>
-              <span className="bg-purple-900 text-white font-mono font-black text-xs px-2.5 py-0.5 rounded-md tracking-wider">
-                CHANKEEY
-              </span>
-              <span className="font-bold text-xs text-slate-700 hidden md:inline">
-                Rafely Chandra Rizkilillah (Chandra)
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5 font-mono text-[10px] font-bold">
-              <span className="bg-purple-100 text-purple-900 px-2 py-0.5 rounded-full">
-                14 Nov 1996 (Scorpio ♏)
-              </span>
-              <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
-                MBTI: ESTP
-              </span>
-              <span className="bg-slate-200 text-slate-800 px-2 py-0.5 rounded-full hidden sm:inline">
-                Payment Platform Engineer
-              </span>
-            </div>
+        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3 mb-2">
+            <span className="text-3xl font-black text-[#451B69]">| Introduction</span>
+            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
+              SLIDE 02
+            </span>
           </div>
 
-          {/* Dynamic 10-Photo Grid (5 columns x 2 rows) */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 my-auto py-1">
-            <IntroPhotoCard idx={0} label="Portrait / Profile" aspect="aspect-[4/3]" theme="from-purple-200 via-purple-50 to-amber-100" />
-            <IntroPhotoCard idx={1} label="Basketball Court" aspect="aspect-[4/3]" theme="from-amber-100 to-orange-50" />
-            <IntroPhotoCard idx={2} label="Vinyl Collection" aspect="aspect-[4/3]" theme="from-pink-100 to-rose-50" />
-            <IntroPhotoCard idx={3} label="Concert / Music" aspect="aspect-[4/3]" theme="from-indigo-100 to-blue-50" />
-            <IntroPhotoCard idx={4} label="Office / Squad" aspect="aspect-[4/3]" theme="from-emerald-100 to-teal-50" />
-            <IntroPhotoCard idx={5} label="Travel & Life" aspect="aspect-[4/3]" theme="from-cyan-100 to-sky-50" />
-            <IntroPhotoCard idx={6} label="Filkom UB Campus" aspect="aspect-[4/3]" theme="from-purple-100 to-fuchsia-50" />
-            <IntroPhotoCard idx={7} label="Hobbies & Passion" aspect="aspect-[4/3]" theme="from-yellow-100 to-amber-50" />
-            <IntroPhotoCard idx={8} label="Childhood / Family" aspect="aspect-[4/3]" theme="from-rose-100 to-red-50" />
-            <IntroPhotoCard idx={9} label="Daily / Candid" aspect="aspect-[4/3]" theme="from-teal-100 to-emerald-50" />
+          {/* Main Profile Showcase */}
+          <div className="my-auto max-w-5xl lg:max-w-6xl mx-auto w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 py-3">
+            {/* Profile Photo (image8.png) */}
+            <div
+              onClick={() => setLightboxImage({ src: "/assets/intro/image8.png", title: "Rafely Chandra Rizkilillah (Chandra)" })}
+              className="shrink-0 w-64 sm:w-80 md:w-96 lg:w-[420px] max-h-[58vh] aspect-square rounded-3xl overflow-hidden border-4 border-retro-black shadow-2xl bg-slate-950 relative group cursor-zoom-in"
+              title="Click to view full size"
+            >
+              <img
+                src="/assets/intro/image8.png"
+                alt="Rafely Chandra Rizkilillah"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4 pointer-events-none">
+                <span className="font-mono text-xs text-amber-300 font-bold uppercase tracking-wider">
+                  CHANKEEY • 1996
+                </span>
+                <span className="text-white/90 font-mono text-[10px] bg-black/60 px-2 py-0.5 rounded flex items-center gap-1">
+                  <ZoomIn size={12} /> Full Size
+                </span>
+              </div>
+            </div>
+
+            {/* Profile Info Details */}
+            <div className="flex-1 flex flex-col justify-center gap-4 w-full max-w-xl">
+              <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-purple-700">
+                <div className="flex flex-wrap items-center gap-2.5 mb-2">
+                  <span className="bg-[#451B69] text-white font-mono font-black text-xs px-3 py-1 rounded-md tracking-wider">
+                    CHANKEEY
+                  </span>
+                  <span className="font-mono text-xs text-purple-700 font-bold">
+                    (Chandra)
+                  </span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                  Rafely Chandra Rizkilillah
+                </h2>
+                <p className="text-sm sm:text-base font-bold text-purple-900 mt-1.5">
+                  Senior Backend Engineer • Payment Platform
+                </p>
+              </div>
+
+              {/* Attributes Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 flex items-center gap-3.5 shadow-xs">
+                  <div className="w-12 h-12 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold text-xl shrink-0">
+                    🎂
+                  </div>
+                  <div>
+                    <span className="font-mono text-[10px] text-slate-400 uppercase font-bold block">DATE OF BIRTH</span>
+                    <span className="font-mono text-xs sm:text-sm font-bold text-slate-800">14 Nov 1996 (Scorpio ♏)</span>
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 flex items-center gap-3.5 shadow-xs">
+                  <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xl shrink-0">
+                    🧠
+                  </div>
+                  <div>
+                    <span className="font-mono text-[10px] text-slate-400 uppercase font-bold block">MBTI PERSONALITY</span>
+                    <span className="font-mono text-xs sm:text-sm font-bold text-slate-800">ESTP (Entrepreneur)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )
@@ -799,36 +887,13 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
       )
     },
 
-    // 3: HOBBY - BASKETBALL SLIDE (VIDEO TEMPLATE)
+    // 3: HOBBY - BASKETBALL SLIDE (PHOTOS & VIDEO REEL)
     {
       id: "basketball",
       title: "Hobby: Basketball",
       subtitle: "HIGHLIGHTS & GAME TAPE",
-      notes: "Highlight video basket: turnamen Filkom UB & Amartha 3x3 League.",
-      render: () => (
-        <div className="h-full w-full flex flex-col justify-between p-4 sm:p-6 md:p-8 bg-[#FAFAFA] text-slate-900 overflow-y-auto">
-          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-2 mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl sm:text-3xl font-black text-[#451B69]">| Basketball 🏀</span>
-              <span className="text-xs font-mono bg-amber-100 text-amber-900 px-2 py-0.5 rounded font-bold hidden sm:inline">
-                VIDEO REEL
-              </span>
-            </div>
-            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
-              SLIDE 04
-            </span>
-          </div>
-
-          <div className="my-auto max-w-3xl mx-auto w-full">
-            {/* Video Player Template */}
-            <VideoTemplatePlayer
-              src="/assets/basketball/video.mp4"
-              title="Filkom UB & Amartha 3x3 Tape"
-              subtitle="High-energy plays, fast breaks & clutch shots"
-            />
-          </div>
-        </div>
-      )
+      notes: "Highlight foto & video basket: turnamen Filkom UB & Amartha 3x3 League.",
+      render: () => <BasketballSlideContent />
     },
 
     // 4: HOBBY - VINYL COLLECTION SLIDE (4-PHOTO TEMPLATE)
@@ -1113,8 +1178,8 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 role: "Software Engineering Intern",
                 period: "2018",
                 photos: [
-                  { src: "/assets/career/citra-media-1.jpg", caption: "Citra Media Solusindo Office & Team" },
-                  { src: "/assets/career/citra-media-2.jpg", caption: "Web & Software Projects" }
+                  { src: "/assets/career/citra-media/citra-media-1.png" },
+                  { src: "/assets/career/citra-media/citra-media-2.png" }
                 ]
               })}
               className="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
@@ -1124,7 +1189,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <span className="font-mono text-xs font-bold text-purple-700 uppercase">2018</span>
                 <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
                   <Camera size={11} />
-                  <span>Photos</span>
+                  <span>Photos (2)</span>
                 </span>
               </div>
               <h3 className="text-2xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">PT. Citra Media Solusindo</h3>
@@ -1138,8 +1203,10 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 role: "Backend Developer",
                 period: "2019",
                 photos: [
-                  { src: "/assets/career/tunaiku-1.jpg", caption: "Tunaiku Amar Bank Team" },
-                  { src: "/assets/career/tunaiku-2.jpg", caption: "Customer Service Improvement Squad" }
+                  { src: "/assets/career/tunaiku/tunaiku-1.jpg" },
+                  { src: "/assets/career/tunaiku/tunaiku-2.jpg" },
+                  { src: "/assets/career/tunaiku/tunaiku-3.jpg" },
+                  { src: "/assets/career/tunaiku/tunaiku-4.jpg" }
                 ]
               })}
               className="group bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
@@ -1149,7 +1216,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <span className="font-mono text-xs font-bold text-purple-700 uppercase">2019</span>
                 <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
                   <Camera size={11} />
-                  <span>Photos</span>
+                  <span>Photos (4)</span>
                 </span>
               </div>
               <h3 className="text-2xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Tunaiku (PT Bank Amar Indonesia)</h3>
@@ -1183,8 +1250,13 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 role: "Backend Engineer",
                 period: "2019 – 2021",
                 photos: [
-                  { src: "/assets/career/amartha-bo-1.jpg", caption: "Back Office Squad Gathering" },
-                  { src: "/assets/career/amartha-bo-2.jpg", caption: "Core Banking & Money-Flow Migration" }
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-1.jpg" },
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-2.jpg" },
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-3.jpg" },
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-4.jpg" },
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-5.png" },
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-6.jpg" },
+                  { src: "/assets/career/amartha/backoffice/amartha-bo-7.jpg" }
                 ]
               })}
               className="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
@@ -1194,7 +1266,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <span className="font-mono text-xs font-bold text-purple-700 uppercase">2019 – 2021</span>
                 <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
                   <Camera size={11} />
-                  <span>Photos</span>
+                  <span>Photos (7)</span>
                 </span>
               </div>
               <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Back Office Team</h3>
@@ -1208,8 +1280,12 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 role: "Senior Analyst",
                 period: "2021 – 2022",
                 photos: [
-                  { src: "/assets/career/amartha-wealth-1.jpg", caption: "Wealth Team Engineering" },
-                  { src: "/assets/career/amartha-wealth-2.jpg", caption: "E-Wallet & Funding Squad" }
+                  { src: "/assets/career/amartha/wealth/amartha-wealth-1.jpg" },
+                  { src: "/assets/career/amartha/wealth/amartha-wealth-2.jpg" },
+                  { src: "/assets/career/amartha/wealth/amartha-wealth-3.jpg" },
+                  { src: "/assets/career/amartha/wealth/amartha-wealth-4.png" },
+                  { src: "/assets/career/amartha/wealth/amartha-wealth-5.jpg" },
+                  { src: "/assets/career/amartha/wealth/amartha-wealth-6.jpg" }
                 ]
               })}
               className="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
@@ -1219,7 +1295,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <span className="font-mono text-xs font-bold text-purple-700 uppercase">2021 – 2022</span>
                 <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
                   <Camera size={11} />
-                  <span>Photos</span>
+                  <span>Photos (6)</span>
                 </span>
               </div>
               <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Wealth Team</h3>
@@ -1233,8 +1309,12 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 role: "Senior Backend Engineer",
                 period: "2023 – PRESENT",
                 photos: [
-                  { src: "/assets/career/amartha-payment-1.jpg", caption: "Payment Platform Squad" },
-                  { src: "/assets/career/amartha-payment-2.jpg", caption: "Single API & QRIS Release Celebration" }
+                  { src: "/assets/career/amartha/payment/amartha-payment-1.jpg" },
+                  { src: "/assets/career/amartha/payment/amartha-payment-2.jpg" },
+                  { src: "/assets/career/amartha/payment/amartha-payment-3.png" },
+                  { src: "/assets/career/amartha/payment/amartha-payment-4.jpg" },
+                  { src: "/assets/career/amartha/payment/amartha-payment-5.jpg" },
+                  { src: "/assets/career/amartha/payment/amartha-payment-6.jpg" }
                 ]
               })}
               className="group bg-white p-6 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
@@ -1244,7 +1324,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <span className="font-mono text-xs font-bold text-purple-700 uppercase">2023 – PRESENT</span>
                 <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
                   <Camera size={11} />
-                  <span>Photos</span>
+                  <span>Photos (6)</span>
                 </span>
               </div>
               <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Payment Platform Team</h3>
@@ -1298,7 +1378,8 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
   const currentSlideObj = SLIDES[currentSlide] || SLIDES[0];
 
   return (
-    <div className="min-h-screen bg-warm-cream text-retro-black flex flex-col justify-between select-none">
+    <LightboxContext.Provider value={{ openLightbox: (src, title) => setLightboxImage({ src, title }) }}>
+      <div className="min-h-screen bg-warm-cream text-retro-black flex flex-col justify-between select-none">
       {/* Top Security Banner (Hidden in Fullscreen) */}
       {!isFullscreen && (
         <div className="bg-retro-black text-warm-cream py-2 px-4 md:px-8 border-b-4 border-retro-black flex items-center justify-between font-mono text-[10px] md:text-xs uppercase tracking-widest">
@@ -1625,6 +1706,49 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Global Image Lightbox Modal */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxImage(null)}
+            className="fixed inset-0 z-[120] bg-black/90 backdrop-blur-lg flex items-center justify-center p-4 sm:p-8 cursor-zoom-out"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setLightboxImage(null)}
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2.5 rounded-full bg-white/10 hover:bg-white/25 text-white transition-all backdrop-blur-md z-10 cursor-pointer shadow-lg"
+              title="Close (Esc)"
+            >
+              <X size={28} />
+            </button>
+
+            {/* Lightbox Image Container */}
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-5xl max-h-[90vh] flex flex-col items-center justify-center cursor-default"
+            >
+              <img
+                src={lightboxImage.src}
+                alt={lightboxImage.title || "Full size preview"}
+                className="max-h-[82vh] max-w-full object-contain rounded-2xl shadow-2xl border-2 border-white/20"
+              />
+              {lightboxImage.title && (
+                <div className="mt-3 px-5 py-1.5 bg-black/75 backdrop-blur-md rounded-full border border-white/20 text-white font-mono text-xs font-bold tracking-wide">
+                  {lightboxImage.title}
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
+    </LightboxContext.Provider>
   );
 }

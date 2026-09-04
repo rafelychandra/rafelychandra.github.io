@@ -415,6 +415,67 @@ function BasketballPhotoCard({ idx }: BasketballPhotoCardProps) {
   );
 }
 
+interface AmarthaHighlightCardProps {
+  idx: number;
+  key?: React.Key;
+}
+
+function AmarthaHighlightCard({ idx }: AmarthaHighlightCardProps) {
+  const { openLightbox } = useLightbox();
+  const [extIdx, setExtIdx] = useState(0);
+  const exts = [".jpg", ".png", ".jpeg", ".webp"];
+  const [hasError, setHasError] = useState(false);
+
+  const currentSrc = `/assets/career/amartha/highlights/amartha-moment-${idx + 1}${exts[extIdx]}`;
+
+  const handleError = () => {
+    if (extIdx < exts.length - 1) {
+      setExtIdx((prev) => prev + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  return (
+    <div
+      onClick={() => !hasError && openLightbox(currentSrc, `Amartha Moment #${idx + 1}`)}
+      className={`group relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm border-2 border-slate-300 hover:border-purple-600 hover:shadow-lg transition-all duration-300 bg-slate-950 text-white ${
+        !hasError ? "cursor-zoom-in" : ""
+      }`}
+      title={!hasError ? "Click to view full size" : undefined}
+    >
+      {!hasError ? (
+        <div className="w-full h-full relative overflow-hidden bg-slate-950 flex items-center justify-center">
+          <img
+            src={currentSrc}
+            alt={`Amartha moment ${idx + 1}`}
+            onError={handleError}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3 pointer-events-none">
+            <span className="font-mono text-[9px] text-amber-300 font-bold uppercase tracking-wider">
+              MOMENT #{idx + 1}
+            </span>
+            <span className="text-white/90 font-mono text-[9px] bg-black/60 px-2 py-0.5 rounded flex items-center gap-1">
+              <ZoomIn size={11} /> View
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full h-full p-3 flex flex-col justify-center items-center bg-gradient-to-br from-purple-950 via-slate-900 to-black text-purple-200 text-xs font-mono">
+          <span className="text-xl mb-1">📸</span>
+          <span>AMARTHA #{idx + 1}</span>
+        </div>
+      )}
+
+      {/* Index Number Badge */}
+      <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-xs text-white text-[8px] font-mono font-bold px-1.5 py-0.5 rounded z-10">
+        #{idx + 1}
+      </div>
+    </div>
+  );
+}
+
 interface VideoTemplatePlayerProps {
   src?: string;
   poster?: string;
@@ -1329,6 +1390,60 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
               </div>
               <h3 className="text-xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">Payment Platform Team</h3>
               <p className="text-sm font-bold text-purple-900 font-sans mt-1">Senior Backend Engineer</p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+
+    // 10: WORKING EXPERIENCE - AMARTHA MOMENTS
+    {
+      id: "amartha-highlights",
+      title: "Working Experience: Amartha",
+      subtitle: "AMARTHA MOMENTS",
+      notes: "Koleksi foto momen kebersamaan dan event selama berkarya di Amartha.",
+      render: () => (
+        <div className="h-full w-full flex flex-col justify-between p-6 md:p-10 bg-[#FAFAFA] text-slate-900">
+          <div className="flex items-center justify-between border-b-2 border-purple-900/10 pb-3">
+            <span className="text-3xl font-black text-[#451B69]">| Working Experience: Amartha 📸</span>
+            <span className="font-mono text-xs text-purple-900 bg-purple-100 px-2.5 py-1 rounded-full font-bold">
+              SLIDE 11
+            </span>
+          </div>
+
+          <div className="my-auto max-w-2xl mx-auto w-full">
+            <div
+              onClick={() => setSelectedCareer({
+                company: "Amartha Moments",
+                role: "Life, Squad Events & Memories",
+                period: "2019 – PRESENT",
+                photos: [
+                  { src: "/assets/career/amartha/highlights/amartha-moment-1.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-2.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-3.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-4.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-5.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-6.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-7.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-8.jpg" }
+                ]
+              })}
+              className="group bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
+              title="Click to view photos"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-xs font-bold text-purple-700 uppercase">2019 – PRESENT</span>
+                <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2.5 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
+                  <Camera size={11} />
+                  <span>Photos (8)</span>
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">
+                Amartha Moments
+              </h3>
+              <p className="text-sm font-bold text-purple-900 font-sans mt-1">
+                Life, Squad Events & Memories
+              </p>
             </div>
           </div>
         </div>

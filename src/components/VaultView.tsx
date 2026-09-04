@@ -1427,7 +1427,11 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                   { src: "/assets/career/amartha/highlights/amartha-moment-7.jpg" },
                   { src: "/assets/career/amartha/highlights/amartha-moment-8.jpg" },
                   { src: "/assets/career/amartha/highlights/amartha-moment-9.jpg" },
-                  { src: "/assets/career/amartha/highlights/amartha-moment-10.JPG" }
+                  { src: "/assets/career/amartha/highlights/amartha-moment-10.JPG" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-11.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-12.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-13.jpg" },
+                  { src: "/assets/career/amartha/highlights/amartha-moment-14.png" }
                 ]
               })}
               className="group bg-white p-8 sm:p-10 rounded-2xl shadow-sm border border-slate-200 hover:border-purple-600 hover:shadow-lg transition-all border-l-4 border-l-purple-700 flex flex-col justify-center cursor-pointer relative"
@@ -1437,7 +1441,7 @@ export default function VaultView({ vaultConfig, profile, onExit }: VaultViewPro
                 <span className="font-mono text-xs font-bold text-purple-700 uppercase">2019 – PRESENT</span>
                 <span className="text-[10px] font-mono bg-purple-50 text-purple-800 group-hover:bg-purple-900 group-hover:text-white px-2.5 py-0.5 rounded-full font-bold transition-all flex items-center gap-1">
                   <Camera size={11} />
-                  <span>Photos (10)</span>
+                  <span>Photos (14)</span>
                 </span>
               </div>
               <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-2 group-hover:text-[#451B69] transition-colors">
